@@ -117,7 +117,7 @@ const companies = ref([
                     <RouterLink
                       :to="{ path: '/Companies', query: { status: 'pending' } }"
                       :class="{ active: route.query.status === 'pending' }"
-                      >Pending Perusahaan</RouterLink
+                      >Perusahaan Pending</RouterLink
                     >
                   </li>
                   <li>
