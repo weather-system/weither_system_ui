@@ -1,5 +1,14 @@
 <script setup>
-import MainWrapper from '@/components/MainWrapper.vue'
+import { ref } from 'vue';
+import MainWrapper from '@/components/MainWrapper.vue';
+
+// Define a reactive variable to toggle password visibility
+const showPassword = ref(false);
+
+// Method to toggle the password visibility
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
 </script>
 
 <template>
@@ -21,7 +30,7 @@ import MainWrapper from '@/components/MainWrapper.vue'
             <div class="login-content">
               <div class="login-contenthead">
                 <h5>Registrasi Perusahaan</h5>
-                <h6>We'll send a confirmation code to your email.</h6>
+                <h6>Masukan Email dan Password Anda.</h6>
               </div>
               <div class="login-input">
                 <div class="form-group">
@@ -40,24 +49,22 @@ import MainWrapper from '@/components/MainWrapper.vue'
                     >
                   </div>
                   <div class="pass-group">
+                    <!-- Bind the input type to show/hide password -->
                     <input
-                      type="password"
+                      :type="showPassword ? 'text' : 'password'"
                       class="form-control pass-input"
                       placeholder="********"
                     />
-                    <span class="fas toggle-password fa-eye-slash"></span>
+                    <!-- Eye icon for toggling password visibility -->
+                    <span 
+                      class="fas toggle-password" 
+                      :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                      @click="togglePasswordVisibility"
+                      style="cursor: pointer;"
+                    ></span>
                   </div>
                 </div>
                 <div class="filter-checkbox m-0">
-                  <ul class="d-flex justify-content-between">
-                    <li>
-                      <label class="checkboxs">
-                        <input type="checkbox" />
-                        <span><i></i></span>
-                        <b class="check-content">Remember Me</b>
-                      </label>
-                    </li>
-                  </ul>
                 </div>
               </div>
               <div class="login-button">
