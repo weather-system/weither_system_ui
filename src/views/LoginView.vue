@@ -1,6 +1,12 @@
 <script setup>
-import MainWrapper from '@/components/MainWrapper.vue'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
+import MainWrapper from '@/components/MainWrapper.vue'
+import { login, me } from '@/lib/auth.js'
+
+const router = useRouter()
+const $loading = useLoading()
 
 // Reactive variable to toggle password visibility
 const showPassword = ref(false)
@@ -8,6 +14,29 @@ const showPassword = ref(false)
 // Function to toggle the password visibility
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
+}
+
+const submit = async e => {
+  const formData = new FormData(e.target)
+
+  const loader = $loading.show()
+  try {
+    await login({
+      email: formData.get('email'),
+      password: formData.get('password'),
+    })
+    const user = await me()
+    if (user.role === 'USER') {
+      router.push('/MyCompany')
+      return
+    }
+    router.push('/Companies')
+  } catch (e) {
+    alert('error login')
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
 }
 </script>
 
@@ -30,7 +59,7 @@ const togglePasswordVisibility = () => {
               <img src="@/assets/img/login-banner.png" alt="img" />
             </div>
           </div>
-          <div class="col-lg-6 col-xl-5">
+          <form @submit.prevent="submit" class="col-lg-6 col-xl-5">
             <div class="login-content">
               <div class="login-contenthead">
                 <h5>Login Perusahaan</h5>
@@ -43,6 +72,7 @@ const togglePasswordVisibility = () => {
                     type="text"
                     class="form-control"
                     placeholder="example@email.com"
+                    name="email"
                   />
                 </div>
                 <div class="form-group">
@@ -54,6 +84,7 @@ const togglePasswordVisibility = () => {
                       :type="showPassword ? 'text' : 'password'"
                       class="form-control pass-input"
                       placeholder="********"
+                      name="password"
                     />
                     <span
                       class="fas toggle-password"
@@ -64,7 +95,7 @@ const togglePasswordVisibility = () => {
                 </div>
               </div>
               <div class="login-button">
-                <a href="index.html" class="btn btn-login">Login</a>
+                <button class="btn btn-login">Login</button>
               </div>
               <!-- Forgot password and sign up section -->
               <div class="login-footer mt-3 text-left">
@@ -77,7 +108,7 @@ const togglePasswordVisibility = () => {
                 </span>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
