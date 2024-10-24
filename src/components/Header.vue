@@ -1,4 +1,26 @@
-<script setup></script>
+<script setup>
+import { useStore } from 'vuex'
+import { useLoading } from 'vue-loading-overlay'
+import { useRouter } from 'vue-router'
+import { logout as authLogout } from '@/lib/auth.js'
+
+const $loading = useLoading()
+const store = useStore()
+const router = useRouter()
+
+const logout = async () => {
+  const loader = $loading.show()
+  try {
+    await authLogout()
+    router.push('/Login')
+  } catch (e) {
+    alert('error logout')
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+</script>
 
 <template>
   <div class="header">
@@ -301,27 +323,12 @@
               <span class="animate-circle"></span>
             </span>
             <span class="user-content">
-              <span class="user-name">John Smith</span>
-              <span class="user-details">Demo User</span>
+              <span class="user-name">{{ store.state.auth.user.name }}</span>
+              <span class="user-details">{{ store.state.auth.user.role }}</span>
             </span>
           </a>
           <div class="dropdown-menu menu-drop-user">
             <div class="profilemenu">
-              <div class="user-detials">
-                <a href="account.html">
-                  <span class="profile-image">
-                    <img
-                      src="@/assets/img/user.jpg"
-                      alt="img"
-                      class="profilesidebar"
-                    />
-                  </span>
-                  <span class="profile-content">
-                    <span>John Smith</span>
-                    <span>John@gmail.com</span>
-                  </span>
-                </a>
-              </div>
               <div class="subscription-menu">
                 <ul>
                   <li>
@@ -333,7 +340,7 @@
                 </ul>
               </div>
               <div class="subscription-logout">
-                <a href="signin.html">Log Out</a>
+                <a @click="logout" href="#">Log Out</a>
               </div>
             </div>
           </div>

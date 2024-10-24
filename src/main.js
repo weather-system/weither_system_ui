@@ -30,12 +30,23 @@ import '@/assets/plugins/sweetalert/sweetalert2.all.min.js'
 import '@/assets/plugins/sweetalert/sweetalerts.min.js'
 import '@/assets/js/admin.js'
 
+import 'vue-loading-overlay/dist/css/index.css'
+
 import { createApp } from 'vue'
+import { LoadingPlugin } from 'vue-loading-overlay'
+import axios from 'axios'
 import App from './App.vue'
 import router from './router'
+import { API_BASE_URL } from './lib/env'
+import store from './store'
 
 const app = createApp(App)
 
+axios.defaults.baseURL = API_BASE_URL
+axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
+
+app.use(LoadingPlugin)
 app.use(router)
+app.use(store)
 
 app.mount('#app')
