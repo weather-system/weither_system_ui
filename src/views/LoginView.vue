@@ -18,7 +18,11 @@ const togglePasswordVisibility = () => {
         <div class="row align-items-center">
           <div class="col-lg-12">
             <div class="login-logo">
-              <img src="@/assets/img/dlh.jpg" alt="img" style="width: 200px; height: auto;" />
+              <img
+                src="@/assets/img/dlh.jpg"
+                alt="img"
+                style="width: 200px; height: auto"
+              />
             </div>
           </div>
           <div class="col-lg-6 col-xl-7">
@@ -51,11 +55,11 @@ const togglePasswordVisibility = () => {
                       class="form-control pass-input"
                       placeholder="********"
                     />
-                    <span 
+                    <span
                       class="fas toggle-password"
                       :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
                       @click="togglePasswordVisibility"
-                    ></span>                    
+                    ></span>
                   </div>
                 </div>
               </div>
@@ -64,8 +68,11 @@ const togglePasswordVisibility = () => {
               </div>
               <!-- Forgot password and sign up section -->
               <div class="login-footer mt-3 text-left">
-                <a href="forget-password.html" class="d-block mb-2">Forgot password?</a>
-                <span>Belum punya akun perusahaan? 
+                <a href="forget-password.html" class="d-block mb-2"
+                  >Forgot password?</a
+                >
+                <span
+                  >Belum punya akun perusahaan?
                   <a href="sign-up.html" class="signup-link">Sign Up</a>
                 </span>
               </div>
