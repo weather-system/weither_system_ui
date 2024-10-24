@@ -2635,6 +2635,26 @@ html.menu-opened body {
   color: #fff;
 }
 
+/* Add transition class */
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.4s ease;
+}
+
+.slide-fade-enter-from, .slide-fade-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.6 ease;
+}
+
+.slide-fade-enter-to, .slide-fade-leave-from {
+  max-height: 250px;
+  opacity: 1;
+}
+
+.submenu {
+  overflow: hidden;
+}
+
 /*-----------------
 	10. Content
 -----------------------*/
