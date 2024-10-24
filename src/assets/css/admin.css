@@ -83,6 +83,9 @@ input:-webkit-autofill:focus {
 img {
   max-width: 100%;
 }
+.input-dark-placeholder::placeholder{
+  color:#535353 !important;
+}
 ul {
   list-style: none;
   margin: 0;

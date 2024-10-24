@@ -1,36 +1,56 @@
 <script setup>
 import MainWrapper from '@/components/MainWrapper.vue'
-import { ref } from 'vue';
-import { watch, computed } from 'vue';
-const searchQuery = ref('');
+import { ref } from 'vue'
+import { watch, computed } from 'vue'
+const searchQuery = ref('')
 const filteredKbliOptions = computed(() => {
-  if (!searchQuery.value) return kbliOptions; // Return all options if no search query
-  return Object.entries(kbliOptions).filter(([key]) =>
-    key.toLowerCase().includes(searchQuery.value.toLowerCase())
-  ).reduce((obj, [key, value]) => {
-    obj[key] = value;
-    return obj;
-  }, {});
-});
-const ipalStatus = ref('');
-const cerobongStatus = ref('');
-const tpsb3Status = ref('');
-const gensetStatus = ref('');
+  if (!searchQuery.value) return kbliOptions // Return all options if no search query
+  return Object.entries(kbliOptions)
+    .filter(([key]) =>
+      key.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    )
+    .reduce((obj, [key, value]) => {
+      obj[key] = value
+      return obj
+    }, {})
+})
+const npwp = ref('');
+
+const formatNpwp = () => {
+  // Remove any non-digit characters
+  let cleaned = npwp.value.replace(/\D/g, '').slice(0, 15);
+
+  let formatted = '';
+  
+  for (let i = 0; i < cleaned.length; i++) {
+    if (i === 2 || i === 5 || i === 8 || i === 9|| i === 12|| i === 15) {
+      formatted += '.';
+    }
+    formatted += cleaned[i];
+  }
+  
+  // Update the npwp variable with the formatted value
+  npwp.value = formatted;
+};
+const ipalStatus = ref('')
+const cerobongStatus = ref('')
+const tpsb3Status = ref('')
+const gensetStatus = ref('')
 const sumberOptions = ref({
   dalam: false,
   resapan: false,
   imbuhan: false,
   biopori: false,
-});
-const kodekbli = ref('');
-const kodeJudul = ref('');
+})
+const kodekbli = ref('')
+const kodeJudul = ref('')
 const kbliOptions = {
-  'ABC00909': 'test',
-  'ABC00910': 'example', // Add more mappings as needed
-};
-watch(kodekbli, (newValue) => {
-  kodeJudul.value = kbliOptions[newValue] || ''; // Set the corresponding Nama
-});
+  ABC00909: 'test',
+  ABC00910: 'example', // Add more mappings as needed
+}
+watch(kodekbli, newValue => {
+  kodeJudul.value = kbliOptions[newValue] || '' // Set the corresponding Nama
+})
 </script>
 
 <template>
@@ -96,31 +116,29 @@ watch(kodekbli, (newValue) => {
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="col-form-label">KODE KBLI</label>
-                              
-                              <!-- Search Input -->
                               <div class="input-group mb-2">
+                                <span class="input-group-text" id="search-addon">
+                                    <i class="fas fa-search"></i> 
+                                  </span>
                                 <input
                                   type="text"
-                                  class="form-control"
+                                  class="form-control input-dark-placeholder"
                                   placeholder="Search KODE KBLI"
                                   v-model="searchQuery"
                                   aria-label="Search KODE KBLI"
+                                  style="placecolor: black;"
                                 />
-                                <!-- <div class="input-group-append">
-                                  <span class="input-group-text" id="search-addon">
-                                    <i class="fas fa-search"></i> 
-                                  </span>
-                                </div> -->
                               </div>
-
-                              <!-- Dropdown Select -->
                               <select class="form-control" v-model="kodekbli">
-                                <option value="" disabled selected>Tidak ada data berdasarkan pencarian</option>
-                                <!-- <option value="" disabled selected v-show="filteredKbliOptions.length === 0">
-                                  Tidak ada data berdasarkan pencarian
-                                </option> -->
-                                
-                                <option v-for="(value, key) in filteredKbliOptions" :key="key" :value="key">
+                                <option value="" disabled selected>
+                                  Pilih KODE KBLI
+                                </option>
+
+                                <option
+                                  v-for="(value, key) in filteredKbliOptions"
+                                  :key="key"
+                                  :value="key"
+                                >
                                   {{ key }}
                                 </option>
                               </select>
@@ -147,6 +165,8 @@ watch(kodekbli, (newValue) => {
                             type="text"
                             class="form-control"
                             placeholder="Masukan Nomer NPWP Perusahaan"
+                            v-model="npwp"
+                            @input="formatNpwp"
                           />
                         </div>
                       </div>
@@ -162,9 +182,7 @@ watch(kodekbli, (newValue) => {
                       </div>
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label class="col-form-label"
-                            >Jenis Usaha</label
-                          >
+                          <label class="col-form-label">Jenis Usaha</label>
                           <input
                             type="text"
                             class="form-control"
@@ -176,8 +194,7 @@ watch(kodekbli, (newValue) => {
                         <div class="form-group">
                           <label class="col-form-label"
                             >Kapasitas Produksi
-                            </label
-                          >
+                          </label>
                           <div class="form-duration">
                             <input
                               type="text"
@@ -187,15 +204,15 @@ watch(kodekbli, (newValue) => {
                             <span class="mins">Satuan : $data jenis usaha</span>
                           </div>
                         </div>
-                        </div>
+                      </div>
                       <div class="col-md-6">
                         <div class="form-group">
                           <label class="col-form-label">Jumlah Karyawan</label>
                           <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Masukkan Jumlah Karyawan"
-                            />
+                            type="text"
+                            class="form-control"
+                            placeholder="Masukkan Jumlah Karyawan"
+                          />
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -216,9 +233,9 @@ watch(kodekbli, (newValue) => {
                         </div>
                       </div>
                       <div class="col-sm-6">
-                        <div class="status-toggle sml-status float-sm-end mb-3">
-                          
-                        </div>
+                        <div
+                          class="status-toggle sml-status float-sm-end mb-3"
+                        ></div>
                       </div>
                     </div>
                     <div class="addservice-info">
@@ -227,39 +244,41 @@ watch(kodekbli, (newValue) => {
                           <div class="form-group">
                             <label class="col-form-label">Luas Lahan</label>
                             <div class="form-duration">
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Masukkan Luas Lahan"
-                            />
-                            <span class="mins">m2</span>
-                          </div>
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Masukkan Luas Lahan"
+                              />
+                              <span class="mins">m2</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
                             <label class="col-form-label">Luas Bangunan</label>
                             <div class="form-duration">
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Masukkan Luas Bangunan"
-                            />
-                            <span class="mins">m2</span>
-                          </div>
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Masukkan Luas Bangunan"
+                              />
+                              <span class="mins">m2</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label class="col-form-label">Luas Ruang Terbuka Hijau</label>
+                            <label class="col-form-label"
+                              >Luas Ruang Terbuka Hijau</label
+                            >
                             <div class="form-duration">
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Masukkan Luas Ruang Terbuka Hijau"
-                            />
-                            <span class="mins">m2</span>
-                          </div>
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Masukkan Luas Ruang Terbuka Hijau"
+                              />
+                              <span class="mins">m2</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -293,30 +312,40 @@ watch(kodekbli, (newValue) => {
                             </select>
                           </div>
                         </div>
-                      <div class="col-md-4" v-if="ipalStatus === 'Ada'">
-                        <div class="form-group">
-                          <label class="col-form-label">Jumlah IPAL</label>
-                          <input type="number" class="form-control" placeholder="Masukkan jumlah IPAL" />
+                        <div class="col-md-4" v-if="ipalStatus === 'Ada'">
+                          <div class="form-group">
+                            <label class="col-form-label">Jumlah IPAL</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              placeholder="Masukkan jumlah IPAL"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-4" v-if="ipalStatus === 'Ada'">
-                        <div class="form-group">
-                          <label class="col-form-label">Jenis IPAL</label>
-                          <select class="form-control">
-                            <option value="">Pilih Jenis IPAL</option> <!-- Placeholder option -->
-                            <option value="Domestik">Domestik</option>
-                            <option value="Industri">Industri</option>
-                            <option value="Integrasi">Integrasi</option>
-                          </select>
+                        <div class="col-md-4" v-if="ipalStatus === 'Ada'">
+                          <div class="form-group">
+                            <label class="col-form-label">Jenis IPAL</label>
+                            <select class="form-control">
+                              <option value="">Pilih Jenis IPAL</option>
+                              <!-- Placeholder option -->
+                              <option value="Domestik">Domestik</option>
+                              <option value="Industri">Industri</option>
+                              <option value="Integrasi">Integrasi</option>
+                            </select>
+                          </div>
                         </div>
-                      </div>
                       </div>
                       <div class="row service-cont">
                         <div class="col-md-4">
                           <div class="form-group">
                             <label class="col-form-label">Cerobong</label>
-                            <select class="form-control" v-model="cerobongStatus">
-                              <option value="" disabled selected>Pilih Status Cerobong</option>
+                            <select
+                              class="form-control"
+                              v-model="cerobongStatus"
+                            >
+                              <option value="" disabled selected>
+                                Pilih Status Cerobong
+                              </option>
                               <option value="Ada">Ada</option>
                               <option value="Tidak Ada">Tidak Ada</option>
                             </select>
@@ -324,8 +353,14 @@ watch(kodekbli, (newValue) => {
                         </div>
                         <div class="col-md-4" v-if="cerobongStatus === 'Ada'">
                           <div class="form-group">
-                            <label class="col-form-label">Jumlah Cerobong</label>
-                            <input type="number" class="form-control" placeholder="Masukkan jumlah cerobong" />
+                            <label class="col-form-label"
+                              >Jumlah Cerobong</label
+                            >
+                            <input
+                              type="number"
+                              class="form-control"
+                              placeholder="Masukkan jumlah cerobong"
+                            />
                           </div>
                         </div>
                       </div>
@@ -334,7 +369,9 @@ watch(kodekbli, (newValue) => {
                           <div class="form-group">
                             <label class="col-form-label">TPSB3</label>
                             <select class="form-control" v-model="tpsb3Status">
-                              <option value="" disabled selected>Pilih Status TPSB3</option>
+                              <option value="" disabled selected>
+                                Pilih Status TPSB3
+                              </option>
                               <option value="Ada">Ada</option>
                               <option value="Tidak Ada">Tidak Ada</option>
                             </select>
@@ -343,7 +380,11 @@ watch(kodekbli, (newValue) => {
                         <div class="col-md-4" v-if="tpsb3Status === 'Ada'">
                           <div class="form-group">
                             <label class="col-form-label">Jumlah TPSB3</label>
-                            <input type="number" class="form-control" placeholder="Masukkan jumlah TPSB3" />
+                            <input
+                              type="number"
+                              class="form-control"
+                              placeholder="Masukkan jumlah TPSB3"
+                            />
                           </div>
                         </div>
                       </div>
@@ -352,7 +393,9 @@ watch(kodekbli, (newValue) => {
                           <div class="form-group">
                             <label class="col-form-label">Genset</label>
                             <select class="form-control" v-model="gensetStatus">
-                              <option value="" disabled selected>Pilih Status Genset</option>
+                              <option value="" disabled selected>
+                                Pilih Status Genset
+                              </option>
                               <option value="Ada">Ada</option>
                               <option value="Tidak Ada">Tidak Ada</option>
                             </select>
@@ -361,7 +404,11 @@ watch(kodekbli, (newValue) => {
                         <div class="col-md-4" v-if="gensetStatus === 'Ada'">
                           <div class="form-group">
                             <label class="col-form-label">Jumlah Genset</label>
-                            <input type="number" class="form-control" placeholder="Masukkan jumlah Genset" />
+                            <input
+                              type="number"
+                              class="form-control"
+                              placeholder="Masukkan jumlah Genset"
+                            />
                           </div>
                         </div>
                       </div>
@@ -377,7 +424,11 @@ watch(kodekbli, (newValue) => {
                                   class="form-check-input"
                                   v-model="sumberOptions.dalam"
                                 />
-                                <label class="form-check-label" for="sumberDalam">Dalam</label>
+                                <label
+                                  class="form-check-label"
+                                  for="sumberDalam"
+                                  >Dalam</label
+                                >
                               </div>
                               <div class="form-check me-3">
                                 <input
@@ -386,7 +437,11 @@ watch(kodekbli, (newValue) => {
                                   class="form-check-input"
                                   v-model="sumberOptions.resapan"
                                 />
-                                <label class="form-check-label" for="sumberResapan">Resapan</label>
+                                <label
+                                  class="form-check-label"
+                                  for="sumberResapan"
+                                  >Resapan</label
+                                >
                               </div>
                               <div class="form-check me-3">
                                 <input
@@ -395,7 +450,11 @@ watch(kodekbli, (newValue) => {
                                   class="form-check-input"
                                   v-model="sumberOptions.imbuhan"
                                 />
-                                <label class="form-check-label" for="sumberImbuhan">Imbuhan</label>
+                                <label
+                                  class="form-check-label"
+                                  for="sumberImbuhan"
+                                  >Imbuhan</label
+                                >
                               </div>
                               <div class="form-check me-3">
                                 <input
@@ -404,7 +463,11 @@ watch(kodekbli, (newValue) => {
                                   class="form-check-input"
                                   v-model="sumberOptions.biopori"
                                 />
-                                <label class="form-check-label" for="sumberBiopori">Biopori</label>
+                                <label
+                                  class="form-check-label"
+                                  for="sumberBiopori"
+                                  >Biopori</label
+                                >
                               </div>
                             </div>
                           </div>
@@ -418,7 +481,7 @@ watch(kodekbli, (newValue) => {
                           <input
                             type="text"
                             class="form-control"
-                            placeholder="Enter Services Category"
+                            placeholder="Masukkan Penanggung Jawab"
                           />
                         </div>
                       </div>
@@ -430,7 +493,7 @@ watch(kodekbli, (newValue) => {
                             class="btn btn-primary next_btn"
                             type="button"
                           >
-                            Save
+                            Simpan
                           </button>
                         </div>
                       </div>
