@@ -68,7 +68,8 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="index.html" class="active">
-              <i class="fe fe-grid"></i> <span>Dashboard</span>
+              <i class="fe fe-grid"></i> 
+              <span >Dashboard</span>
             </a>
           </li>
           <li>
@@ -76,47 +77,59 @@ const toggleTiket = () => {
               <i class="fe fe-briefcase"></i> <span>Pengendalian</span>
               <i class="fe" :class="{'fe-chevron-down': !isPengendalianOpen, 'fe-chevron-up': isPengendalianOpen}"></i>
             </a>
-            <ul v-if="isPengendalianOpen" class="d-block ms-4">
-              <li><a href="sub-service1.html">Pencemaran Air</a></li>
-              <li><a href="sub-service2.html">Pencemaran Udara</a></li>
-              <li><a href="sub-service3.html">Pengelolaan Limbah B3</a></li>
-            </ul>
+            <!-- Transition for Pengendalian submenu -->
+            <transition name="slide-fade">
+              <ul v-if="isPengendalianOpen" class="submenu d-block ms-4">
+                <li><a href="sub-service1.html">Pencemaran Air</a></li>
+                <li><a href="sub-service2.html">Pencemaran Udara</a></li>
+                <li><a href="sub-service3.html">Pengelolaan Limbah B3</a></li>
+              </ul>
+            </transition>
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fe fe-briefcase"></i> <span>Logbook</span>
               <i class="fe" :class="{'fe-chevron-down': !isLogbookOpen, 'fe-chevron-up': isLogbookOpen}"></i>
             </a>
-            <ul v-if="isLogbookOpen" class="d-block ms-4">
-              <li><a href="sub-service1.html">Produksi Senyatanya</a></li>
-              <li><a href="sub-service1.html">Pemakaian Bahan Kimia</a></li>
-              <li><a href="sub-service1.html">Pemakaian Air</a></li>
-              <li><a href="sub-service1.html">Debit Outlet IPAL</a></li>
-              <li><a href="sub-service1.html">Debit Pemakaian Air</a></li>
-              <li><a href="sub-service1.html">IPAL</a></li>
-              <li><a href="sub-service1.html">Penggunaan B3</a></li>
-              <li><a href="sub-service2.html">TPS Limbah B3</a></li>
-            </ul>
+            <!-- Transition for Logbook submenu -->
+            <transition name="slide-fade">
+              <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
+                <li><a href="sub-service1.html">Produksi Senyatanya</a></li>
+                <li><a href="sub-service1.html">Pemakaian Bahan Kimia</a></li>
+                <li><a href="sub-service1.html">Pemakaian Air</a></li>
+                <li><a href="sub-service1.html">Debit Outlet IPAL</a></li>
+                <li><a href="sub-service1.html">Debit Pemakaian Air</a></li>
+                <li><a href="sub-service1.html">IPAL</a></li>
+                <li><a href="sub-service1.html">Penggunaan B3</a></li>
+                <li><a href="sub-service2.html">TPS Limbah B3</a></li>
+              </ul>
+            </transition>
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fe fe-briefcase"></i> <span>Import Logbook</span>
               <i class="fe" :class="{'fe-chevron-down': !isImportLogbookOpen, 'fe-chevron-up': isImportLogbookOpen}"></i>
             </a>
-            <ul v-if="isImportLogbookOpen" class="d-block ms-4">
-              <li><a href="sub-service1.html">Logbook IPAL</a></li>
-              <li><a href="sub-service2.html">Logbook Limbah B3</a></li>
-            </ul>
+            <!-- Transition for Import Logbook submenu -->
+            <transition name="slide-fade">
+              <ul v-if="isImportLogbookOpen" class="submenu d-block ms-4">
+                <li><a href="sub-service1.html">Logbook IPAL</a></li>
+                <li><a href="sub-service2.html">Logbook Limbah B3</a></li>
+              </ul>
+            </transition>
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fe fe-briefcase"></i> <span>Tiket</span>
               <i class="fe" :class="{'fe-chevron-down': !isTiketOpen, 'fe-chevron-up': isTiketOpen}"></i>
             </a>
-            <ul v-if="isTiketOpen" class="d-block ms-4">
-              <li><a href="sub-service1.html">Daftar Pengaduan</a></li>
-              <li><a href="sub-service2.html">Pengaduan</a></li>
-            </ul>
+            <!-- Transition for Tiket submenu -->
+            <transition name="slide-fade">
+              <ul v-if="isTiketOpen" class="submenu d-block ms-4">
+                <li><a href="sub-service1.html">Daftar Pengaduan</a></li>
+                <li><a href="sub-service2.html">Pengaduan</a></li>
+              </ul>
+            </transition>
           </li>
         </ul>
       </div>
