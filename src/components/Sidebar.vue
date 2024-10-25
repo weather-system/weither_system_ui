@@ -45,11 +45,7 @@ const toggleTiket = () => {
           <img src="@/assets/img/logo.svg" class="img-fluid logo" alt="" />
         </a>
         <a href="index.html">
-          <img
-            src="@/assets/img/logo-small.svg"
-            class="img-fluid logo-small"
-            alt=""
-          />
+          <img src="@/assets/img/logo-small.svg" class="img-fluid logo-small" alt="" />
         </a>
       </div>
       <div class="siderbar-toggle">
@@ -68,16 +64,16 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="index.html" class="active">
-              <i class="fe fe-grid"></i> 
-              <span >Dashboard</span>
+              <i class="fas fa-tachometer-alt"></i> <!-- Dashboard Icon -->
+              <span>Dashboard</span>
             </a>
           </li>
           <li>
             <a href="javascript:void(0);" @click="togglePengendalian">
-              <i class="fe fe-briefcase"></i> <span>Pengendalian</span>
+              <i class="fas fa-cogs"></i> <!-- Pengendalian Icon -->
+              <span>Pengendalian</span>
               <i class="fe" :class="{'fe-chevron-down': !isPengendalianOpen, 'fe-chevron-up': isPengendalianOpen}"></i>
             </a>
-            <!-- Transition for Pengendalian submenu -->
             <transition name="slide-fade">
               <ul v-if="isPengendalianOpen" class="submenu d-block ms-4">
                 <li><a href="sub-service1.html">Pencemaran Air</a></li>
@@ -88,10 +84,10 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleLogbook">
-              <i class="fe fe-briefcase"></i> <span>Logbook</span>
+              <i class="fas fa-book"></i> <!-- Logbook Icon -->
+              <span>Logbook</span>
               <i class="fe" :class="{'fe-chevron-down': !isLogbookOpen, 'fe-chevron-up': isLogbookOpen}"></i>
             </a>
-            <!-- Transition for Logbook submenu -->
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
                 <li><a href="sub-service1.html">Produksi Senyatanya</a></li>
@@ -107,10 +103,10 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleImportLogbook">
-              <i class="fe fe-briefcase"></i> <span>Import Logbook</span>
+              <i class="fas fa-file-import"></i> <!-- Import Logbook Icon -->
+              <span>Import Logbook</span>
               <i class="fe" :class="{'fe-chevron-down': !isImportLogbookOpen, 'fe-chevron-up': isImportLogbookOpen}"></i>
             </a>
-            <!-- Transition for Import Logbook submenu -->
             <transition name="slide-fade">
               <ul v-if="isImportLogbookOpen" class="submenu d-block ms-4">
                 <li><a href="sub-service1.html">Logbook IPAL</a></li>
@@ -120,10 +116,10 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleTiket">
-              <i class="fe fe-briefcase"></i> <span>Tiket</span>
+              <i class="fas fa-ticket-alt"></i> <!-- Tiket Icon -->
+              <span>Tiket</span>
               <i class="fe" :class="{'fe-chevron-down': !isTiketOpen, 'fe-chevron-up': isTiketOpen}"></i>
             </a>
-            <!-- Transition for Tiket submenu -->
             <transition name="slide-fade">
               <ul v-if="isTiketOpen" class="submenu d-block ms-4">
                 <li><a href="sub-service1.html">Daftar Pengaduan</a></li>
