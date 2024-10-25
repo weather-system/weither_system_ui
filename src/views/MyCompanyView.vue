@@ -14,24 +14,24 @@ const filteredKbliOptions = computed(() => {
       return obj
     }, {})
 })
-const npwp = ref('');
+const npwp = ref('')
 
 const formatNpwp = () => {
   // Remove any non-digit characters
-  let cleaned = npwp.value.replace(/\D/g, '').slice(0, 15);
+  let cleaned = npwp.value.replace(/\D/g, '').slice(0, 15)
 
-  let formatted = '';
-  
+  let formatted = ''
+
   for (let i = 0; i < cleaned.length; i++) {
-    if (i === 2 || i === 5 || i === 8 || i === 9|| i === 12|| i === 15) {
-      formatted += '.';
+    if (i === 2 || i === 5 || i === 8 || i === 9 || i === 12 || i === 15) {
+      formatted += '.'
     }
-    formatted += cleaned[i];
+    formatted += cleaned[i]
   }
-  
+
   // Update the npwp variable with the formatted value
-  npwp.value = formatted;
-};
+  npwp.value = formatted
+}
 const ipalStatus = ref('')
 const cerobongStatus = ref('')
 const tpsb3Status = ref('')
@@ -117,16 +117,19 @@ watch(kodekbli, newValue => {
                             <div class="form-group">
                               <label class="col-form-label">KODE KBLI</label>
                               <div class="input-group mb-2">
-                                <span class="input-group-text" id="search-addon">
-                                    <i class="fas fa-search"></i> 
-                                  </span>
+                                <span
+                                  class="input-group-text"
+                                  id="search-addon"
+                                >
+                                  <i class="fas fa-search"></i>
+                                </span>
                                 <input
                                   type="text"
                                   class="form-control input-dark-placeholder"
                                   placeholder="Search KODE KBLI"
                                   v-model="searchQuery"
                                   aria-label="Search KODE KBLI"
-                                  style="placecolor: black;"
+                                  style="placecolor: black"
                                 />
                               </div>
                               <select class="form-control" v-model="kodekbli">

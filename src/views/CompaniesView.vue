@@ -17,18 +17,22 @@ const title = computed(() => {
 
 const companies = ref([])
 
-watch(() => route.query.status, async (latest, _) => {
-  const loader = $loading.show()
-  try {
-    companies.value = await getCompanies({
-      status: latest?.toUpperCase()
-    })
-  } catch (e) {
-    console.error(e)
-  } finally {
-    loader.hide()
-  }
-}, {immediate: true})
+watch(
+  () => route.query.status,
+  async (latest, _) => {
+    const loader = $loading.show()
+    try {
+      companies.value = await getCompanies({
+        status: latest?.toUpperCase(),
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>

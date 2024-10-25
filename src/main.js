@@ -31,7 +31,6 @@ import '@/assets/plugins/sweetalert/sweetalerts.min.js'
 import '@/assets/js/admin.js'
 import '@fortawesome/fontawesome-free/css/all.css'
 
-
 import 'vue-loading-overlay/dist/css/index.css'
 
 import { createApp } from 'vue'
