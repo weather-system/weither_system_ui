@@ -102,6 +102,13 @@ ul {
 .table > :not(:first-child) {
   border-top: 0;
 }
+.login-pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
 label {
   display: inline-block;
   margin-bottom: 0.5rem;
