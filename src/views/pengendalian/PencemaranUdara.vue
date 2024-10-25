@@ -3,8 +3,20 @@ import { ref } from 'vue'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const udaraData = ref([
-  { id: 1, lokasi: 'Jakarta', kualitas: 'Buruk', parameter: 'PM2.5, NO2', tanggal: '2024-10-22' },
-  { id: 2, lokasi: 'Bandung', kualitas: 'Sedang', parameter: 'CO, SO2', tanggal: '2024-10-23' },
+  {
+    id: 1,
+    lokasi: 'Jakarta',
+    kualitas: 'Buruk',
+    parameter: 'PM2.5, NO2',
+    tanggal: '2024-10-22',
+  },
+  {
+    id: 2,
+    lokasi: 'Bandung',
+    kualitas: 'Sedang',
+    parameter: 'CO, SO2',
+    tanggal: '2024-10-23',
+  },
 ])
 </script>
 
@@ -31,12 +43,20 @@ const udaraData = ref([
                   <ul>
                     <li>
                       <a href="javascript:void(0);" class="filter-sets">
-                        <img src="@/assets/img/icons/filter1.svg" class="me-2" alt="img" />Filter
+                        <img
+                          src="@/assets/img/icons/filter1.svg"
+                          class="me-2"
+                          alt="img"
+                        />Filter
                       </a>
                     </li>
                     <li>
                       <span>
-                        <img src="@/assets/img/icons/sort.svg" class="me-2" alt="img" />
+                        <img
+                          src="@/assets/img/icons/sort.svg"
+                          class="me-2"
+                          alt="img"
+                        />
                       </span>
                       <div class="review-sort">
                         <select class="select">
@@ -89,7 +109,8 @@ const udaraData = ref([
   width: 100%;
   border-collapse: collapse;
 }
-.table th, .table td {
+.table th,
+.table td {
   padding: 10px;
   text-align: left;
   border: 1px solid #ddd;

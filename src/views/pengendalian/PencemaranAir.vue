@@ -1,10 +1,22 @@
 <script setup>
 import { ref } from 'vue'
-import MainWrapper from '@/components/MainWrapper.vue'  // Import MainWrapper
+import MainWrapper from '@/components/MainWrapper.vue' // Import MainWrapper
 
 const airData = ref([
-  { id: 1, lokasi: 'Danau Toba', kualitas: 'Baik', parameter: 'pH, DO', tanggal: '2024-10-20' },
-  { id: 2, lokasi: 'Sungai Citarum', kualitas: 'Buruk', parameter: 'BOD, COD', tanggal: '2024-10-21' },
+  {
+    id: 1,
+    lokasi: 'Danau Toba',
+    kualitas: 'Baik',
+    parameter: 'pH, DO',
+    tanggal: '2024-10-20',
+  },
+  {
+    id: 2,
+    lokasi: 'Sungai Citarum',
+    kualitas: 'Buruk',
+    parameter: 'BOD, COD',
+    tanggal: '2024-10-21',
+  },
 ])
 </script>
 
@@ -26,7 +38,11 @@ const airData = ref([
                   <ul>
                     <li>
                       <a href="javascript:void(0);" class="filter-sets">
-                        <img src="@/assets/img/icons/filter1.svg" class="me-2" alt="img" />Filter
+                        <img
+                          src="@/assets/img/icons/filter1.svg"
+                          class="me-2"
+                          alt="img"
+                        />Filter
                       </a>
                     </li>
                   </ul>
@@ -68,7 +84,8 @@ const airData = ref([
   width: 100%;
   border-collapse: collapse;
 }
-.table th, .table td {
+.table th,
+.table td {
   padding: 10px;
   text-align: left;
   border: 1px solid #ddd;

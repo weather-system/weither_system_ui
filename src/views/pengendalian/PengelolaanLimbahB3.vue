@@ -3,8 +3,18 @@ import { ref } from 'vue'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const limbahData = ref([
-  { id: 1, perusahaan: 'PT. Kimia Farma', jenis: 'Limbah B3 Padat', tanggal: '2024-10-20' },
-  { id: 2, perusahaan: 'PT. Indofood', jenis: 'Limbah B3 Cair', tanggal: '2024-10-21' },
+  {
+    id: 1,
+    perusahaan: 'PT. Kimia Farma',
+    jenis: 'Limbah B3 Padat',
+    tanggal: '2024-10-20',
+  },
+  {
+    id: 2,
+    perusahaan: 'PT. Indofood',
+    jenis: 'Limbah B3 Cair',
+    tanggal: '2024-10-21',
+  },
 ])
 </script>
 
@@ -31,12 +41,20 @@ const limbahData = ref([
                   <ul>
                     <li>
                       <a href="javascript:void(0);" class="filter-sets">
-                        <img src="@/assets/img/icons/filter1.svg" class="me-2" alt="img" />Filter
+                        <img
+                          src="@/assets/img/icons/filter1.svg"
+                          class="me-2"
+                          alt="img"
+                        />Filter
                       </a>
                     </li>
                     <li>
                       <span>
-                        <img src="@/assets/img/icons/sort.svg" class="me-2" alt="img" />
+                        <img
+                          src="@/assets/img/icons/sort.svg"
+                          class="me-2"
+                          alt="img"
+                        />
                       </span>
                       <div class="review-sort">
                         <select class="select">
@@ -87,7 +105,8 @@ const limbahData = ref([
   width: 100%;
   border-collapse: collapse;
 }
-.table th, .table td {
+.table th,
+.table td {
   padding: 10px;
   text-align: left;
   border: 1px solid #ddd;

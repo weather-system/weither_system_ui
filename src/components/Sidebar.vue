@@ -9,10 +9,9 @@ const isTiketOpen = ref(false)
 
 // Function to toggle the visibility of the submenus
 const togglePengendalian = () => {
-  console.log("Pengendalian clicked"); // Debugging log
-  isPengendalianOpen.value = !isPengendalianOpen.value;
-};
-
+  console.log('Pengendalian clicked') // Debugging log
+  isPengendalianOpen.value = !isPengendalianOpen.value
+}
 
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
@@ -88,9 +87,21 @@ const toggleTiket = () => {
             </a>
             <transition name="slide-fade">
               <ul v-if="isPengendalianOpen" class="submenu d-block ms-4">
-                <li><router-link to="/pengendalian/air">Pencemaran Air</router-link></li>
-                <li><router-link to="/pengendalian/udara">Pencemaran Udara</router-link></li>
-                <li><router-link to="/pengendalian/limbah-b3">Pengelolaan Limbah B3</router-link></li>
+                <li>
+                  <router-link to="/pengendalian/air"
+                    >Pencemaran Air</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/pengendalian/udara"
+                    >Pencemaran Udara</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/pengendalian/limbah-b3"
+                    >Pengelolaan Limbah B3</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>
@@ -110,9 +121,19 @@ const toggleTiket = () => {
             </a>
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
-                <li><router-link to="/logbook/produksi">Produksi Senyatanya</router-link</li>
-                <li><router-link to="/logbook/kimia">Pemakaian Bahan Kimia</router-link</li>
-                <li><router-link to="/logbook/air">Pemakaian Air</router-link</li>
+                <li>
+                  <router-link to="/logbook/produksi"
+                    >Produksi Senyatanya</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/kimia"
+                    >Pemakaian Bahan Kimia</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/air">Pemakaian Air</router-link>
+                </li>
                 <li><a href="sub-service1.html">Debit Outlet IPAL</a></li>
                 <li><a href="sub-service1.html">Debit Pemakaian Air</a></li>
                 <li><a href="sub-service1.html">IPAL</a></li>
@@ -137,8 +158,16 @@ const toggleTiket = () => {
             </a>
             <transition name="slide-fade">
               <ul v-if="isImportLogbookOpen" class="submenu d-block ms-4">
-                <li><router-link to="/import-logbook/ipal">Logbook IPAL</router-link></li>
-                <li><router-link to="/import-logbook/limbah-b3">Logbook Limbah B3</router-link></li>
+                <li>
+                  <router-link to="/import-logbook/ipal"
+                    >Logbook IPAL</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/import-logbook/limbah-b3"
+                    >Logbook Limbah B3</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>
@@ -158,8 +187,16 @@ const toggleTiket = () => {
             </a>
             <transition name="slide-fade">
               <ul v-if="isTiketOpen" class="submenu d-block ms-4">
-                <li><router-link to="/tiket/pengaduan">Daftar Pengaduan</router-link></li>
-                <li><router-link to="/tiket/pengaduan-baru">Pengaduan</router-link></li>
+                <li>
+                  <router-link to="/tiket/pengaduan"
+                    >Daftar Pengaduan</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/tiket/pengaduan-baru"
+                    >Pengaduan</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>
@@ -168,4 +205,3 @@ const toggleTiket = () => {
     </div>
   </div>
 </template>
-
