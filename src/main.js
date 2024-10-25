@@ -29,6 +29,7 @@ import '@/assets/js/jvectormap.js'
 import '@/assets/plugins/sweetalert/sweetalert2.all.min.js'
 import '@/assets/plugins/sweetalert/sweetalerts.min.js'
 import '@/assets/js/admin.js'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 import 'vue-loading-overlay/dist/css/index.css'
 
