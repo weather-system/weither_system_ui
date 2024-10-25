@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 import { login, me } from '@/lib/auth.js'
@@ -104,7 +104,7 @@ const submit = async e => {
                 >
                 <span
                   >Belum punya akun perusahaan?
-                  <a href="sign-up.html" class="signup-link">Sign Up</a>
+                  <RouterLink to="/RegisterCompany" class="signup-link">Sign Up</RouterLink>
                 </span>
               </div>
             </div>

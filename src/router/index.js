@@ -40,7 +40,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  if (to.path === '/Login') {
+  if (to.path === '/Login' || to.path === '/RegisterCompany') {
     next()
     return
   }
