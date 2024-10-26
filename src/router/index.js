@@ -36,7 +36,6 @@ const router = createRouter({
       name: 'CompaniesView',
       component: () => import('@/views/CompaniesView.vue'),
     },
-<<<<<<< HEAD
     {
       path: '/ProfileEdit',
       name: 'ProfileVEditiew',
@@ -46,23 +45,6 @@ const router = createRouter({
       path: '/Profile',
       name: 'ProfileView',
       component: () => import('@/views/ProfileView.vue'),
-=======
-    // Rute baru untuk pengendalian pencemaran dan limbah
-    {
-      path: '/pengendalian/air',
-      name: 'PencemaranAir',
-      component: () => import('@/views/pengendalian/PencemaranAir.vue'),
-    },
-    {
-      path: '/pengendalian/udara',
-      name: 'PencemaranUdara',
-      component: () => import('@/views/pengendalian/PencemaranUdara.vue'),
-    },
-    {
-      path: '/pengendalian/limbah-b3',
-      name: 'PengelolaanLimbahB3',
-      component: () => import('@/views/pengendalian/PengelolaanLimbahB3.vue'),
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
     },
   ],
 })

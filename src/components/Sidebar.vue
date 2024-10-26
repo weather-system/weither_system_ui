@@ -37,23 +37,11 @@ const toggleTiket = () => {
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-<<<<<<< HEAD
         <a href="index.html">
           <img src="@/assets/img/dlh2.png" class="img-fluid logo" alt="" />
         </a>
         <a href="index.html">
           <img src="@/assets/img/dlh2.png" class="img-fluid logo-small" alt="" />
-=======
-        <a href="/">
-          <img src="@/assets/img/logo.svg" class="img-fluid logo" alt="" />
-        </a>
-        <a href="/">
-          <img
-            src="@/assets/img/logo-small.svg"
-            class="img-fluid logo-small"
-            alt=""
-          />
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
         </a>
       </div>
       <div class="siderbar-toggle">
@@ -71,25 +59,15 @@ const toggleTiket = () => {
             <h6>Home</h6>
           </li>
           <li>
-<<<<<<< HEAD
             <a href="index.html" class="active">
               <i class="fas fa-tachometer-alt"></i>
-=======
-            <router-link to="/" class="active">
-              <i class="fas fa-tachometer-alt"></i>
-              <!-- Dashboard Icon -->
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
               <span>Dashboard</span>
-            </router-link>
+            </a>
           </li>
 
           <li>
             <a href="javascript:void(0);" @click="togglePengendalian">
               <i class="fas fa-cogs"></i>
-<<<<<<< HEAD
-=======
-              <!-- Pengendalian Icon -->
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
               <span>Pengendalian</span>
               <i
                 class="fe"
@@ -123,10 +101,6 @@ const toggleTiket = () => {
           <li>
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
-<<<<<<< HEAD
-=======
-              <!-- Logbook Icon -->
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
               <span>Logbook</span>
               <i
                 class="fe"
@@ -162,12 +136,7 @@ const toggleTiket = () => {
 
           <li>
             <a href="javascript:void(0);" @click="toggleImportLogbook">
-<<<<<<< HEAD
               <i class="fas fa-file-import"></i> 
-=======
-              <i class="fas fa-file-import"></i>
-              <!-- Import Logbook Icon -->
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
               <span>Import Logbook</span>
               <i
                 class="fe"
@@ -195,12 +164,7 @@ const toggleTiket = () => {
 
           <li>
             <a href="javascript:void(0);" @click="toggleTiket">
-<<<<<<< HEAD
               <i class="fas fa-ticket-alt"></i> 
-=======
-              <i class="fas fa-ticket-alt"></i>
-              <!-- Tiket Icon -->
->>>>>>> 6e054a38ca999e4fcfb8a7bad2bc354f10049665
               <span>Tiket</span>
               <i
                 class="fe"
