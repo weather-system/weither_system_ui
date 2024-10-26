@@ -1,49 +1,40 @@
 <script setup>
-import axios from 'axios';
-import MainWrapper from '@/components/MainWrapper.vue';
-import { ref, watch, computed } from 'vue';
+import axios from 'axios'
+import MainWrapper from '@/components/MainWrapper.vue'
+import { ref, watch, computed } from 'vue'
 
-const searchQuery = ref('');
+const searchQuery = ref('')
 const kbliOptions = {
   ABC00909: 'test',
-  ABC00910: 'example', // Add more mappings as needed
-};
+  ABC00910: 'example',
+}
 
 const filteredKbliOptions = computed(() => {
-  if (!searchQuery.value) return kbliOptions; // Return all options if no search query
+  if (!searchQuery.value) return kbliOptions
   return Object.entries(kbliOptions)
-    .filter(([key]) => key.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .filter(([key]) =>
+      key.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    )
     .reduce((obj, [key, value]) => {
-      obj[key] = value;
-      return obj;
-    }, {});
-});
+      obj[key] = value
+      return obj
+    }, {})
+})
 
-const npwp = ref('');
+const npwp = ref('')
 const formatNpwp = () => {
-  let cleaned = npwp.value.replace(/\D/g, '').slice(0, 15);
-  let formatted = '';
+  let cleaned = formData.value.npwp.replace(/\D/g, '').slice(0, 15)
+  let formatted = ''
 
   for (let i = 0; i < cleaned.length; i++) {
-    if (i === 2 || i === 5 || i === 8 || i === 9 || i === 12 || i === 15) {
-      formatted += '.';
+    if (i === 2 || i === 5 || i === 8 || i === 9 || i === 12) {
+      formatted += '.'
     }
-    formatted += cleaned[i];
+    formatted += cleaned[i]
   }
 
-  npwp.value = formatted;
-};
-
-const ipalStatus = ref('');
-const ipalType = ref('');
-const cerobongStatus = ref('');
-const gensetStatus = ref('');
-const sumberOptions = ref({
-  dalam: false,
-  resapan: false,
-  imbuhan: false,
-  biopori: false,
-});
+  formData.value.npwp = formatted
+}
 
 const formData = ref({
   npwp: '',
@@ -52,7 +43,7 @@ const formData = ref({
   production_capacity: '',
   employees_total: '',
   land_area: '',
-  any_ipal: '', // Ensure this is bound to an input
+  any_ipal: '',
   ipal_total: null,
   ipal_type: '',
   any_wells: '',
@@ -61,16 +52,15 @@ const formData = ref({
   tpsb3_total: null,
   any_genset: '',
   genset_total: null,
-  source: '',
+  source: [],
   pic_name: '',
   shift_count: '',
   building_area: '',
   green_open_space_area: '',
-});
+})
 
-const message = ref('');
+const message = ref('')
 
-// Validation function
 const validateForm = () => {
   const requiredFields = [
     'npwp',
@@ -79,30 +69,44 @@ const validateForm = () => {
     'production_capacity',
     'employees_total',
     'land_area',
-    'any_ipal', // Include required fields here
-  ];
+    'any_ipal',
+  ]
 
   for (const field of requiredFields) {
     if (!formData.value[field]) {
-      return false; // If any required field is empty, return false
+      return false
     }
   }
-  return true; // All required fields are filled
-};
+  return true
+}
 
 const submitForm = async () => {
   if (!validateForm()) {
-    message.value = 'Silakan lengkapi semua kolom yang wajib diisi.'; // Inform the user
-    return;
+    message.value = 'Silakan lengkapi semua kolom yang wajib diisi.'
+    return
   }
-
+  const token = localStorage.getItem('TOKEN')
+  console.log(token)
+  if (!token) {
+    message.value = 'Token tidak tersedia. Silakan login ulang.'
+    return
+  }
   try {
-    const response = await axios.post('http://localhost:8000/api/companies/details', formData.value, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Adjust your authentication token
+    const selectedSources = formData.value.source.join(', ')
+    const response = await axios.post(
+      'http://localhost:8000/api/companies/details',
+      {
+        ...formData.value,
+        source: selectedSources,
       },
-    });
-    message.value = response.data.message;
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('TOKEN')}`,
+        },
+      },
+    )
+    message.value = response.data.message
+
     Object.assign(formData.value, {
       npwp: '',
       local_npwp: '',
@@ -124,24 +128,25 @@ const submitForm = async () => {
       shift_count: '',
       building_area: '',
       green_open_space_area: '',
-    }); // Reset form after successful submission
+    })
   } catch (error) {
-    console.error(error);
+    console.error(error)
     if (error.response && error.response.data) {
-      message.value = error.response.data.message || 'Terjadi kesalahan saat menyimpan.';
+      message.value =
+        error.response.data.message || 'Terjadi kesalahan saat menyimpan.'
     } else {
-      message.value = 'Terjadi kesalahan saat menyimpan.';
+      message.value = 'Terjadi kesalahan saat menyimpan.'
     }
   }
-};
+}
 
-const kodekbli = ref('');
-const kodeJudul = ref('');
-watch(kodekbli, (newValue) => {
-  kodeJudul.value = kbliOptions[newValue] || ''; // Set the corresponding Nama
-});
+const kodekbli = ref('')
+const kodeJudul = ref('')
+watch(kodekbli, newValue => {
+  kodeJudul.value = kbliOptions[newValue] || ''
+})
+console.log(localStorage.getItem('token'))
 </script>
-
 
 <template>
   <MainWrapper>
@@ -415,14 +420,20 @@ watch(kodekbli, (newValue) => {
                           <div class="col-md-4">
                             <div class="form-group">
                               <label class="col-form-label">IPAL</label>
-                              <select class="form-control" v-model="formData.any_ipal">
+                              <select
+                                class="form-control"
+                                v-model="formData.any_ipal"
+                              >
                                 <option value="">Pilih Status IPAL</option>
                                 <option value="Ada">Ada</option>
                                 <option value="Tidak Ada">Tidak Ada</option>
                               </select>
                             </div>
                           </div>
-                          <div class="col-md-4" v-if="formData.any_ipal === 'Ada'">
+                          <div
+                            class="col-md-4"
+                            v-if="formData.any_ipal === 'Ada'"
+                          >
                             <div class="form-group">
                               <label class="col-form-label">Jumlah IPAL</label>
                               <input
@@ -433,7 +444,10 @@ watch(kodekbli, (newValue) => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-4" v-if="formData.any_ipal === 'Ada'">
+                          <div
+                            class="col-md-4"
+                            v-if="formData.any_ipal === 'Ada'"
+                          >
                             <div class="form-group">
                               <label class="col-form-label">Jenis IPAL</label>
                               <select class="form-control" v-model="ipalType">
@@ -461,7 +475,10 @@ watch(kodekbli, (newValue) => {
                               </select>
                             </div>
                           </div>
-                          <div class="col-md-4" v-if="formData.any_wells === 'Ada'">
+                          <div
+                            class="col-md-4"
+                            v-if="formData.any_wells === 'Ada'"
+                          >
                             <div class="form-group">
                               <label class="col-form-label"
                                 >Jumlah Cerobong</label
@@ -491,7 +508,10 @@ watch(kodekbli, (newValue) => {
                               </select>
                             </div>
                           </div>
-                          <div class="col-md-4" v-if="formData.any_tpsb3 === 'Ada'">
+                          <div
+                            class="col-md-4"
+                            v-if="formData.any_tpsb3 === 'Ada'"
+                          >
                             <div class="form-group">
                               <label class="col-form-label">Jumlah TPSB3</label>
                               <input
@@ -519,7 +539,10 @@ watch(kodekbli, (newValue) => {
                               </select>
                             </div>
                           </div>
-                          <div class="col-md-4" v-if="formData.any_genset === 'Ada'">
+                          <div
+                            class="col-md-4"
+                            v-if="formData.any_genset === 'Ada'"
+                          >
                             <div class="form-group">
                               <label class="col-form-label"
                                 >Jumlah Genset</label
@@ -536,14 +559,42 @@ watch(kodekbli, (newValue) => {
                         <div class="row service-cont">
                           <div class="col-md-12">
                             <div class="form-group">
-                            <label class="col-form-label">Sumber</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Masukan Sumber"
-                              v-model="formData.source"
-                            />
-                          </div>
+                              <label class="col-form-label">Sumber</label>
+                              <div class="d-flex flex-wrap">
+                                <div class="form-check me-3">
+                                  <input
+                                    type="checkbox"
+                                    value="dalam"
+                                    v-model="formData.source"
+                                  />
+                                  Dalam
+                                </div>
+                                <div class="form-check me-3">
+                                  <input
+                                    type="checkbox"
+                                    value="resapan"
+                                    v-model="formData.source"
+                                  />
+                                  Resapan
+                                </div>
+                                <div class="form-check me-3">
+                                  <input
+                                    type="checkbox"
+                                    value="imbuhan"
+                                    v-model="formData.source"
+                                  />
+                                  Imbuhan
+                                </div>
+                                <div class="form-check me-3">
+                                  <input
+                                    type="checkbox"
+                                    value="biopori"
+                                    v-model="formData.source"
+                                  />
+                                  Biopori
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <div class="col-md-12">
