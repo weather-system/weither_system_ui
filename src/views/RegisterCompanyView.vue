@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
+import Swal from 'sweetalert2'
 import { registerCompany } from '@/lib/company.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
@@ -38,7 +39,15 @@ const submit = async e => {
   const loader = $loading.show()
   try {
     const data = await registerCompany({ ...formDataObj, nib: urlNIB.value })
-    router.push('/Login')
+    // SweetAlert success message
+    Swal.fire({
+      title: 'Registrasi Berhasil!',
+      text: 'Akun perusahaan Anda telah terdaftar.',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      router.push('/Login')
+    })
   } catch (e) {
     console.error(e)
   } finally {
@@ -171,12 +180,12 @@ const submit = async e => {
                     />
                   </div>
                   <div class="col-12">
-                    <label class="form-label">Nomer Kontak</label>
+                    <label class="form-label">Nomor Kontak</label>
                     <input
                       name="contact_person"
                       type="text"
                       class="form-control"
-                      placeholder="Masukkan Nomer Kontak"
+                      placeholder="Masukkan Nomor Kontak"
                     />
                   </div>
                   <div class="col-md-6">
