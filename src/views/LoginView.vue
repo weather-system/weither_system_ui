@@ -104,7 +104,9 @@ const submit = async e => {
                 >
                 <span
                   >Belum punya akun perusahaan?
-                  <RouterLink to="/RegisterCompany" class="signup-link">Sign Up</RouterLink>
+                  <RouterLink to="/RegisterCompany" class="signup-link"
+                    >Sign Up</RouterLink
+                  >
                 </span>
               </div>
             </div>

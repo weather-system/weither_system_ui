@@ -1,49 +1,101 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
+import {
+  getCompanies,
+  updateCompanyStatus,
+  fetchCompanies,
+} from '@/lib/company.js'
+import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 
+const $loading = useLoading()
 const route = useRoute()
 const title = computed(() => {
   let ret = 'Semua Perusahaan'
-  if (route.query.status === 'pending') ret = 'Pending Perusahaan'
+  if (route.query.status === 'pending') ret = 'Perusahaan Pending'
   if (route.query.status === 'ditolak') ret = 'Perusahaan Ditolak'
   if (route.query.status === 'diterima') ret = 'Perusahaan Diterima'
   return ret
 })
 
-const companies = ref([
-  {
-    id: 1,
-    name: 'PT. Muhammad Azhari',
-    address: 'Jalan Dago',
-    nib: '123123123123123',
-    company_phone_number: '12392032',
-    charge_phone_number: '089560123123',
-    status: 'Pending',
-    created_by: 'M. Azhari',
+const companies = ref([])
+
+const acceptCompany = async id => {
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: 'Perusahaan akan diterima!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Terima',
+    cancelButtonText: 'Batal',
+  })
+
+  if (result.isConfirmed) {
+    const loader = $loading.show()
+    try {
+      await updateCompanyStatus(id, 'accept')
+      companies.value = companies.value.map(company =>
+        company.id === id ? { ...company, status: 'DITERIMA' } : company,
+      )
+      Swal.fire('Berhasil!', 'Perusahaan telah diterima.', 'success')
+    } catch (e) {
+      console.error(e)
+      Swal.fire(
+        'Gagal!',
+        'Terjadi kesalahan saat menerima perusahaan.',
+        'error',
+      )
+    } finally {
+      loader.hide()
+    }
+  }
+}
+
+const rejectCompany = async id => {
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: 'Perusahaan akan ditolak!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Tolak',
+    cancelButtonText: 'Batal',
+  })
+
+  if (result.isConfirmed) {
+    const loader = $loading.show()
+    try {
+      await updateCompanyStatus(id, 'reject')
+      companies.value = companies.value.map(company =>
+        company.id === id ? { ...company, status: 'DITOLAK' } : company,
+      )
+      Swal.fire('Berhasil!', 'Perusahaan telah ditolak.', 'success')
+    } catch (e) {
+      console.error(e)
+      Swal.fire('Gagal!', 'Terjadi kesalahan saat menolak perusahaan.', 'error')
+    } finally {
+      loader.hide()
+    }
+  }
+}
+
+watch(
+  () => route.query.status,
+  async (latest, _) => {
+    const loader = $loading.show()
+    try {
+      companies.value = await getCompanies({
+        status: latest?.toUpperCase(),
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
   },
-  {
-    id: 2,
-    name: 'PT. Air Bersih',
-    address: 'Jalan Dipatiukur',
-    nib: '123123123123123',
-    company_phone_number: '12392032',
-    charge_phone_number: '089560123123',
-    status: 'Diterima',
-    created_by: 'Ramadika',
-  },
-  {
-    id: 3,
-    name: 'PT. Baik Hati',
-    address: 'Jalan Disitu',
-    nib: '123123123123123',
-    company_phone_number: '12392032',
-    charge_phone_number: '089560123123',
-    status: 'Ditolak',
-    created_by: 'Ardi',
-  },
-])
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -153,11 +205,10 @@ const companies = ref([
                   <tr>
                     <th>Nama</th>
                     <th>Alamat</th>
-                    <th>NIB</th>
-                    <th>Telp. Kantor</th>
-                    <th>Telp. Penanggung Jawab</th>
+                    <th>SKKL</th>
+                    <th>Nomer Kontak</th>
+                    <th>Penanggung Jawab</th>
                     <th>Status</th>
-                    <th>Dibuat Oleh</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -167,42 +218,37 @@ const companies = ref([
                       {{ company.name }}
                     </td>
                     <td>{{ company.address }}</td>
-                    <td>{{ company.nib }}</td>
-                    <td>{{ company.company_phone_number }}</td>
-                    <td>{{ company.charge_phone_number }}</td>
+                    <td>{{ company.no_skkl }}</td>
+                    <td>{{ company.contact_person }}</td>
+                    <td>{{ company.in_charge_ukl_upl }}</td>
                     <td>
                       <h6
                         :class="{
-                          'badge-pending': company.status === 'Pending',
-                          'badge-active': company.status === 'Diterima',
-                          'badge-delete': company.status === 'Ditolak',
+                          'badge-pending': company.status === 'PENDING',
+                          'badge-active': company.status === 'DITERIMA',
+                          'badge-delete': company.status === 'DITOLAK',
                         }"
                       >
                         {{ company.status }}
                       </h6>
                     </td>
-                    <td>{{ company.created_by }}</td>
                     <td>
                       <div class="table-actions d-flex">
-                        <a
-                          class="btn btn-primary me-2"
-                          href="edit-service.html"
+                        <a class="btn btn-primary me-2" href="edit-service.html"
+                          >Detail</a
                         >
-                          Detail
-                        </a>
                         <a
-                          v-if="company.status === 'Pending'"
+                          v-if="company.status === 'PENDING'"
+                          @click.prevent="acceptCompany(company.id)"
                           class="btn btn-success me-2"
-                          href="edit-service.html"
                         >
                           Terima
                         </a>
                         <a
-                          v-if="company.status === 'Pending'"
+                          v-if="company.status === 'PENDING'"
+                          @click.prevent="rejectCompany(company.id)"
                           class="btn btn-danger"
                           href="javascript:void(0);"
-                          data-bs-toggle="modal"
-                          data-bs-target="#delete-item"
                         >
                           Tolak
                         </a>
