@@ -2,7 +2,12 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { getCompanies } from '@/lib/company.js'
+import {
+  getCompanies,
+  updateCompanyStatus,
+  fetchCompanies,
+} from '@/lib/company.js'
+import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
@@ -16,6 +21,64 @@ const title = computed(() => {
 })
 
 const companies = ref([])
+
+const acceptCompany = async id => {
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: 'Perusahaan akan diterima!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Terima',
+    cancelButtonText: 'Batal',
+  })
+
+  if (result.isConfirmed) {
+    const loader = $loading.show()
+    try {
+      await updateCompanyStatus(id, 'accept')
+      companies.value = companies.value.map(company =>
+        company.id === id ? { ...company, status: 'DITERIMA' } : company,
+      )
+      Swal.fire('Berhasil!', 'Perusahaan telah diterima.', 'success')
+    } catch (e) {
+      console.error(e)
+      Swal.fire(
+        'Gagal!',
+        'Terjadi kesalahan saat menerima perusahaan.',
+        'error',
+      )
+    } finally {
+      loader.hide()
+    }
+  }
+}
+
+const rejectCompany = async id => {
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: 'Perusahaan akan ditolak!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Tolak',
+    cancelButtonText: 'Batal',
+  })
+
+  if (result.isConfirmed) {
+    const loader = $loading.show()
+    try {
+      await updateCompanyStatus(id, 'reject')
+      companies.value = companies.value.map(company =>
+        company.id === id ? { ...company, status: 'DITOLAK' } : company,
+      )
+      Swal.fire('Berhasil!', 'Perusahaan telah ditolak.', 'success')
+    } catch (e) {
+      console.error(e)
+      Swal.fire('Gagal!', 'Terjadi kesalahan saat menolak perusahaan.', 'error')
+    } finally {
+      loader.hide()
+    }
+  }
+}
 
 watch(
   () => route.query.status,
@@ -171,25 +234,21 @@ watch(
                     </td>
                     <td>
                       <div class="table-actions d-flex">
-                        <a
-                          class="btn btn-primary me-2"
-                          href="edit-service.html"
+                        <a class="btn btn-primary me-2" href="edit-service.html"
+                          >Detail</a
                         >
-                          Detail
-                        </a>
                         <a
                           v-if="company.status === 'PENDING'"
+                          @click.prevent="acceptCompany(company.id)"
                           class="btn btn-success me-2"
-                          href="edit-service.html"
                         >
                           Terima
                         </a>
                         <a
                           v-if="company.status === 'PENDING'"
+                          @click.prevent="rejectCompany(company.id)"
                           class="btn btn-danger"
                           href="javascript:void(0);"
-                          data-bs-toggle="modal"
-                          data-bs-target="#delete-item"
                         >
                           Tolak
                         </a>
