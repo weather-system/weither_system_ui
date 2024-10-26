@@ -36,6 +36,15 @@ const router = createRouter({
       name: 'CompaniesView',
       component: () => import('@/views/CompaniesView.vue'),
     },
+    {
+      path: '/ProfileEdit',
+      name: 'ProfileVEditiew',
+      component: () => import('@/views/ProfileEditView.vue'),
+    },
+    {
+      path: '/Profile',
+      name: 'ProfileView',
+      component: () => import('@/views/ProfileView.vue'),
     // Rute baru untuk pengendalian pencemaran dan limbah
     {
       path: '/pengendalian/air',

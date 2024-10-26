@@ -1,13 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 
-// Reactive variables to control the submenu visibility
 const isPengendalianOpen = ref(false)
 const isLogbookOpen = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
 
-// Function to toggle the visibility of the submenus
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
   isPengendalianOpen.value = !isPengendalianOpen.value
@@ -39,15 +37,11 @@ const toggleTiket = () => {
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-        <a href="/">
-          <img src="@/assets/img/logo.svg" class="img-fluid logo" alt="" />
+        <a href="index.html">
+          <img src="@/assets/img/dlh2.png" class="img-fluid logo" alt="" />
         </a>
-        <a href="/">
-          <img
-            src="@/assets/img/logo-small.svg"
-            class="img-fluid logo-small"
-            alt=""
-          />
+        <a href="index.html">
+          <img src="@/assets/img/dlh2.png" class="img-fluid logo-small" alt="" />
         </a>
       </div>
       <div class="siderbar-toggle">
@@ -75,7 +69,9 @@ const toggleTiket = () => {
           <li>
             <a href="javascript:void(0);" @click="togglePengendalian">
               <i class="fas fa-cogs"></i>
+
               <!-- Pengendalian Icon -->
+
               <span>Pengendalian</span>
               <i
                 class="fe"
@@ -109,7 +105,6 @@ const toggleTiket = () => {
           <li>
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
-              <!-- Logbook Icon -->
               <span>Logbook</span>
               <i
                 class="fe"
@@ -145,8 +140,7 @@ const toggleTiket = () => {
 
           <li>
             <a href="javascript:void(0);" @click="toggleImportLogbook">
-              <i class="fas fa-file-import"></i>
-              <!-- Import Logbook Icon -->
+              <i class="fas fa-file-import"></i> 
               <span>Import Logbook</span>
               <i
                 class="fe"
@@ -174,8 +168,7 @@ const toggleTiket = () => {
 
           <li>
             <a href="javascript:void(0);" @click="toggleTiket">
-              <i class="fas fa-ticket-alt"></i>
-              <!-- Tiket Icon -->
+              <i class="fas fa-ticket-alt"></i> 
               <span>Tiket</span>
               <i
                 class="fe"
