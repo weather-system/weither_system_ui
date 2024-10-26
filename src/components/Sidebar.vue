@@ -1,13 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 
-// Reactive variables to control the submenu visibility
 const isPengendalianOpen = ref(false)
 const isLogbookOpen = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
 
-// Function to toggle the visibility of the submenus
 const togglePengendalian = () => {
   isPengendalianOpen.value = !isPengendalianOpen.value
   isLogbookOpen.value = false
@@ -42,10 +40,10 @@ const toggleTiket = () => {
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <a href="index.html">
-          <img src="@/assets/img/logo.svg" class="img-fluid logo" alt="" />
+          <img src="@/assets/img/dlh2.png" class="img-fluid logo" alt="" />
         </a>
         <a href="index.html">
-          <img src="@/assets/img/logo-small.svg" class="img-fluid logo-small" alt="" />
+          <img src="@/assets/img/dlh2.png" class="img-fluid logo-small" alt="" />
         </a>
       </div>
       <div class="siderbar-toggle">
@@ -64,13 +62,13 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="index.html" class="active">
-              <i class="fas fa-tachometer-alt"></i> <!-- Dashboard Icon -->
+              <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
             </a>
           </li>
           <li>
             <a href="javascript:void(0);" @click="togglePengendalian">
-              <i class="fas fa-cogs"></i> <!-- Pengendalian Icon -->
+              <i class="fas fa-cogs"></i>
               <span>Pengendalian</span>
               <i class="fe" :class="{'fe-chevron-down': !isPengendalianOpen, 'fe-chevron-up': isPengendalianOpen}"></i>
             </a>
@@ -84,7 +82,7 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleLogbook">
-              <i class="fas fa-book"></i> <!-- Logbook Icon -->
+              <i class="fas fa-book"></i>
               <span>Logbook</span>
               <i class="fe" :class="{'fe-chevron-down': !isLogbookOpen, 'fe-chevron-up': isLogbookOpen}"></i>
             </a>
@@ -103,7 +101,7 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleImportLogbook">
-              <i class="fas fa-file-import"></i> <!-- Import Logbook Icon -->
+              <i class="fas fa-file-import"></i> 
               <span>Import Logbook</span>
               <i class="fe" :class="{'fe-chevron-down': !isImportLogbookOpen, 'fe-chevron-up': isImportLogbookOpen}"></i>
             </a>
@@ -116,7 +114,7 @@ const toggleTiket = () => {
           </li>
           <li>
             <a href="javascript:void(0);" @click="toggleTiket">
-              <i class="fas fa-ticket-alt"></i> <!-- Tiket Icon -->
+              <i class="fas fa-ticket-alt"></i> 
               <span>Tiket</span>
               <i class="fe" :class="{'fe-chevron-down': !isTiketOpen, 'fe-chevron-up': isTiketOpen}"></i>
             </a>
