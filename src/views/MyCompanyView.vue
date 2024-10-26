@@ -148,7 +148,10 @@ watch(kodekbli, (newValue) => {
     <div class="page-wrapper">
       <div class="content">
         <div class="container">
-          <div class="row">
+          <div v-if="true" class="row">
+            <p>Sedang menunggu proses verifikasi perusahaan</p>
+          </div>
+          <div v-else class="row">
             <div class="col-md-12 col-lg-10 mx-auto">
               <h3 class="mb-5">Lengkapi seluruh persyaratan pendaftaran</h3>
 
