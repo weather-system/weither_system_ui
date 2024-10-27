@@ -9,6 +9,11 @@ export const getCompanies = async query => {
   return resp.data
 }
 
+export const getCompany = async id => {
+  const resp = await axios.get(`/api/companies/${id}`)
+  return resp.data
+}
+
 export const registerCompany = async data => {
   const resp = await axios.post('/api/company/registerCompany', data)
   return resp.data

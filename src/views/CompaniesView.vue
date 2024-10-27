@@ -234,8 +234,13 @@ watch(
                     </td>
                     <td>
                       <div class="table-actions d-flex">
-                        <a class="btn btn-primary me-2" href="edit-service.html"
-                          >Detail</a
+                        <RouterLink
+                          :to="{
+                            path: '/CompanyDetail',
+                            query: { id: company.id },
+                          }"
+                          class="btn btn-primary me-2"
+                          >Detail</RouterLink
                         >
                         <a
                           v-if="company.status === 'PENDING'"
