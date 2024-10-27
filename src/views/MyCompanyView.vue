@@ -6,6 +6,8 @@ import { logout as authLogout } from '@/lib/auth.js'
 import { useStore } from 'vuex'
 import { useLoading } from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
+
 const $loading = useLoading()
 const store = useStore()
 const router = useRouter()
@@ -101,15 +103,27 @@ const validateForm = () => {
 
 const submitForm = async () => {
   if (!validateForm()) {
-    message.value = 'Silakan lengkapi semua kolom yang wajib diisi.'
+    Swal.fire({
+      title: 'Data Tidak Lengkap!',
+      text: 'Silakan lengkapi semua kolom yang wajib diisi.',
+      icon: 'warning',
+      confirmButtonText: 'OK'
+    })
     return
   }
+
   const token = localStorage.getItem('TOKEN')
-  console.log(token)
   if (!token) {
-    message.value = 'Token tidak tersedia. Silakan login ulang.'
+    Swal.fire({
+      title: 'Token Tidak Tersedia!',
+      text: 'Silakan login ulang.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
     return
   }
+
+  const loader = $loading.show()
   try {
     const selectedSources = formData.value.source.join(', ')
     const response = await axios.post(
@@ -120,12 +134,19 @@ const submitForm = async () => {
       },
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('TOKEN')}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     )
-    message.value = response.data.message
 
+    Swal.fire({
+      title: 'Registrasi Berhasil!',
+      text: response.data.message || 'Data perusahaan telah berhasil disimpan.',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    })
+
+    // Reset form data
     Object.assign(formData.value, {
       npwp: '',
       local_npwp: '',
@@ -142,7 +163,7 @@ const submitForm = async () => {
       tpsb3_total: null,
       any_genset: '',
       genset_total: null,
-      source: '',
+      source: [],
       pic_name: '',
       shift_count: '',
       building_area: '',
@@ -150,12 +171,14 @@ const submitForm = async () => {
     })
   } catch (error) {
     console.error(error)
-    if (error.response && error.response.data) {
-      message.value =
-        error.response.data.message || 'Terjadi kesalahan saat menyimpan.'
-    } else {
-      message.value = 'Terjadi kesalahan saat menyimpan.'
-    }
+    Swal.fire({
+      title: 'Registrasi Gagal!',
+      text: error.response?.data?.message || 'Terjadi kesalahan saat menyimpan.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
+  } finally {
+    loader.hide()
   }
 }
 

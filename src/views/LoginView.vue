@@ -4,6 +4,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 import { login, me } from '@/lib/auth.js'
+import Swal from 'sweetalert2'
 
 const router = useRouter()
 const $loading = useLoading()
@@ -26,13 +27,28 @@ const submit = async e => {
       password: formData.get('password'),
     })
     const user = await me()
-    if (user.role === 'USER') {
-      router.push('/MyCompany')
-      return
-    }
-    router.push('/Companies')
+    
+    // SweetAlert sukses login
+    Swal.fire({
+      title: 'Login Berhasil!',
+      text: `Selamat datang, ${user.name || 'pengguna'}!`,
+      icon: 'success',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      if (user.role === 'USER') {
+        router.push('/MyCompany')
+      } else {
+        router.push('/Companies')
+      }
+    })
   } catch (e) {
-    alert('error login')
+    // SweetAlert gagal login
+    Swal.fire({
+      title: 'Login Gagal!',
+      text: 'Email atau password yang Anda masukkan salah. Silakan coba lagi.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
     console.error(e)
   } finally {
     loader.hide()

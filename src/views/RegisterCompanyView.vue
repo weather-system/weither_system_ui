@@ -39,6 +39,7 @@ const submit = async e => {
   const loader = $loading.show()
   try {
     const data = await registerCompany({ ...formDataObj, nib: urlNIB.value })
+    
     // SweetAlert success message
     Swal.fire({
       title: 'Registrasi Berhasil!',
@@ -50,10 +51,19 @@ const submit = async e => {
     })
   } catch (e) {
     console.error(e)
+    
+    // SweetAlert error message for registration failure
+    Swal.fire({
+      title: 'Registrasi Gagal!',
+      text: 'Terjadi kesalahan saat registrasi. Silakan coba lagi.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
   } finally {
     loader.hide()
   }
 }
+
 </script>
 
 <template>
