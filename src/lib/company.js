@@ -23,3 +23,8 @@ export const updateCompanyStatus = async (id, action) => {
   const url = `/api/companies/${id}/${action}`;
   await axios.put(url);
 };
+
+export const getMyCompany = async () => {
+  const resp = await axios.get('/api/companies/myCompany');
+  return resp.data
+}
