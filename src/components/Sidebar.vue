@@ -59,19 +59,15 @@ const toggleTiket = () => {
             <h6>Home</h6>
           </li>
           <li>
-            <router-link to="/" class="active">
+            <a href="index.html" class="active">
               <i class="fas fa-tachometer-alt"></i>
-              <!-- Dashboard Icon -->
               <span>Dashboard</span>
-            </router-link>
+            </a>
           </li>
 
           <li>
             <a href="javascript:void(0);" @click="togglePengendalian">
               <i class="fas fa-cogs"></i>
-
-              <!-- Pengendalian Icon -->
-
               <span>Pengendalian</span>
               <i
                 class="fe"
