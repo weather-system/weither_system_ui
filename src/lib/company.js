@@ -28,3 +28,8 @@ export const getUserStatus = async () => {
   const resp = await axios.get('/api/user/status')
   return resp.data
 }
+
+export const getMyCompany = async () => {
+  const resp = await axios.get('/api/companies/myCompany')
+  return resp.data
+}

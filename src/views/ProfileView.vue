@@ -1,6 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useLoading } from 'vue-loading-overlay'
+import { getMyCompany } from '@/lib/company.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+
+const store = useStore()
+const $loading = useLoading()
+
+const company = ref({})
 
 // Data reactive untuk menampung input form
 const profileData = ref({
@@ -20,6 +28,20 @@ const profileData = ref({
     'Jalan. PHH. Mustsofa No.4, RT. 10, RW. 09, KELURAHAN PASIRLAYUNG, KECAMATAN CIBEUNYING KIDUL',
   uklUplPIC: 'MUHAMAD RAMADIKA ARDIANSYAH',
   contactNumber: '081210638156',
+})
+
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    const data = await getMyCompany()
+    if (data) {
+      company.value = data
+    }
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
 })
 </script>
 
@@ -56,25 +78,25 @@ const profileData = ref({
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Name</label>
-              <p class="profile-new">{{ profileData.name }}</p>
+              <p class="profile-new">{{ store.state.auth.user.name }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>User Name</label>
-              <p class="profile-new">{{ profileData.username }}</p>
+              <p class="profile-new">{{ company.username }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Email</label>
-              <p class="profile-new">{{ profileData.email }}</p>
+              <p class="profile-new">{{ store.state.auth.user.email }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Mobile Number</label>
-              <p class="profile-new">{{ profileData.mobileNumber }}</p>
+              <p class="profile-new">{{ company.contact_person }}</p>
             </div>
           </div>
           <div class="col-lg-12">
@@ -91,60 +113,60 @@ const profileData = ref({
           </div>
           <div class="form-group">
             <label>Company Name</label>
-            <p class="profile-new">{{ profileData.companyName }}</p>
+            <p class="profile-new">{{ company.name }}</p>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>PKPLH / UKL UPL & DPLH</label>
-              <p class="profile-new">{{ profileData.pkplhNumber }}</p>
+              <p class="profile-new">{{ company.no_pkplh }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>SKKL / AMDAL / DELH</label>
-              <p class="profile-new">{{ profileData.skklNumber }}</p>
+              <p class="profile-new">{{ company.no_skkl }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label for="nibFile">NIB</label>
-              <p class="profile-new">{{ profileData.nibFile }}</p>
+              <p class="profile-new">{{ company.nib }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Activity Type</label>
-              <p class="profile-new">{{ profileData.activityType }}</p>
+              <p class="profile-new">{{ company.activity_type }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Nama Pimpinan</label>
-              <p class="profile-new">{{ profileData.leaderName }}</p>
+              <p class="profile-new">{{ company.leader_name }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Pemrakarsa</label>
-              <p class="profile-new">{{ profileData.proponent }}</p>
+              <p class="profile-new">{{ company.pemrakarsa }}</p>
             </div>
           </div>
           <div class="col-lg-12">
             <div class="form-group">
               <label>Address</label>
-              <p class="profile-new">{{ profileData.address }}</p>
+              <p class="profile-new">{{ company.address }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>UKL UPL Person In Charge</label>
-              <p class="profile-new">{{ profileData.uklUplPIC }}</p>
+              <p class="profile-new">{{ company.in_charge_ukl_upl }}</p>
             </div>
           </div>
           <div class="col-lg-6 col-12">
             <div class="form-group">
               <label>Contact Number</label>
-              <p class="profile-new">{{ profileData.contactNumber }}</p>
+              <p class="profile-new">{{ company.contact_person }}</p>
             </div>
           </div>
           <div class="col-lg-12">
