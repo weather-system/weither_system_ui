@@ -14,17 +14,17 @@ export const registerCompany = async data => {
   return resp.data
 }
 
-export const fetchCompanies = async (params) => {
-  const response = await axios.get('/api/companies', { params });
-  return response.data;
-};
+export const fetchCompanies = async params => {
+  const response = await axios.get('/api/companies', { params })
+  return response.data
+}
 
 export const updateCompanyStatus = async (id, action) => {
-  const url = `/api/companies/${id}/${action}`;
-  await axios.put(url);
-};
+  const url = `/api/companies/${id}/${action}`
+  await axios.put(url)
+}
 
-export const getMyCompany = async () => {
-  const resp = await axios.get('/api/companies/myCompany');
+export const getUserStatus = async () => {
+  const resp = await axios.get('/api/user/status')
   return resp.data
 }

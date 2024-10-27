@@ -21,12 +21,15 @@ export const logout = async () => {
   return resp.data
 }
 export const statusCompanies = async () => {
-  const response = await fetch('/api/status-companies', { method: 'PUT', headers: { 'Authorization': `Bearer ${yourToken}` } });
-  
+  const response = await fetch('/api/status-companies', {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${yourToken}` },
+  })
+
   if (!response.ok) {
-      throw new Error('Failed to fetch company status');
+    throw new Error('Failed to fetch company status')
   }
-  
-  const data = await response.json();
-  return data;
-};
+
+  const data = await response.json()
+  return data
+}

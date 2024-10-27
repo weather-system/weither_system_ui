@@ -1,5 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useLoading } from 'vue-loading-overlay'
+import { getUserStatus } from '@/lib/company.js'
+
+const $loading = useLoading()
+
+const isUserPending = ref(false)
 
 const isPengendalianOpen = ref(false)
 const isLogbookOpen = ref(false)
@@ -31,6 +37,20 @@ const toggleTiket = () => {
   isLogbookOpen.value = false
   isImportLogbookOpen.value = false
 }
+
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    const data = await getUserStatus()
+    if (data.status === 'PENDING') {
+      isUserPending.value = true
+    }
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+})
 </script>
 
 <template>
@@ -41,7 +61,11 @@ const toggleTiket = () => {
           <img src="@/assets/img/dlh2.png" class="img-fluid logo" alt="" />
         </a>
         <a href="index.html">
-          <img src="@/assets/img/dlh2.png" class="img-fluid logo-small" alt="" />
+          <img
+            src="@/assets/img/dlh2.png"
+            class="img-fluid logo-small"
+            alt=""
+          />
         </a>
       </div>
       <div class="siderbar-toggle">
@@ -59,13 +83,13 @@ const toggleTiket = () => {
             <h6>Home</h6>
           </li>
           <li>
-            <a href="index.html" class="active">
+            <router-link to="/MyCompany" class="active">
               <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
-            </a>
+            </router-link>
           </li>
 
-          <li>
+          <li v-if="!isUserPending">
             <a href="javascript:void(0);" @click="togglePengendalian">
               <i class="fas fa-cogs"></i>
               <span>Pengendalian</span>
@@ -98,7 +122,7 @@ const toggleTiket = () => {
             </transition>
           </li>
 
-          <li>
+          <li v-if="!isUserPending">
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -134,9 +158,9 @@ const toggleTiket = () => {
             </transition>
           </li>
 
-          <li>
+          <li v-if="!isUserPending">
             <a href="javascript:void(0);" @click="toggleImportLogbook">
-              <i class="fas fa-file-import"></i> 
+              <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
               <i
                 class="fe"
@@ -162,9 +186,9 @@ const toggleTiket = () => {
             </transition>
           </li>
 
-          <li>
+          <li v-if="!isUserPending">
             <a href="javascript:void(0);" @click="toggleTiket">
-              <i class="fas fa-ticket-alt"></i> 
+              <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
               <i
                 class="fe"

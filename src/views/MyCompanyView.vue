@@ -107,7 +107,7 @@ const submitForm = async () => {
       title: 'Data Tidak Lengkap!',
       text: 'Silakan lengkapi semua kolom yang wajib diisi.',
       icon: 'warning',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     })
     return
   }
@@ -118,7 +118,7 @@ const submitForm = async () => {
       title: 'Token Tidak Tersedia!',
       text: 'Silakan login ulang.',
       icon: 'error',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     })
     return
   }
@@ -143,7 +143,7 @@ const submitForm = async () => {
       title: 'Registrasi Berhasil!',
       text: response.data.message || 'Data perusahaan telah berhasil disimpan.',
       icon: 'success',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     })
 
     // Reset form data
@@ -173,9 +173,10 @@ const submitForm = async () => {
     console.error(error)
     Swal.fire({
       title: 'Registrasi Gagal!',
-      text: error.response?.data?.message || 'Terjadi kesalahan saat menyimpan.',
+      text:
+        error.response?.data?.message || 'Terjadi kesalahan saat menyimpan.',
       icon: 'error',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     })
   } finally {
     loader.hide()
@@ -1211,8 +1212,14 @@ onMounted(() => {
     <div class="overlay"></div>
     <div class="popup">
       <h2>Status Akun Anda</h2>
-      <p class="info-text">Informasi: Status akun Anda saat ini adalah <strong>{{ userStatus }}</strong>.</p>
-      <p>Mohon tunggu hingga akun Anda terverifikasi, atau hubungi nomor berikut:</p>
+      <p class="info-text">
+        Informasi: Status akun Anda saat ini adalah
+        <strong>{{ userStatus }}</strong
+        >.
+      </p>
+      <p>
+        Mohon tunggu hingga akun Anda terverifikasi, atau hubungi nomor berikut:
+      </p>
       <p class="contact-number">081-2345-6789</p>
       <div class="subscription-logout">
         <a @click="logout" href="#" class="logout-button">Log Out</a>
@@ -1262,7 +1269,7 @@ onMounted(() => {
 
 .contact-number {
   font-weight: bold;
-  color: #007BFF;
+  color: #007bff;
   margin-top: 5px;
   margin-bottom: 15px;
 }
@@ -1273,7 +1280,7 @@ onMounted(() => {
 
 .logout-button {
   color: #ffffff;
-  background-color: #FF4D4D;
+  background-color: #ff4d4d;
   padding: 10px 20px;
   text-decoration: none;
   border-radius: 5px;
@@ -1283,7 +1290,7 @@ onMounted(() => {
 }
 
 .logout-button:hover {
-  background-color: #FF3333;
+  background-color: #ff3333;
 }
 
 @keyframes fadeIn {

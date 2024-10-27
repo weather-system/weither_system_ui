@@ -27,13 +27,13 @@ const submit = async e => {
       password: formData.get('password'),
     })
     const user = await me()
-    
+
     // SweetAlert sukses login
     Swal.fire({
       title: 'Login Berhasil!',
       text: `Selamat datang, ${user.name || 'pengguna'}!`,
       icon: 'success',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     }).then(() => {
       if (user.role === 'USER') {
         router.push('/MyCompany')
@@ -47,7 +47,7 @@ const submit = async e => {
       title: 'Login Gagal!',
       text: 'Email atau password yang Anda masukkan salah. Silakan coba lagi.',
       icon: 'error',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     })
     console.error(e)
   } finally {

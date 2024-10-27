@@ -16,7 +16,8 @@ const profileData = ref({
   activityType: 'INDUSTRI TEKSTIL',
   leaderName: 'RIZKYA WILDANI YAHYA',
   proponent: 'PT. ARDI FAJAR MAULANA',
-  address: 'Jalan. PHH. Mustsofa No.4, RT. 10, RW. 09, KELURAHAN PASIRLAYUNG, KECAMATAN CIBEUNYING KIDUL',
+  address:
+    'Jalan. PHH. Mustsofa No.4, RT. 10, RW. 09, KELURAHAN PASIRLAYUNG, KECAMATAN CIBEUNYING KIDUL',
   uklUplPIC: 'MUHAMAD RAMADIKA ARDIANSYAH',
   contactNumber: '081210638156',
 })
