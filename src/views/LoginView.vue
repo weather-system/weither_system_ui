@@ -78,7 +78,7 @@ const submit = async e => {
           <form @submit.prevent="submit" class="col-lg-6 col-xl-5">
             <div class="login-content">
               <div class="login-contenthead">
-                <h5>Login Perusahaan</h5>
+                <h5>Login</h5>
                 <h6>Masukan Email dan Password Anda.</h6>
               </div>
               <div class="login-input">

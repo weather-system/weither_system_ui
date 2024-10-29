@@ -259,18 +259,6 @@ const submit = async e => {
                       ></span>
                     </div>
                   </div>
-                  <div class="col-12">
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="emailActivation"
-                      />
-                      <label class="form-check-label" for="emailActivation">
-                        Perlu aktivasi via email?
-                      </label>
-                    </div>
-                  </div>
                   <div class="col-12 text-center mt-4">
                     <button type="submit" class="btn btn-primary btn-block">
                       Daftar Perusahaan
