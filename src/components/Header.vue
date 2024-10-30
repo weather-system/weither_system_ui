@@ -3,6 +3,7 @@ import { useStore } from 'vuex'
 import { useLoading } from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
 import { logout as authLogout } from '@/lib/auth.js'
+import Swal from 'sweetalert2'
 
 const $loading = useLoading()
 const store = useStore()
@@ -12,6 +13,13 @@ const logout = async () => {
   const loader = $loading.show()
   try {
     await authLogout()
+    Swal.fire({
+      icon: 'success',
+      title: 'Logout berhasil',
+      text: 'Anda telah keluar dengan sukses.',
+      timer: 2000,
+      showConfirmButton: false
+    })
     router.push('/Login')
   } catch (e) {
     alert('error logout')

@@ -10,6 +10,8 @@ import MainWrapper from '@/components/MainWrapper.vue'
 const $loading = useLoading()
 const router = useRouter()
 
+const password = ref('');
+const confirmPassword = ref('');
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 const urlNIB = ref('')
@@ -53,15 +55,25 @@ const uploadNIB = async (e) => {
     loader.hide()
   }
 }
-
+const isPasswordMatch = computed(() => {
+  const match = password.value && password.value === confirmPassword.value;
+  return match;
+});
+const passwordMatchMessage = computed(() =>
+  isPasswordMatch.value ? 'Passwords sesuai' : 'Passwords tidak sesuai'
+);
 const updateKelurahan = () => {
   selectedKelurahan.value = ''
 }
 const submit = async (e) => {
   const formData = new FormData(e.target)
-  const formDataObj = {}
-  formData.forEach((value, key) => (formDataObj[key] = value))
-
+  console.log("Selected Kecamatan:", selectedKecamatan.value);
+  console.log("Selected Kelurahan:", selectedKelurahan.value);
+  formData.append('kecamatan', selectedKecamatan.value)
+  formData.append('kelurahan', selectedKelurahan.value)
+  const formDataObj = Object.fromEntries(formData)
+  formDataObj['status'] = 'PENDING';
+  console.log("Data to be sent to backend:", { ...formDataObj, nib: urlNIB.value });
   const loader = $loading.show()
   try {
     const data = await registerCompany({ ...formDataObj, nib: urlNIB.value })
@@ -206,16 +218,15 @@ const submit = async (e) => {
                     ></input>
                   </div>
                   <div>
-                      <div class="col-md-12 mt-3">
-                        <label class="form-label">Kecamatan</label>
-                        <select v-model="selectedKecamatan" @change="updateKelurahan" class="form-control">
-                          <option disabled value="">Pilih Kecamatan</option>
-                          <option v-for="kec in kecamatanData" :key="kec.kecamatan" :value="kec.kecamatan">
-                            {{ kec.kecamatan }}
-                          </option>
-                        </select>
-                      </div>
-
+                    <div class="col-md-12 mt-3">
+                      <label class="form-label">Kecamatan</label>
+                      <select v-model="selectedKecamatan" @change="updateKelurahan" class="form-control">
+                        <option disabled value="">Pilih Kecamatan</option>
+                        <option v-for="kec in kecamatanData" :key="kec.kecamatan" :value="kec.kecamatan">
+                          {{ kec.kecamatan }}
+                        </option>
+                      </select>
+                    </div>
                       <div class="col-md-12 mt-3">
                         <label class="form-label">Kelurahan</label>
                         <select v-model="selectedKelurahan" class="form-control" :disabled="!filteredKelurahan.length">
@@ -266,6 +277,7 @@ const submit = async (e) => {
                     <label class="form-label">Password</label>
                     <div class="pass-group position-relative">
                       <input
+                        v-model="password"
                         name="password"
                         :type="showPassword ? 'text' : 'password'"
                         class="form-control"
@@ -288,6 +300,7 @@ const submit = async (e) => {
                     <label class="form-label">Confirm Password</label>
                     <div class="pass-group position-relative">
                       <input
+                        v-model="confirmPassword"
                         name="confirm_password"
                         :type="showPassword2 ? 'text' : 'password'"
                         class="form-control"
@@ -304,10 +317,21 @@ const submit = async (e) => {
                           cursor: pointer;
                         "
                       ></span>
+                      <small
+                        v-if="confirmPassword"
+                        :class="{'text-success': isPasswordMatch, 'text-danger': !isPasswordMatch}"
+                      >
+                        {{ passwordMatchMessage }}
+                      </small>
                     </div>
                   </div>
                   <div class="col-12 text-center mt-4">
-                    <button type="submit" class="btn btn-primary btn-block">
+                    <button
+                      type="submit"
+                      class="btn btn-block"
+                      :class="isPasswordMatch ? 'btn-primary' : 'gray-button'"
+                      :disabled="!isPasswordMatch"
+                    >
                       Daftar
                     </button>
                   </div>
@@ -328,3 +352,10 @@ const submit = async (e) => {
     </div>
   </MainWrapper>
 </template>
+<style>
+.gray-button {
+  background-color: black;
+  color: black;
+  cursor: not-allowed;
+}
+</style>

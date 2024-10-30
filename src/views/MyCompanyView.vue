@@ -409,9 +409,6 @@ onMounted(() => {
                         </div>
                         <div class="row">
                           <div class="col-sm-6">
-                            <div class="sub-title">
-                              <h6>Luas Perusahaan</h6>
-                            </div>
                           </div>
                           <div class="col-sm-6">
                             <div
@@ -472,9 +469,6 @@ onMounted(() => {
                         </div>
                         <div class="row">
                           <div class="col-sm-6">
-                            <div class="sub-title">
-                              <h6>Dokumen Perusahaan</h6>
-                            </div>
                           </div>
                           <div class="col-sm-6">
                             <div
@@ -678,7 +672,7 @@ onMounted(() => {
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="col-form-label"
-                                >Penanggung Jawab Monitoring Lingkungan</label
+                                >Penanggung Jawab Monitoring Lingkungan (Nama : Jabatan) <p>Contoh (Jhon Doe - Direktur)</p></label
                               >
                               <input
                                 type="text"
@@ -906,9 +900,9 @@ onMounted(() => {
                         </div>
                         <div class="row">
                           <div class="col-sm-6">
-                            <div class="sub-title">
+                            <!-- <div class="sub-title">
                               <h6>Luas Perusahaan</h6>
-                            </div>
+                            </div> -->
                           </div>
                           <div class="col-sm-6">
                             <div
@@ -969,9 +963,6 @@ onMounted(() => {
                         </div>
                         <div class="row">
                           <div class="col-sm-6">
-                            <div class="sub-title">
-                              <h6>Dokumen Perusahaan</h6>
-                            </div>
                           </div>
                           <div class="col-sm-6">
                             <div
