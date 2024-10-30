@@ -328,7 +328,8 @@ const submit = async (e) => {
                   <div class="col-12 text-center mt-4">
                     <button
                       type="submit"
-                      class="btn btn-primary btn-block"
+                      class="btn btn-block"
+                      :class="isPasswordMatch ? 'btn-primary' : 'gray-button'"
                       :disabled="!isPasswordMatch"
                     >
                       Daftar
@@ -351,3 +352,10 @@ const submit = async (e) => {
     </div>
   </MainWrapper>
 </template>
+<style>
+.gray-button {
+  background-color: black;
+  color: black;
+  cursor: not-allowed;
+}
+</style>
