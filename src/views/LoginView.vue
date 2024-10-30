@@ -54,6 +54,36 @@ const submit = async e => {
     loader.hide()
   }
 }
+// Logout function to trigger on logout action
+const logout = async () => {
+  const loader = $loading.show()
+  try {
+    // Here, you would include any necessary steps to log out the user, 
+    // such as clearing tokens or session data.
+    await logoutUser() // Adjust this based on your actual logout implementation
+
+    // Show SweetAlert on successful logout
+    Swal.fire({
+      title: 'Logout Berhasil!',
+      text: 'Anda telah berhasil keluar.',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      router.push('/login') // Redirect to login page
+    })
+  } catch (e) {
+    console.error('Logout Error:', e)
+    Swal.fire({
+      title: 'Logout Gagal!',
+      text: 'Terjadi kesalahan saat logout. Silakan coba lagi.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    })
+  } finally {
+    loader.hide()
+  }
+}
+
 </script>
 
 <template>
