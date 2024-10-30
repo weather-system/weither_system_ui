@@ -1,93 +1,108 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
+import { useStore } from 'vuex'
+import { getPencemaranAir } from '@/lib/pencemaranAir.js'
 import MainWrapper from '@/components/MainWrapper.vue' // Import MainWrapper
 
-const airData = ref([
-  {
-    id: 1,
-    lokasi: 'Danau Toba',
-    kualitas: 'Baik',
-    parameter: 'pH, DO',
-    tanggal: '2024-10-20',
-  },
-  {
-    id: 2,
-    lokasi: 'Sungai Citarum',
-    kualitas: 'Buruk',
-    parameter: 'BOD, COD',
-    tanggal: '2024-10-21',
-  },
-])
+const $loading = useLoading()
+const store = useStore()
+
+const pencemaranAir = ref([])
+
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    pencemaranAir.value = await getPencemaranAir()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+})
 </script>
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper">
+    <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
-          <h5>Pengendalian Pencemaran Air</h5>
+          <h5>
+            Pengendalian Pencemaran Air ({{
+              store.state.auth.user.company?.name
+            }})
+          </h5>
           <div class="list-btn">
             <ul>
               <li>
-                <a class="btn btn-primary" href="add-water-quality.html">
-                  <i class="fa fa-plus me-2"></i>Tambah Kualitas Air
-                </a>
-              </li>
-              <li>
-                <div class="filter-sorting">
-                  <ul>
-                    <li>
-                      <a href="javascript:void(0);" class="filter-sets">
-                        <img
-                          src="@/assets/img/icons/filter1.svg"
-                          class="me-2"
-                          alt="img"
-                        />Filter
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                <RouterLink
+                  class="btn btn-primary"
+                  to="/Pengendalian/PencemaranAir/Create"
+                >
+                  <i class="fa fa-plus me-2"></i>Tambah
+                </RouterLink>
               </li>
             </ul>
           </div>
         </div>
 
-        <div class="table-responsive table-div">
-          <table class="table datatable table-bordered mt-3">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Lokasi</th>
-                <th>Kualitas Air</th>
-                <th>Parameter</th>
-                <th>Tanggal Pengukuran</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(data, index) in airData" :key="data.id">
-                <td>{{ index + 1 }}</td>
-                <td>{{ data.lokasi }}</td>
-                <td>{{ data.kualitas }}</td>
-                <td>{{ data.parameter }}</td>
-                <td>{{ data.tanggal }}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div style="width: fit-content">
+          <div class="d-flex align-items-center" style="gap: 1rem">
+            <p class="m-0">Tahun/Bulan</p>
+            <select class="form-select">
+              <option>Semua</option>
+              <option>2024</option>
+              <option>2023</option>
+            </select>
+            <select class="form-select">
+              <option>Semua</option>
+              <option>Januari</option>
+              <option>Febuari</option>
+            </select>
+          </div>
+
+          <div class="mt-4 d-flex" style="gap: 1rem">
+            <input class="form-control" placeholder="Search..." />
+            <button class="btn btn-primary">Search</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="table-resposnive table-div">
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>Bulan</th>
+                    <th>Tanggal Ukur</th>
+                    <th>Debit Terukur (M3/BLN)</th>
+                    <th>Produksi</th>
+                    <th>Lab. Pengukur</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="data in pencemaranAir" :key="data.id">
+                    <td>{{ data.month }} {{ data.year }}</td>
+                    <td>{{ data.tgl_pengambilan_contoh }}</td>
+                    <td>{{ data.debit_terukur }}</td>
+                    <td>{{ data.produksi_ton_bulan }}</td>
+                    <td>{{ data.lab_penguji }}</td>
+                    <td>{{ data.status }}</td>
+                    <td class="d-flex" style="gap: 1rem">
+                      <button class="btn btn-success">Ubah</button>
+                      <button class="btn btn-danger">Hapus</button>
+                      <button class="btn btn-primary">Cetak</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </MainWrapper>
 </template>
-
-<style scoped>
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.table th,
-.table td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd;
-}
-</style>

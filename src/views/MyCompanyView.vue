@@ -408,8 +408,7 @@ onMounted(() => {
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-6">
-                          </div>
+                          <div class="col-sm-6"></div>
                           <div class="col-sm-6">
                             <div
                               class="status-toggle sml-status float-sm-end mb-3"
@@ -468,8 +467,7 @@ onMounted(() => {
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-6">
-                          </div>
+                          <div class="col-sm-6"></div>
                           <div class="col-sm-6">
                             <div
                               class="status-toggle sml-status float-sm-end mb-3"
@@ -672,7 +670,9 @@ onMounted(() => {
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="col-form-label"
-                                >Penanggung Jawab Monitoring Lingkungan (Nama : Jabatan) <p>Contoh (Jhon Doe - Direktur)</p></label
+                                >Penanggung Jawab Monitoring Lingkungan (Nama :
+                                Jabatan)
+                                <p>Contoh (Jhon Doe - Direktur)</p></label
                               >
                               <input
                                 type="text"
@@ -962,8 +962,7 @@ onMounted(() => {
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-6">
-                          </div>
+                          <div class="col-sm-6"></div>
                           <div class="col-sm-6">
                             <div
                               class="status-toggle sml-status float-sm-end mb-3"

@@ -51,6 +51,16 @@ const router = createRouter({
       name: 'ProfileView',
       component: () => import('@/views/ProfileView.vue'),
     },
+    {
+      path: '/Pengendalian/PencemaranAir',
+      name: 'PengendalianPencemaranAir',
+      component: () => import('@/views/pengendalian/PencemaranAir.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranAir/Create',
+      name: 'PengendalianPencemaranAirCreate',
+      component: () => import('@/views/pengendalian/PencemaranAirCreate.vue'),
+    },
   ],
 })
 

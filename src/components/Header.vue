@@ -18,7 +18,7 @@ const logout = async () => {
       title: 'Logout berhasil',
       text: 'Anda telah keluar dengan sukses.',
       timer: 2000,
-      showConfirmButton: false
+      showConfirmButton: false,
     })
     router.push('/Login')
   } catch (e) {

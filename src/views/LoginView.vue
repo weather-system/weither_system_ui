@@ -58,7 +58,7 @@ const submit = async e => {
 const logout = async () => {
   const loader = $loading.show()
   try {
-    // Here, you would include any necessary steps to log out the user, 
+    // Here, you would include any necessary steps to log out the user,
     // such as clearing tokens or session data.
     await logoutUser() // Adjust this based on your actual logout implementation
 
@@ -83,7 +83,6 @@ const logout = async () => {
     loader.hide()
   }
 }
-
 </script>
 
 <template>

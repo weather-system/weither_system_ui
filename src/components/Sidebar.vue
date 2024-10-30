@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { getUserStatus } from '@/lib/company.js'
 
+const route = useRoute()
 const $loading = useLoading()
 
 const isUserPending = ref(false)
@@ -83,14 +85,18 @@ onMounted(async () => {
             <h6>Home</h6>
           </li>
           <li>
-            <router-link to="/MyCompany" class="active">
+            <router-link to="/MyCompany" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
             </router-link>
           </li>
 
           <li v-if="!isUserPending">
-            <a href="javascript:void(0);" @click="togglePengendalian">
+            <a
+              href="javascript:void(0);"
+              @click="togglePengendalian"
+              :class="{ active: route.path.startsWith('/Pengendalian') }"
+            >
               <i class="fas fa-cogs"></i>
               <span>Pengendalian</span>
               <i
@@ -104,7 +110,9 @@ onMounted(async () => {
             <transition name="slide-fade">
               <ul v-if="isPengendalianOpen" class="submenu d-block ms-4">
                 <li>
-                  <router-link to="/pengendalian/air"
+                  <router-link
+                    to="/Pengendalian/PencemaranAir"
+                    activeClass="active"
                     >Pencemaran Air</router-link
                   >
                 </li>
