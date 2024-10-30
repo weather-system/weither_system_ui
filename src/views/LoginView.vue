@@ -116,12 +116,12 @@ const submit = async e => {
               <!-- Forgot password and sign up section -->
               <div class="login-footer mt-3 text-left">
                 <a href="forget-password.html" class="d-block mb-2"
-                  >Forgot password?</a
+                  >Lupa password?</a
                 >
                 <span
                   >Belum punya akun perusahaan?
                   <RouterLink to="/RegisterCompany" class="signup-link"
-                    >Sign Up</RouterLink
+                    >Daftar</RouterLink
                   >
                 </span>
               </div>

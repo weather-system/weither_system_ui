@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
@@ -10,16 +10,39 @@ import MainWrapper from '@/components/MainWrapper.vue'
 const $loading = useLoading()
 const router = useRouter()
 
-// Reactive variable to toggle password visibility
 const showPassword = ref(false)
+const showPassword2 = ref(false)
 const urlNIB = ref('')
 
-// Toggle password visibility
+const kecamatanData = [
+  {
+    kecamatan: "Cimahi Selatan",
+    kelurahan: ["Cibeber", "Cibeureum", "Leuwigajah", "Melong", "Utama"]
+  },
+  {
+    kecamatan: "Cimahi Tengah",
+    kelurahan: ["Baros", "Cigugur Tengah", "Cimahi", "Karangmekar", "Padasuka", "Setiamanah"]
+  },
+  {
+    kecamatan: "Cimahi Utara",
+    kelurahan: ["Cibabat", "Cipageran", "Citeureup", "Pasirkaliki"]
+  }
+]
+
+const selectedKecamatan = ref('')
+const selectedKelurahan = ref('')
+const filteredKelurahan = computed(() => {
+  const kecamatan = kecamatanData.find(item => item.kecamatan === selectedKecamatan.value)
+  return kecamatan ? kecamatan.kelurahan : []
+})
+
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
-
-const uploadNIB = async e => {
+const togglePasswordVisibility2 = () => {
+  showPassword2.value = !showPassword2.value
+}
+const uploadNIB = async (e) => {
   const loader = $loading.show()
   try {
     const url = await uploadFile(e.target.files[0])
@@ -31,7 +54,10 @@ const uploadNIB = async e => {
   }
 }
 
-const submit = async e => {
+const updateKelurahan = () => {
+  selectedKelurahan.value = ''
+}
+const submit = async (e) => {
   const formData = new FormData(e.target)
   const formDataObj = {}
   formData.forEach((value, key) => (formDataObj[key] = value))
@@ -88,7 +114,7 @@ const submit = async e => {
                   class="mb-1 text-center"
                   style="font-family: 'Poppins', sans-serif; font-weight: 600"
                 >
-                  Registrasi Perusahaan
+                  Registrasi
                 </h5>
                 <p
                   class="text-center"
@@ -98,7 +124,7 @@ const submit = async e => {
                     color: #6c757d;
                   "
                 >
-                  Masukkan detail perusahaan Anda dengan benar.
+                  Masukkan detail kegiatan atau usaha dengan benar.
                 </p>
               </div>
 
@@ -172,13 +198,34 @@ const submit = async e => {
                   </div>
                   <div class="col-md-12">
                     <label class="form-label">Alamat</label>
-                    <textarea
+                    <input
                       name="address"
                       class="form-control"
-                      rows="2"
-                      placeholder="Alamat Perusahaan"
-                    ></textarea>
+                      rows="1"
+                      placeholder="Masukkan Alamat"
+                    ></input>
                   </div>
+                  <div>
+                      <div class="col-md-12 mt-3">
+                        <label class="form-label">Kecamatan</label>
+                        <select v-model="selectedKecamatan" @change="updateKelurahan" class="form-control">
+                          <option disabled value="">Pilih Kecamatan</option>
+                          <option v-for="kec in kecamatanData" :key="kec.kecamatan" :value="kec.kecamatan">
+                            {{ kec.kecamatan }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="col-md-12 mt-3">
+                        <label class="form-label">Kelurahan</label>
+                        <select v-model="selectedKelurahan" class="form-control" :disabled="!filteredKelurahan.length">
+                          <option disabled value="">Pilih Kelurahan</option>
+                          <option v-for="kel in filteredKelurahan" :key="kel" :value="kel">
+                            {{ kel }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
                   <div class="col-md-6">
                     <label class="form-label">Penanggung Jawab UKL UPL</label>
                     <input
@@ -242,14 +289,14 @@ const submit = async e => {
                     <div class="pass-group position-relative">
                       <input
                         name="confirm_password"
-                        :type="showPassword ? 'text' : 'password'"
+                        :type="showPassword2 ? 'text' : 'password'"
                         class="form-control"
                         placeholder="********"
                       />
                       <span
                         class="fas toggle-password position-absolute"
-                        :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
-                        @click="togglePasswordVisibility"
+                        :class="showPassword2 ? 'fa-eye' : 'fa-eye-slash'"
+                        @click="togglePasswordVisibility2"
                         style="
                           top: 50%;
                           right: 10px;
@@ -261,9 +308,17 @@ const submit = async e => {
                   </div>
                   <div class="col-12 text-center mt-4">
                     <button type="submit" class="btn btn-primary btn-block">
-                      Daftar Perusahaan
+                      Daftar
                     </button>
                   </div>
+                  <div class="login-footer mt-3 text-left">
+                <span
+                  >Sudah punya akun ?
+                  <RouterLink to="/Login" class="signup-link"
+                    >Login</RouterLink
+                  >
+                </span>
+              </div>
                 </div>
               </form>
             </div>
