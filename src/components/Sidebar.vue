@@ -98,7 +98,7 @@ onMounted(async () => {
               <span>Dashboard</span>
             </router-link>
           </li>
-          
+
           <li v-if="!isUserPending">
             <a
               href="javascript:void(0);"
@@ -192,12 +192,12 @@ onMounted(async () => {
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
                 <li>
-                  <router-link to="/logbook/produksi"
+                  <router-link to="/logbook/produksisenyatanya"
                     >Produksi Senyatanya</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/kimia"
+                  <router-link to="/logbook/PemakaianBahanKimia"
                     >Pemakaian Bahan Kimia</router-link
                   >
                 </li>

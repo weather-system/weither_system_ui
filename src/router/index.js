@@ -66,7 +66,19 @@ const router = createRouter({
       name: 'PengendalianPencemaranAirCreate',
       component: () => import('@/views/pengendalian/PencemaranAirCreate.vue'),
     },
-    
+
+    {
+      path: '/Logbook/ProduksiSenyatanya',
+      name: 'ProduksiSenyatanya',
+      component: () => import('@/views/Logbook/ProduksiSenyatanya.vue'),
+    },
+
+    {
+      path: '/Logbook/PemakaianBahanKimia',
+      name: 'PemakaianBahanKimia',
+      component: () => import('@/views/Logbook/PemakaianBahanKimia.vue'),
+    },
+
     {
       path: '/Data/Company',
       name: 'DataCompany',
