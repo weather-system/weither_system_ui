@@ -80,6 +80,19 @@ const router = createRouter({
     },
 
     {
+      path: '/Logbook/PemakaianAir',
+      name: 'PemakaianAir',
+      component: () => import('@/views/Logbook/PemakaianAir.vue'),
+    },
+
+    {
+      path: '/Logbook/DebitPemakaianAir',
+      name: 'DebitPemakaianAir',
+      component: () => import('@/views/Logbook/DebitPemakaianAir.vue'),
+    },
+
+
+    {
       path: '/Data/Company',
       name: 'DataCompany',
       component: () => import('@/views/data/Company.vue'),

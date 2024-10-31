@@ -202,10 +202,14 @@ onMounted(async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/air">Pemakaian Air</router-link>
+                  <router-link to="/logbook/PemakaianAir">Pemakaian Air</router-link>
                 </li>
                 <li><a href="sub-service1.html">Debit Outlet IPAL</a></li>
-                <li><a href="sub-service1.html">Debit Pemakaian Air</a></li>
+                <li>
+                  <router-link to="/logbook/DebitPemakaianAir"
+                    >DebitPemakaian Air</router-link
+                  >
+                </li>
                 <li><a href="sub-service1.html">IPAL</a></li>
                 <li><a href="sub-service1.html">Penggunaan B3</a></li>
                 <li><a href="sub-service2.html">TPS Limbah B3</a></li>
