@@ -10,6 +10,7 @@ const $loading = useLoading()
 const isUserPending = ref(false)
 
 const isPengendalianOpen = ref(false)
+const isDataOpen = ref(false)
 const isLogbookOpen = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
@@ -18,9 +19,14 @@ const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
   isPengendalianOpen.value = !isPengendalianOpen.value
 }
+const toggleData = () => {
+  console.log('Data clicked') // Debugging log
+  isDataOpen.value = !isDataOpen.value
+}
 
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
+  isDataOpen.value = false
   isPengendalianOpen.value = false
   isImportLogbookOpen.value = false
   isTiketOpen.value = false
@@ -28,6 +34,7 @@ const toggleLogbook = () => {
 
 const toggleImportLogbook = () => {
   isImportLogbookOpen.value = !isImportLogbookOpen.value
+  isDataOpen.value = false
   isPengendalianOpen.value = false
   isLogbookOpen.value = false
   isTiketOpen.value = false
@@ -35,6 +42,7 @@ const toggleImportLogbook = () => {
 
 const toggleTiket = () => {
   isTiketOpen.value = !isTiketOpen.value
+  isDataOpen.value = false
   isPengendalianOpen.value = false
   isLogbookOpen.value = false
   isImportLogbookOpen.value = false
@@ -89,6 +97,45 @@ onMounted(async () => {
               <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
             </router-link>
+          </li>
+          
+          <li v-if="!isUserPending">
+            <a
+              href="javascript:void(0);"
+              @click="toggleData"
+              :class="{ active: route.path.startsWith('/Data') }"
+            >
+              <i class="fas fa-book-bookmark"></i>
+              <span>Data</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isDataOpen,
+                  'fe-chevron-up': isDataOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isDataOpen" class="submenu d-block ms-4">
+                <li>
+                  <router-link
+                    to="/Data/Company"
+                    activeClass="active"
+                    >Usaha</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/pengendalian/udara"
+                    >IPAL</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/pengendalian/limbah-b3"
+                    >TPSB3</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
           </li>
 
           <li v-if="!isUserPending">

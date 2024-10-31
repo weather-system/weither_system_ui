@@ -23,6 +23,7 @@ const logout = async () => {
     loader.hide()
   }
 }
+
 const searchQuery = ref('')
 const kbliOptions = {
   ABC00909: 'test',
@@ -41,21 +42,6 @@ const filteredKbliOptions = computed(() => {
     }, {})
 })
 
-const npwp = ref('')
-const formatNpwp = () => {
-  let cleaned = formData.value.npwp.replace(/\D/g, '').slice(0, 15)
-  let formatted = ''
-
-  for (let i = 0; i < cleaned.length; i++) {
-    if (i === 2 || i === 5 || i === 8 || i === 9 || i === 12) {
-      formatted += '.'
-    }
-    formatted += cleaned[i]
-  }
-
-  formData.value.npwp = formatted
-}
-
 const formData = ref({
   npwp: '',
   local_npwp: '',
@@ -65,7 +51,7 @@ const formData = ref({
   land_area: '',
   any_ipal: '',
   ipal_total: null,
-  ipal_type: '',
+  ipalTypes: [], 
   any_wells: '',
   wells_total: null,
   any_tpsb3: '',
@@ -93,7 +79,7 @@ const validateForm = () => {
   ]
 
   for (const field of requiredFields) {
-    if (!formData.value[field]) {
+    if (!formData[field]) {
       return false
     }
   }
@@ -101,93 +87,100 @@ const validateForm = () => {
 }
 
 const submitForm = async () => {
-  if (!validateForm()) {
-    Swal.fire({
-      title: 'Data Tidak Lengkap!',
-      text: 'Silakan lengkapi semua kolom yang wajib diisi.',
-      icon: 'warning',
-      confirmButtonText: 'OK',
-    })
-    return
-  }
-
-  const token = localStorage.getItem('TOKEN')
-  if (!token) {
-    Swal.fire({
-      title: 'Token Tidak Tersedia!',
-      text: 'Silakan login ulang.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    })
-    return
-  }
-
-  const loader = $loading.show()
   try {
-    const selectedSources = formData.value.source.join(', ')
+    const token = localStorage.getItem('TOKEN');
+    if (!token) {
+      Swal.fire('Error', 'Silakan login ulang.', 'error');
+      return;
+    }
+
+    // Pastikan semua field wajib terisi
+    const requiredFields = [
+      'npwp',
+      'local_npwp',
+      'activity_type',
+      'any_genset',
+      'any_tpsb3',
+      'any_wells',
+      'building_area',
+      'employees_total',
+      'green_open_space_area',
+      'land_area',
+      'pic_name',
+      'production_capacity',
+      'shift_count',
+      'source',
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData.value[field]) {
+        Swal.fire('Error', `${field.replace(/_/g, ' ')} tidak boleh kosong.`, 'error');
+        return;
+      }
+    }
+
     const response = await axios.post(
       'http://localhost:8000/api/companies/details',
       {
-        ...formData.value,
-        source: selectedSources,
+        npwp: formData.value.npwp,
+        local_npwp: formData.value.local_npwp,
+        activity_type: formData.value.activity_type,
+        any_genset: formData.value.any_genset,
+        any_tpsb3: formData.value.any_tpsb3,
+        any_wells: formData.value.any_wells,
+        building_area: formData.value.building_area,
+        employees_total: formData.value.employees_total,
+        green_open_space_area: formData.value.green_open_space_area,
+        land_area: formData.value.land_area,
+        pic_name: formData.value.pic_name,
+        production_capacity: formData.value.production_capacity,
+        shift_count: formData.value.shift_count,
+        source: formData.value.source.toString(),
+        any_ipal: formData.value.any_ipal,
+        ipal_total: formData.value.ipal_total,
       },
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
-    )
-
-    Swal.fire({
-      title: 'Registrasi Berhasil!',
-      text: response.data.message || 'Data perusahaan telah berhasil disimpan.',
-      icon: 'success',
-      confirmButtonText: 'OK',
-    })
-
-    // Reset form data
-    Object.assign(formData.value, {
-      npwp: '',
-      local_npwp: '',
-      activity_type: '',
-      production_capacity: '',
-      employees_total: '',
-      land_area: '',
-      any_ipal: '',
-      ipal_total: null,
-      ipal_type: '',
-      any_wells: '',
-      wells_total: null,
-      any_tpsb3: '',
-      tpsb3_total: null,
-      any_genset: '',
-      genset_total: null,
-      source: [],
-      pic_name: '',
-      shift_count: '',
-      building_area: '',
-      green_open_space_area: '',
-    })
-  } catch (error) {
-    console.error(error)
-    Swal.fire({
-      title: 'Registrasi Gagal!',
-      text:
-        error.response?.data?.message || 'Terjadi kesalahan saat menyimpan.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    })
-  } finally {
-    loader.hide()
+      }
+    );
+    const companyId = response.data.data.id;
+    const ipalPromises = formData.value.ipalTypes.map(async (type) => {
+    if (type) {
+      return axios.post(
+        'http://localhost:8000/api/company_ipals',
+        {
+          company_detail_id: companyId, // Ensure you are using the correct ID here
+          type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+  });
+  if (ipalPromises.length > 0) {
+  await Promise.all(ipalPromises); // Tunggu hingga semua IPAL disimpan
   }
-}
+
+    Swal.fire('Success', 'Data berhasil disimpan.', 'success');
+  } catch (error) {
+    Swal.fire('Error', error.response.data.message || 'Gagal menyimpan data.', 'error');
+    console.error(error);
+  }
+};
+
+
 
 const kodekbli = ref('')
 const kodeJudul = ref('')
-watch(kodekbli, newValue => {
+watch(kodekbli, (newValue) => {
   kodeJudul.value = kbliOptions[newValue] || ''
 })
-console.log(localStorage.getItem('token'))
+
 const userStatus = ref(null)
 const loading = ref(true)
 const fetchUserStatus = async () => {
@@ -211,7 +204,15 @@ const fetchUserStatus = async () => {
 onMounted(() => {
   fetchUserStatus()
 })
+const updateIpalTypes = () => {
+  formData.value.ipalTypes = Array.from({ length: formData.value.ipal_total }, () => '');
+}
+watch(
+  () => formData.value.ipal_total,
+  () => updateIpalTypes()
+)
 </script>
+
 
 <template>
   <div v-if="userStatus === 'DITERIMA'">
@@ -482,52 +483,52 @@ onMounted(() => {
                         </div>
                         <div class="addservice-info">
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <!-- IPAL Status Selection -->
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">IPAL</label>
-                                <select
-                                  class="form-control"
-                                  v-model="formData.any_ipal"
-                                >
+                                <select class="form-control" v-model="formData.any_ipal">
                                   <option value="">Pilih Status IPAL</option>
                                   <option value="Ada">Ada</option>
                                   <option value="Tidak Ada">Tidak Ada</option>
                                 </select>
                               </div>
                             </div>
-                            <div
-                              class="col-md-4"
-                              v-if="formData.any_ipal === 'Ada'"
-                            >
+
+                            <!-- IPAL Count Input -->
+                            <div class="col-md-6" v-if="formData.any_ipal === 'Ada'">
                               <div class="form-group">
-                                <label class="col-form-label"
-                                  >Jumlah IPAL</label
-                                >
+                                <label class="col-form-label">Jumlah IPAL</label>
                                 <input
                                   type="number"
                                   class="form-control"
                                   placeholder="Masukkan jumlah IPAL"
                                   v-model="formData.ipal_total"
+                                  @input="updateIpalTypes"
                                 />
                               </div>
                             </div>
+
+                            <!-- IPAL Type Inputs -->
                             <div
                               class="col-md-4"
+                              v-for="(ipal, index) in formData.ipalTypes"
+                              :key="index"
                               v-if="formData.any_ipal === 'Ada'"
                             >
                               <div class="form-group">
-                                <label class="col-form-label">Jenis IPAL</label>
-                                <select class="form-control" v-model="ipalType">
-                                  <option value="">Pilih Jenis IPAL</option>
+                                <label class="col-form-label">Jenis IPAL {{ index + 1 }}</label>
+                                <select class="form-control" v-model="formData.ipalTypes[index]">
+                                  <option value="" disabled selected>Pilih Jenis IPAL</option>
                                   <option value="Domestik">Domestik</option>
                                   <option value="Industri">Industri</option>
                                   <option value="Integrasi">Integrasi</option>
                                 </select>
                               </div>
                             </div>
-                          </div>
+                        </div>
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">Cerobong</label>
                                 <select
@@ -543,7 +544,7 @@ onMounted(() => {
                               </div>
                             </div>
                             <div
-                              class="col-md-4"
+                              class="col-md-6"
                               v-if="formData.any_wells === 'Ada'"
                             >
                               <div class="form-group">
@@ -560,7 +561,7 @@ onMounted(() => {
                             </div>
                           </div>
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">TPSB3</label>
                                 <select
@@ -576,7 +577,7 @@ onMounted(() => {
                               </div>
                             </div>
                             <div
-                              class="col-md-4"
+                              class="col-md-6"
                               v-if="formData.any_tpsb3 === 'Ada'"
                             >
                               <div class="form-group">
@@ -593,7 +594,7 @@ onMounted(() => {
                             </div>
                           </div>
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">Genset</label>
                                 <select
@@ -609,7 +610,7 @@ onMounted(() => {
                               </div>
                             </div>
                             <div
-                              class="col-md-4"
+                              class="col-md-6"
                               v-if="formData.any_genset === 'Ada'"
                             >
                               <div class="form-group">
@@ -1050,7 +1051,7 @@ onMounted(() => {
                             </div>
                           </div>
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">Cerobong</label>
                                 <select
@@ -1066,7 +1067,7 @@ onMounted(() => {
                               </div>
                             </div>
                             <div
-                              class="col-md-4"
+                              class="col-md-6"
                               v-if="formData.any_wells === 'Ada'"
                             >
                               <div class="form-group">
@@ -1083,7 +1084,7 @@ onMounted(() => {
                             </div>
                           </div>
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">TPSB3</label>
                                 <select
@@ -1116,7 +1117,7 @@ onMounted(() => {
                             </div>
                           </div>
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">Genset</label>
                                 <select
@@ -1132,7 +1133,7 @@ onMounted(() => {
                               </div>
                             </div>
                             <div
-                              class="col-md-4"
+                              class="col-md-6"
                               v-if="formData.any_genset === 'Ada'"
                             >
                               <div class="form-group">
