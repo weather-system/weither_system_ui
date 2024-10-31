@@ -7,6 +7,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/LandingPage',
+      name: 'LandingPage',
+      component: () => import('@/views/LandingPage.vue'),
+    },
+    {
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),

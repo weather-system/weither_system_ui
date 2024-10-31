@@ -7,7 +7,6 @@ import { useStore } from 'vuex'
 import { useLoading } from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-
 const $loading = useLoading()
 const store = useStore()
 const router = useRouter()
@@ -629,39 +628,67 @@ onMounted(() => {
                           <div class="row service-cont">
                             <div class="col-md-12">
                               <div class="form-group">
-                                <label class="col-form-label">Sumber</label>
+                                <label class="col-form-label">Sumber Air</label>
                                 <div class="d-flex flex-wrap">
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="dalam"
+                                      value="air_tanah_dalam"
                                       v-model="formData.source"
                                     />
-                                    Dalam
+                                    Air Tanah Dalam
                                   </div>
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="resapan"
+                                      value="air_permukaan"
                                       v-model="formData.source"
                                     />
-                                    Resapan
+                                    Air Permukaan
                                   </div>
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="imbuhan"
+                                      value="PDAM LAINNYA"
                                       v-model="formData.source"
                                     />
-                                    Imbuhan
+                                    PDAM Lainnya
                                   </div>
+
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="biopori"
+                                      value="lainnya"
                                       v-model="formData.source"
                                     />
-                                    Biopori
+                                    Lainnya
+                                  </div>
+
+                                  <!-- Input Tambahan jika Checkbox Terpilih -->
+                                  <div class="row mt-3">
+                                    <div class="col-md-6" v-if="formData.source.includes('PDAM LAINNYA')">
+                                      <div class="form-group">
+                                        <label class="col-form-label">Masukkan Nama PDAM</label>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Masukkan nama PDAM lainnya"
+                                          v-model="formData.pdam_lainnya"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-6" v-if="formData.source.includes('lainnya')">
+                                      <div class="form-group">
+                                        <label class="col-form-label">Masukkan Detail Lainnya</label>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Masukkan detail lainnya"
+                                          v-model="formData.lainnya_detail"
+                                        />
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1217,6 +1244,20 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      formData: {
+        source: [],
+        pdam_lainnya: '',
+        lainnya_detail: ''
+      }
+    };
+  }
+};
+</script>
 
 <style scoped>
 .popup {
