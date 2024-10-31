@@ -8,7 +8,14 @@ export const getCompanies = async query => {
   })
   return resp.data
 }
-
+export const getCompaniesbylogin = async query => {
+  const resp = await axios.get('/api/companiesid', {
+    params: {
+      ...query,
+    },
+  })
+  return resp.data
+}
 export const getCompany = async id => {
   const resp = await axios.get(`/api/companies/${id}`)
   return resp.data
