@@ -11,8 +11,8 @@ const $loading = useLoading()
 const router = useRouter()
 
 const registrationType = ref(null)
-const password = ref('');
-const confirmPassword = ref('');
+const password = ref('')
+const confirmPassword = ref('')
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 const urlNIB = ref('')
@@ -66,24 +66,27 @@ const uploadNIB = async e => {
   }
 }
 const isPasswordMatch = computed(() => {
-  const match = password.value && password.value === confirmPassword.value;
-  return match;
-});
+  const match = password.value && password.value === confirmPassword.value
+  return match
+})
 const passwordMatchMessage = computed(() =>
-  isPasswordMatch.value ? 'Passwords sesuai' : 'Passwords tidak sesuai'
-);
+  isPasswordMatch.value ? 'Passwords sesuai' : 'Passwords tidak sesuai',
+)
 const updateKelurahan = () => {
   selectedKelurahan.value = ''
 }
-const submit = async (e) => {
+const submit = async e => {
   const formData = new FormData(e.target)
-  console.log("Selected Kecamatan:", selectedKecamatan.value);
-  console.log("Selected Kelurahan:", selectedKelurahan.value);
+  console.log('Selected Kecamatan:', selectedKecamatan.value)
+  console.log('Selected Kelurahan:', selectedKelurahan.value)
   formData.append('kecamatan', selectedKecamatan.value)
   formData.append('kelurahan', selectedKelurahan.value)
   const formDataObj = Object.fromEntries(formData)
-  formDataObj['status'] = 'PENDING';
-  console.log("Data to be sent to backend:", { ...formDataObj, nib: urlNIB.value });
+  formDataObj['status'] = 'PENDING'
+  console.log('Data to be sent to backend:', {
+    ...formDataObj,
+    nib: urlNIB.value,
+  })
   const loader = $loading.show()
   try {
     const data = await registerCompany({ ...formDataObj, nib: urlNIB.value })
@@ -110,6 +113,36 @@ const submit = async (e) => {
   } finally {
     loader.hide()
   }
+}
+
+const selectedDocumentType = ref('')
+const isAmdalOrDelh = computed(() => {
+  return (
+    selectedDocumentType.value === 'amdal' ||
+    selectedDocumentType.value === 'delh'
+  )
+})
+const isUklUplOrDplh = computed(() => {
+  return (
+    selectedDocumentType.value === 'ukl_upl' ||
+    selectedDocumentType.value === 'dplh'
+  )
+})
+const handleSubmit = () => {
+  // Menampilkan alert dengan informasi yang dipilih
+  alert(`Selected Document Type: ${selectedDocumentType.value}`)
+}
+
+// Fungsi untuk menangani upload file SKKLH
+const uploadSKKLHFile = event => {
+  const file = event.target.files[0]
+  console.log('Uploaded SKKLH File:', file)
+}
+
+// Fungsi untuk menangani upload file PKPLH
+const uploadPKPLHFile = event => {
+  const file = event.target.files[0]
+  console.log('Uploaded PKPLH File:', file)
 }
 </script>
 
@@ -151,221 +184,287 @@ const submit = async (e) => {
               </div>
 
               <!-- Dropdown to select registration type -->
-              <div class="mb-3">
-                <label class="form-label">Tipe Registrasi</label>
-                <select v-model="registrationType" class="form-control">
-                  <option disabled value="">Pilih Tipe Registrasi</option>
-                  <option value="company">Perusahaan</option>
-                  <option value="individual">Perorangan</option>
-                </select>
-              </div>
-                <!-- Company Registration Form -->
-                <form
-                  v-if="registrationType === 'company'"
-                  @submit.prevent="submit"
-                >
-                  <div class="row">
-                    <div class="col-md-12">
-                      <label class="form-label">Nama Perusahaan</label>
-                      <input
-                        name="name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Masukkan Nama Perusahaan"
+              <div class="row">
+                <!-- Company Signup -->
+                <div class="col-md-6 d-flex">
+                  <div class="choose-signup flex-fill">
+                    <h6>Perusahaan</h6>
+                    <div class="choose-img">
+                      <img src="@/assets/img/company.png" alt="Company Image" />
+                    </div>
+                    <button
+                      class="btn btn-secondary w-100"
+                      :class="{ active: registrationType === 'company' }"
+                      @click="registrationType = 'company'"
+                    >
+                      Sign Up
+                      <i class="feather-arrow-right-circle ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /Company Signup -->
+
+                <!-- Individual Signup -->
+                <div class="col-md-6 d-flex">
+                  <div class="choose-signup flex-fill mb-0">
+                    <h6>Perseorangan</h6>
+                    <div class="choose-img">
+                      <img
+                        src="@/assets/img/individual.png"
+                        alt="Individual Image"
                       />
                     </div>
+                    <button
+                      class="btn btn-secondary w-100"
+                      :class="{ active: registrationType === 'individual' }"
+                      @click="registrationType = 'individual'"
+                    >
+                      Sign Up
+                      <i class="feather-arrow-right-circle ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /Individual Signup -->
+              </div>
+              <!-- Company Registration Form -->
+              <form
+                v-if="registrationType === 'company'"
+                @submit.prevent="handleSubmit"
+              >
+                <div class="row">
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Nama Perusahaan</label>
+                    <input
+                      name="name"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Nama Perusahaan"
+                    />
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Nama Pimpinan</label>
+                    <input
+                      name="name"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Nama Pimpinan"
+                    />
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Nama PJ Dokling</label>
+                    <input
+                      name="name"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Penanggung Jawab"
+                    />
+                  </div>
+                  <div class="col-md-12 mt-3">
+                    <label class="form-label">Jenis Dokumen</label>
+                    <select v-model="selectedDocumentType" class="form-control">
+                      <option disabled value="">
+                        Pilih Jenis Dokumen Lingkungan
+                      </option>
+                      <option value="amdal">AMDAL</option>
+                      <option value="delh">DELH</option>
+                      <option value="ukl_upl">UKL/UPL</option>
+                      <option value="dplh">DPLH</option>
+                    </select>
+                  </div>
+                  <!-- Kondisi untuk AMDAL dan DELH -->
+                  <div v-if="isAmdalOrDelh" class="row mt-3">
                     <div class="col-md-6">
                       <label class="form-label"
-                        >Nomor PKPLH / UKL UPL & DPLH</label
+                        >Nomor Persetujuan Lingkungan SKKLH</label
                       >
                       <input
-                        name="no_pkplh"
+                        name="skklh_number"
                         type="text"
                         class="form-control"
-                        placeholder="Masukkan Nomor PKPLH"
+                        placeholder="Masukkan Nomor Persetujuan SKKLH"
                       />
                     </div>
                     <div class="col-md-6">
-                      <label class="form-label">SKKL / AMDAL / DELH</label>
+                      <label class="form-label">Upload File SKKLH</label>
                       <input
-                        name="no_skkl"
-                        type="text"
+                        type="file"
                         class="form-control"
-                        placeholder="Masukkan SKKL atau AMDAL"
+                        @change="uploadSKKLHFile"
                       />
                     </div>
+                  </div>
+
+                  <!-- Kondisi untuk UKL/UPL dan DPLH -->
+                  <div v-if="isUklUplOrDplh" class="row mt-3">
+                    <div class="col-md-6">
+                      <label class="form-label"
+                        >Nomor Persetujuan Lingkungan PKPLH</label
+                      >
+                      <input
+                        name="pkplh_number"
+                        type="text"
+                        class="form-control"
+                        placeholder="Masukkan Nomor Persetujuan PKPLH"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Upload File PKPLH</label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        @change="uploadPKPLHFile"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mt-3">
                     <div class="col-md-6">
                       <label class="form-label">NIB</label>
+                      <input
+                        name="nib"
+                        type="text"
+                        class="form-control"
+                        placeholder="Masukkan Nomor Induk Berusaha"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Upload File NIB</label>
                       <input
                         type="file"
                         class="form-control"
                         @change="uploadNIB"
                       />
-                      <small class="text-muted">Sertakan nomor KBLI</small>
                     </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Jenis Kegiatan</label>
-                      <input
-                        name="activity_type"
-                        type="text"
-                        class="form-control"
-                        placeholder="Permen 5/2014"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Pemrakarsa</label>
-                      <input
-                        name="pemrakarsa"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nama Pemrakarsa"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Nama Pimpinan</label>
-                      <input
-                        name="leader_name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nama Pimpinan Perusahaan"
-                      />
-                    </div>
-                    <div class="col-md-12">
-                      <label class="form-label">Alamat</label>
-                      <input
-                        name="address"
-                        type="text"
-                        class="form-control"
-                        placeholder="Masukkan Alamat"
-                      />
-                    </div>
-                    <div class="col-md-12 mt-3">
-                      <label class="form-label">Kecamatan</label>
-                      <select
-                        v-model="selectedKecamatan"
-                        @change="updateKelurahan"
-                        class="form-control"
+                  </div>
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Jenis Kegiatan</label>
+                    <input
+                      name="activity_type"
+                      type="text"
+                      class="form-control"
+                      placeholder="Permen 5/2014"
+                    />
+                  </div>
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Alamat</label>
+                    <input
+                      name="address"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Alamat (Jalan, RT, RW)"
+                    />
+                  </div>
+                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                    <label class="form-label">Kecamatan</label>
+                    <select
+                      v-model="selectedKecamatan"
+                      @change="updateKelurahan"
+                      class="form-control"
+                    >
+                      <option disabled value="">Pilih Kecamatan</option>
+                      <option
+                        v-for="kec in kecamatanData"
+                        :key="kec.kecamatan"
+                        :value="kec.kecamatan"
                       >
-                        <option disabled value="">Pilih Kecamatan</option>
-                        <option
-                          v-for="kec in kecamatanData"
-                          :key="kec.kecamatan"
-                          :value="kec.kecamatan"
-                        >
-                          {{ kec.kecamatan }}
-                        </option>
-                      </select>
-                    </div>
-                    <div class="col-md-12 mt-3">
-                      <label class="form-label">Kelurahan</label>
-                      <select
-                        v-model="selectedKelurahan"
-                        class="form-control"
-                        :disabled="!filteredKelurahan.length"
+                        {{ kec.kecamatan }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                    <label class="form-label">Kelurahan</label>
+                    <select
+                      v-model="selectedKelurahan"
+                      class="form-control"
+                      :disabled="!filteredKelurahan.length"
+                    >
+                      <option disabled value="">Pilih Kelurahan</option>
+                      <option
+                        v-for="kel in filteredKelurahan"
+                        :key="kel"
+                        :value="kel"
                       >
-                        <option disabled value="">Pilih Kelurahan</option>
-                        <option
-                          v-for="kel in filteredKelurahan"
-                          :key="kel"
-                          :value="kel"
-                        >
-                          {{ kel }}
-                        </option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Penanggung Jawab UKL UPL</label>
+                        {{ kel }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Username</label>
+                    <input
+                      name="username"
+                      type="text"
+                      class="form-control"
+                      placeholder="Username"
+                    />
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Email Perusahaan</label>
+                    <input
+                      name="company_email"
+                      type="email"
+                      class="form-control"
+                      placeholder="example@company.com"
+                    />
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Password</label>
+                    <div class="pass-group position-relative">
                       <input
-                        name="in_charge_ukl_upl"
-                        type="text"
+                        v-model="password"
+                        name="password"
+                        :type="showPassword ? 'text' : 'password'"
                         class="form-control"
-                        placeholder="Nama Penanggung Jawab"
+                        placeholder="****"
                       />
+                      <span
+                        class="fas toggle-password position-absolute"
+                        :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                        @click="togglePasswordVisibility"
+                        style="
+                          top: 50%;
+                          right: 10px;
+                          transform: translateY(-50%);
+                          cursor: pointer;
+                        "
+                      ></span>
                     </div>
-                    <div class="col-12">
-                      <label class="form-label">Nomor Kontak</label>
+                  </div>
+                  <div class="col-md-6 mb-4" style="margin-top: 20px">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="pass-group position-relative">
                       <input
-                        name="contact_person"
-                        type="text"
+                        v-model="confirmPassword"
+                        name="confirm_password"
+                        :type="showPassword2 ? 'text' : 'password'"
                         class="form-control"
-                        placeholder="Masukkan Nomor Kontak"
+                        placeholder="****"
                       />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Username</label>
-                      <input
-                        name="username"
-                        type="text"
-                        class="form-control"
-                        placeholder="Username"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Email Perusahaan</label>
-                      <input
-                        name="company_email"
-                        type="email"
-                        class="form-control"
-                        placeholder="example@company.com"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Password</label>
-                      <div class="pass-group position-relative">
-                        <input
-                          v-model="password"
-                          name="password"
-                          :type="showPassword ? 'text' : 'password'"
-                          class="form-control"
-                          placeholder="****"
-                        />
-                        <span
-                          class="fas toggle-password position-absolute"
-                          :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
-                          @click="togglePasswordVisibility"
-                          style="
-                            top: 50%;
-                            right: 10px;
-                            transform: translateY(-50%);
-                            cursor: pointer;
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                      <label class="form-label">Confirm Password</label>
-                      <div class="pass-group position-relative">
-                        <input
-                          v-model="confirmPassword"
-                          name="confirm_password"
-                          :type="showPassword2 ? 'text' : 'password'"
-                          class="form-control"
-                          placeholder="****"
-                        />
-                        <span
-                          class="fas toggle-password position-absolute"
-                          :class="showPassword2 ? 'fa-eye' : 'fa-eye-slash'"
-                          @click="togglePasswordVisibility2"
-                          style="
-                            top: 50%;
-                            right: 10px;
-                            transform: translateY(-50%);
-                            cursor: pointer;
-                          "
-                        ></span>
+                      <span
+                        class="fas toggle-password position-absolute"
+                        :class="showPassword2 ? 'fa-eye' : 'fa-eye-slash'"
+                        @click="togglePasswordVisibility2"
+                        style="
+                          top: 50%;
+                          right: 10px;
+                          transform: translateY(-50%);
+                          cursor: pointer;
+                        "
+                      ></span>
                       <div>
                         <small
-                        v-if="confirmPassword"
-                        :class="{'text-success': isPasswordMatch, 'text-danger': !isPasswordMatch}"
-                        style="
-                          position: absolute;
-                          top: 100%;
-                          left: 0;
-                          margin-top: 10px;
-                        "
-                      >
-                        {{ passwordMatchMessage }}
-                      </small>
+                          v-if="confirmPassword"
+                          :class="{
+                            'text-success': isPasswordMatch,
+                            'text-danger': !isPasswordMatch,
+                          }"
+                          style="
+                            position: absolute;
+                            top: 100%;
+                            left: 0;
+                            margin-top: 10px;
+                          "
+                        >
+                          {{ passwordMatchMessage }}
+                        </small>
                       </div>
                     </div>
                   </div>
@@ -379,209 +478,240 @@ const submit = async (e) => {
                       Daftar
                     </button>
                   </div>
-                      </div>
-                </form>
+                </div>
+              </form>
 
-                <!-- Individual Registration Form -->
-                <form
-                  v-if="registrationType === 'individual'"
-                  @submit.prevent="submit"
-                >
+              <!-- Individual Registration Form -->
+              <form
+                v-if="registrationType === 'individual'"
+                @submit.prevent="submit"
+              >
                 <div class="row">
-                    <div class="col-md-12">
-                      <label class="form-label">Nama</label>
-                      <input
-                        name="name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Masukkan Nama Perusahaan"
-                      />
-                    </div>
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Nama Pimpinan</label>
+                    <input
+                      name="name"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Nama Pimpinan"
+                    />
+                  </div>
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Nama PJ Dokling</label>
+                    <input
+                      name="name"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Penanggung Jawab"
+                    />
+                  </div>
+                  <div class="col-md-12 mt-3">
+                    <label class="form-label">Jenis Dokumen</label>
+                    <select v-model="selectedDocumentType" class="form-control">
+                      <option disabled value="">
+                        Pilih Jenis Dokumen Lingkungan
+                      </option>
+                      <option value="amdal">AMDAL</option>
+                      <option value="delh">DELH</option>
+                      <option value="ukl_upl">UKL/UPL</option>
+                      <option value="dplh">DPLH</option>
+                    </select>
+                  </div>
+                  <!-- Kondisi untuk AMDAL dan DELH -->
+                  <div v-if="isAmdalOrDelh" class="row mt-3">
                     <div class="col-md-6">
                       <label class="form-label"
-                        >Nomor PKPLH / UKL UPL & DPLH</label
+                        >Nomor Persetujuan Lingkungan SKKLH</label
                       >
                       <input
-                        name="no_pkplh"
+                        name="skklh_number"
                         type="text"
                         class="form-control"
-                        placeholder="Masukkan Nomor PKPLH"
+                        placeholder="Masukkan Nomor Persetujuan SKKLH"
                       />
                     </div>
                     <div class="col-md-6">
-                      <label class="form-label">SKKL / AMDAL / DELH</label>
+                      <label class="form-label">Upload File SKKLH</label>
                       <input
-                        name="no_skkl"
-                        type="text"
+                        type="file"
                         class="form-control"
-                        placeholder="Masukkan SKKL atau AMDAL"
+                        @change="uploadSKKLHFile"
                       />
                     </div>
+                  </div>
+
+                  <!-- Kondisi untuk UKL/UPL dan DPLH -->
+                  <div v-if="isUklUplOrDplh" class="row mt-3">
+                    <div class="col-md-6">
+                      <label class="form-label"
+                        >Nomor Persetujuan Lingkungan PKPLH</label
+                      >
+                      <input
+                        name="pkplh_number"
+                        type="text"
+                        class="form-control"
+                        placeholder="Masukkan Nomor Persetujuan PKPLH"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Upload File PKPLH</label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        @change="uploadPKPLHFile"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mt-3">
                     <div class="col-md-6">
                       <label class="form-label">NIB</label>
+                      <input
+                        name="nib"
+                        type="text"
+                        class="form-control"
+                        placeholder="Masukkan Nomor Induk Berusaha"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Upload File NIB</label>
                       <input
                         type="file"
                         class="form-control"
                         @change="uploadNIB"
                       />
-                      <small class="text-muted">Sertakan nomor KBLI</small>
                     </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Jenis Kegiatan</label>
-                      <input
-                        name="activity_type"
-                        type="text"
-                        class="form-control"
-                        placeholder="Permen 5/2014"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Pemrakarsa</label>
-                      <input
-                        name="pemrakarsa"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nama Pemrakarsa"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Nama Pimpinan</label>
-                      <input
-                        name="leader_name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nama Pimpinan Perusahaan"
-                      />
-                    </div>
-                    <div class="col-md-12">
-                      <label class="form-label">Alamat</label>
-                      <input
-                        name="address"
-                        type="text"
-                        class="form-control"
-                        placeholder="Masukkan Alamat"
-                      />
-                    </div>
-                    <div class="col-md-12 mt-3">
-                      <label class="form-label">Kecamatan</label>
-                      <select
-                        v-model="selectedKecamatan"
-                        @change="updateKelurahan"
-                        class="form-control"
+                  </div>
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Jenis Kegiatan</label>
+                    <input
+                      name="activity_type"
+                      type="text"
+                      class="form-control"
+                      placeholder="Permen 5/2014"
+                    />
+                  </div>
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <label class="form-label">Alamat</label>
+                    <input
+                      name="address"
+                      type="text"
+                      class="form-control"
+                      placeholder="Masukkan Alamat (Jalan, RT, RW)"
+                    />
+                  </div>
+                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                    <label class="form-label">Kecamatan</label>
+                    <select
+                      v-model="selectedKecamatan"
+                      @change="updateKelurahan"
+                      class="form-control"
+                    >
+                      <option disabled value="">Pilih Kecamatan</option>
+                      <option
+                        v-for="kec in kecamatanData"
+                        :key="kec.kecamatan"
+                        :value="kec.kecamatan"
                       >
-                        <option disabled value="">Pilih Kecamatan</option>
-                        <option
-                          v-for="kec in kecamatanData"
-                          :key="kec.kecamatan"
-                          :value="kec.kecamatan"
-                        >
-                          {{ kec.kecamatan }}
-                        </option>
-                      </select>
-                    </div>
-                    <div class="col-md-12 mt-3">
-                      <label class="form-label">Kelurahan</label>
-                      <select
-                        v-model="selectedKelurahan"
-                        class="form-control"
-                        :disabled="!filteredKelurahan.length"
+                        {{ kec.kecamatan }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                    <label class="form-label">Kelurahan</label>
+                    <select
+                      v-model="selectedKelurahan"
+                      class="form-control"
+                      :disabled="!filteredKelurahan.length"
+                    >
+                      <option disabled value="">Pilih Kelurahan</option>
+                      <option
+                        v-for="kel in filteredKelurahan"
+                        :key="kel"
+                        :value="kel"
                       >
-                        <option disabled value="">Pilih Kelurahan</option>
-                        <option
-                          v-for="kel in filteredKelurahan"
-                          :key="kel"
-                          :value="kel"
-                        >
-                          {{ kel }}
-                        </option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Penanggung Jawab UKL UPL</label>
+                        {{ kel }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Username</label>
+                    <input
+                      name="username"
+                      type="text"
+                      class="form-control"
+                      placeholder="Username"
+                    />
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Email Perusahaan</label>
+                    <input
+                      name="company_email"
+                      type="email"
+                      class="form-control"
+                      placeholder="example@company.com"
+                    />
+                  </div>
+                  <div class="col-md-6" style="margin-top: 20px">
+                    <label class="form-label">Password</label>
+                    <div class="pass-group position-relative">
                       <input
-                        name="in_charge_ukl_upl"
-                        type="text"
+                        v-model="password"
+                        name="password"
+                        :type="showPassword ? 'text' : 'password'"
                         class="form-control"
-                        placeholder="Nama Penanggung Jawab"
+                        placeholder="****"
                       />
+                      <span
+                        class="fas toggle-password position-absolute"
+                        :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                        @click="togglePasswordVisibility"
+                        style="
+                          top: 50%;
+                          right: 10px;
+                          transform: translateY(-50%);
+                          cursor: pointer;
+                        "
+                      ></span>
                     </div>
-                    <div class="col-12">
-                      <label class="form-label">Nomor Kontak</label>
+                  </div>
+                  <div class="col-md-6 mb-4" style="margin-top: 20px">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="pass-group position-relative">
                       <input
-                        name="contact_person"
-                        type="text"
+                        v-model="confirmPassword"
+                        name="confirm_password"
+                        :type="showPassword2 ? 'text' : 'password'"
                         class="form-control"
-                        placeholder="Masukkan Nomor Kontak"
+                        placeholder="****"
                       />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Username</label>
-                      <input
-                        name="username"
-                        type="text"
-                        class="form-control"
-                        placeholder="Username"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Email Perusahaan</label>
-                      <input
-                        name="company_email"
-                        type="email"
-                        class="form-control"
-                        placeholder="example@company.com"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Password</label>
-                      <div class="pass-group position-relative">
-                        <input
-                          v-model="password"
-                          name="password"
-                          :type="showPassword ? 'text' : 'password'"
-                          class="form-control"
-                          placeholder="****"
-                        />
-                        <span
-                          class="fas toggle-password position-absolute"
-                          :class="showPassword ? 'fa-eye' : 'fa-eye-slash'"
-                          @click="togglePasswordVisibility"
-                          style="
-                            top: 50%;
-                            right: 10px;
-                            transform: translateY(-50%);
-                            cursor: pointer;
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Confirm Password</label>
-                      <div class="pass-group position-relative">
-                        <input
-                          v-model="confirmPassword"
-                          name="confirm_password"
-                          :type="showPassword2 ? 'text' : 'password'"
-                          class="form-control"
-                          placeholder="****"
-                        />
-                        <span
-                          class="fas toggle-password position-absolute"
-                          :class="showPassword2 ? 'fa-eye' : 'fa-eye-slash'"
-                          @click="togglePasswordVisibility2"
-                          style="
-                            top: 50%;
-                            right: 10px;
-                            transform: translateY(-50%);
-                            cursor: pointer;
-                          "
-                        ></span>
+                      <span
+                        class="fas toggle-password position-absolute"
+                        :class="showPassword2 ? 'fa-eye' : 'fa-eye-slash'"
+                        @click="togglePasswordVisibility2"
+                        style="
+                          top: 50%;
+                          right: 10px;
+                          transform: translateY(-50%);
+                          cursor: pointer;
+                        "
+                      ></span>
+                      <div>
                         <small
-                        v-if="confirmPassword"
-                        :class="{'text-success': isPasswordMatch, 'text-danger': !isPasswordMatch}"
-                      >
-                        {{ passwordMatchMessage }}
-                      </small>
+                          v-if="confirmPassword"
+                          :class="{
+                            'text-success': isPasswordMatch,
+                            'text-danger': !isPasswordMatch,
+                          }"
+                          style="
+                            position: absolute;
+                            top: 100%;
+                            left: 0;
+                            margin-top: 10px;
+                          "
+                        >
+                          {{ passwordMatchMessage }}
+                        </small>
+                      </div>
                     </div>
                   </div>
                   <div class="col-12 text-center mt-4">
@@ -594,8 +724,8 @@ const submit = async (e) => {
                       Daftar
                     </button>
                   </div>
-                      </div>
-                </form>
+                </div>
+              </form>
 
               <div class="login-footer mt-3 text-left">
                 <span
