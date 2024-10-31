@@ -86,6 +86,12 @@ const router = createRouter({
     },
 
     {
+      path: '/Logbook/DebitOutletIPAL',
+      name: 'DebitOutletIPAL',
+      component: () => import('@/views/Logbook/DebitOutletIPAL.vue'),
+    },
+
+    {
       path: '/Logbook/DebitPemakaianAir',
       name: 'DebitPemakaianAir',
       component: () => import('@/views/Logbook/DebitPemakaianAir.vue'),
