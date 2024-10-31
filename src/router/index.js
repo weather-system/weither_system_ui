@@ -103,6 +103,11 @@ const router = createRouter({
       component: () => import('@/views/Logbook/IPAL.vue'),
     },
 
+    {
+      path: '/Logbook/PenggunaanB3',
+      name: 'PenggunaanB3',
+      component: () => import('@/views/Logbook/PenggunaanB3.vue'),
+    },
 
     {
       path: '/Data/Company',
