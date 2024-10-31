@@ -124,16 +124,6 @@ onMounted(async () => {
                     >Usaha</router-link
                   >
                 </li>
-                <li>
-                  <router-link to="/pengendalian/udara"
-                    >IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/pengendalian/limbah-b3"
-                    >TPSB3</router-link
-                  >
-                </li>
               </ul>
             </transition>
           </li>

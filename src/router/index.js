@@ -61,11 +61,15 @@ const router = createRouter({
       name: 'PengendalianPencemaranAirCreate',
       component: () => import('@/views/pengendalian/PencemaranAirCreate.vue'),
     },
-    
     {
       path: '/Data/Company',
       name: 'DataCompany',
       component: () => import('@/views/data/Company.vue'),
+    },
+    {
+      path: '/Data/Ipal/:company_detail_id',
+      name: 'DataIpal',
+      component: () => import('@/views/data/Ipal.vue'),
     },
   ],
 })
