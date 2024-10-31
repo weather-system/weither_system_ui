@@ -124,6 +124,13 @@ onMounted(async () => {
                     >Usaha</router-link
                   >
                 </li>
+                <li>
+                  <router-link
+                    to="/Data/Perizinan"
+                    activeClass="active"
+                    >Perizinan</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>

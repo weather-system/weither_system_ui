@@ -71,6 +71,22 @@ const router = createRouter({
       name: 'DataIpal',
       component: () => import('@/views/data/Ipal.vue'),
     },
+    {
+      path: '/Data/Perizinan',
+      name: 'DataPerizinan',
+      component: () => import('@/views/data/Perizinan.vue'),
+    },
+    {
+      path: '/Data/Perizinan/Edit/:id',
+      name: 'EditLicense',
+      component: () => import('@/views/data/perizinan/edit.vue'),
+    },
+    
+    {
+      path: '/Data/Perizinan/Tambah',
+      name: 'AddLicense',
+      component: () => import('@/views/data/perizinan/create.vue'),
+    },
   ],
 })
 
