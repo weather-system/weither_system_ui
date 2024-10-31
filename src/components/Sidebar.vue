@@ -222,7 +222,11 @@ onMounted(async () => {
                     >Penggunaan B3</router-link
                   >
                 </li>
-                <li><a href="sub-service2.html">TPS Limbah B3</a></li>
+                <li>
+                  <router-link to="/logbook/TPSLimbahB3"
+                    >TPS Limbah B3</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>

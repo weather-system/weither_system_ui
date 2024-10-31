@@ -110,6 +110,12 @@ const router = createRouter({
     },
 
     {
+      path: '/Logbook/TPSLimbahB3',
+      name: 'TPSLimbahB3',
+      component: () => import('@/views/Logbook/TPSLimbahB3.vue'),
+    },
+
+    {
       path: '/Data/Company',
       name: 'DataCompany',
       component: () => import('@/views/data/Company.vue'),
