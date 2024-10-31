@@ -97,6 +97,12 @@ const router = createRouter({
       component: () => import('@/views/Logbook/DebitPemakaianAir.vue'),
     },
 
+    {
+      path: '/Logbook/IPAL',
+      name: 'IPAL',
+      component: () => import('@/views/Logbook/IPAL.vue'),
+    },
+
 
     {
       path: '/Data/Company',

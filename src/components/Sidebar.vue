@@ -212,7 +212,11 @@ onMounted(async () => {
                     >DebitPemakaian Air</router-link
                   >
                 </li>
-                <li><a href="sub-service1.html">IPAL</a></li>
+                <li>
+                  <router-link to="/logbook/IPAL"
+                    >IPAL</router-link
+                  >
+                </li>
                 <li><a href="sub-service1.html">Penggunaan B3</a></li>
                 <li><a href="sub-service2.html">TPS Limbah B3</a></li>
               </ul>
