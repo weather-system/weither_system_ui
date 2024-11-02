@@ -98,7 +98,7 @@ onMounted(async () => {
               <span>Dashboard</span>
             </router-link>
           </li>
-          
+
           <li v-if="!isUserPending">
             <a
               href="javascript:void(0);"
@@ -189,23 +189,41 @@ onMounted(async () => {
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
                 <li>
-                  <router-link to="/logbook/produksi"
+                  <router-link to="/logbook/produksisenyatanya"
                     >Produksi Senyatanya</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/kimia"
+                  <router-link to="/logbook/PemakaianBahanKimia"
                     >Pemakaian Bahan Kimia</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/air">Pemakaian Air</router-link>
+                  <router-link to="/logbook/PemakaianAir">Pemakaian Air</router-link>
                 </li>
-                <li><a href="sub-service1.html">Debit Outlet IPAL</a></li>
-                <li><a href="sub-service1.html">Debit Pemakaian Air</a></li>
-                <li><a href="sub-service1.html">IPAL</a></li>
-                <li><a href="sub-service1.html">Penggunaan B3</a></li>
-                <li><a href="sub-service2.html">TPS Limbah B3</a></li>
+                <li>
+                  <router-link to="/logbook/DebitOutletIPAL">Debit Outlet IPAL</router-link>
+                </li>
+                <li>
+                  <router-link to="/logbook/DebitPemakaianAir"
+                    >DebitPemakaian Air</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/IPAL"
+                    >IPAL</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/PenggunaanB3"
+                    >Penggunaan B3</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/TPSLimbahB3"
+                    >TPS Limbah B3</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>
