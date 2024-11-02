@@ -229,7 +229,7 @@ const uploadPKPLHFile = event => {
               <!-- Company Registration Form -->
               <form
                 v-if="registrationType === 'company'"
-                @submit.prevent="handleSubmit"
+                @submit.prevent="submit"
               >
                 <div class="row">
                   <div class="col-md-12" style="margin-top: 20px">
