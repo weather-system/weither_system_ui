@@ -131,6 +131,13 @@ onMounted(async () => {
                     >Perizinan</router-link
                   >
                 </li>
+                <li>
+                  <router-link
+                    to="/Data/Cerobong"
+                    activeClass="active"
+                    >Cerobong</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>

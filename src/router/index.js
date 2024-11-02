@@ -139,6 +139,16 @@ const router = createRouter({
       component: () => import('@/views/data/perizinan/create.vue'),
     },
     {
+      path: '/Data/Cerobong',
+      name: 'DataCerobong',
+      component: () => import('@/views/data/Cerobong.vue'),
+    },
+    {
+      path: '/Data/Cerobong/Tambah',
+      name: 'DataCerobongTambah',
+      component: () => import('@/views/data/cerobong/create.vue'),
+    },
+    {
       path: '/Pengendalian/PencemaranAir/Edit',
       name: 'PengendalianPencemaranAirEdit',
       component: () => import('@/views/pengendalian/PencemaranAirEdit.vue'),
