@@ -10,6 +10,7 @@ const $loading = useLoading()
 const isUserPending = ref(false)
 
 const isPengendalianOpen = ref(false)
+const isDataOpen = ref(false)
 const isLogbookOpen = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
@@ -18,9 +19,14 @@ const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
   isPengendalianOpen.value = !isPengendalianOpen.value
 }
+const toggleData = () => {
+  console.log('Data clicked') // Debugging log
+  isDataOpen.value = !isDataOpen.value
+}
 
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
+  isDataOpen.value = false
   isPengendalianOpen.value = false
   isImportLogbookOpen.value = false
   isTiketOpen.value = false
@@ -28,6 +34,7 @@ const toggleLogbook = () => {
 
 const toggleImportLogbook = () => {
   isImportLogbookOpen.value = !isImportLogbookOpen.value
+  isDataOpen.value = false
   isPengendalianOpen.value = false
   isLogbookOpen.value = false
   isTiketOpen.value = false
@@ -35,6 +42,7 @@ const toggleImportLogbook = () => {
 
 const toggleTiket = () => {
   isTiketOpen.value = !isTiketOpen.value
+  isDataOpen.value = false
   isPengendalianOpen.value = false
   isLogbookOpen.value = false
   isImportLogbookOpen.value = false
@@ -94,6 +102,45 @@ onMounted(async () => {
           <li v-if="!isUserPending">
             <a
               href="javascript:void(0);"
+              @click="toggleData"
+              :class="{ active: route.path.startsWith('/Data') }"
+            >
+              <i class="fas fa-book-bookmark"></i>
+              <span>Data</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isDataOpen,
+                  'fe-chevron-up': isDataOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isDataOpen" class="submenu d-block ms-4">
+                <li>
+                  <router-link
+                    to="/Data/Company"
+                    activeClass="active"
+                    >Usaha</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/pengendalian/udara"
+                    >IPAL</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/pengendalian/limbah-b3"
+                    >TPSB3</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+
+          <li v-if="!isUserPending">
+            <a
+              href="javascript:void(0);"
               @click="togglePengendalian"
               :class="{ active: route.path.startsWith('/Pengendalian') }"
             >
@@ -145,23 +192,41 @@ onMounted(async () => {
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
                 <li>
-                  <router-link to="/logbook/produksi"
+                  <router-link to="/logbook/produksisenyatanya"
                     >Produksi Senyatanya</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/kimia"
+                  <router-link to="/logbook/PemakaianBahanKimia"
                     >Pemakaian Bahan Kimia</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/air">Pemakaian Air</router-link>
+                  <router-link to="/logbook/PemakaianAir">Pemakaian Air</router-link>
                 </li>
-                <li><a href="sub-service1.html">Debit Outlet IPAL</a></li>
-                <li><a href="sub-service1.html">Debit Pemakaian Air</a></li>
-                <li><a href="sub-service1.html">IPAL</a></li>
-                <li><a href="sub-service1.html">Penggunaan B3</a></li>
-                <li><a href="sub-service2.html">TPS Limbah B3</a></li>
+                <li>
+                  <router-link to="/logbook/DebitOutletIPAL">Debit Outlet IPAL</router-link>
+                </li>
+                <li>
+                  <router-link to="/logbook/DebitPemakaianAir"
+                    >DebitPemakaian Air</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/IPAL"
+                    >IPAL</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/PenggunaanB3"
+                    >Penggunaan B3</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/TPSLimbahB3"
+                    >TPS Limbah B3</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>

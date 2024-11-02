@@ -7,6 +7,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/LandingPage',
+      name: 'LandingPage',
+      component: () => import('@/views/LandingPage.vue'),
+    },
+    {
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
@@ -60,6 +65,60 @@ const router = createRouter({
       path: '/Pengendalian/PencemaranAir/Create',
       name: 'PengendalianPencemaranAirCreate',
       component: () => import('@/views/pengendalian/PencemaranAirCreate.vue'),
+    },
+
+    {
+      path: '/Logbook/ProduksiSenyatanya',
+      name: 'ProduksiSenyatanya',
+      component: () => import('@/views/Logbook/ProduksiSenyatanya.vue'),
+    },
+
+    {
+      path: '/Logbook/PemakaianBahanKimia',
+      name: 'PemakaianBahanKimia',
+      component: () => import('@/views/Logbook/PemakaianBahanKimia.vue'),
+    },
+
+    {
+      path: '/Logbook/PemakaianAir',
+      name: 'PemakaianAir',
+      component: () => import('@/views/Logbook/PemakaianAir.vue'),
+    },
+
+    {
+      path: '/Logbook/DebitOutletIPAL',
+      name: 'DebitOutletIPAL',
+      component: () => import('@/views/Logbook/DebitOutletIPAL.vue'),
+    },
+
+    {
+      path: '/Logbook/DebitPemakaianAir',
+      name: 'DebitPemakaianAir',
+      component: () => import('@/views/Logbook/DebitPemakaianAir.vue'),
+    },
+
+    {
+      path: '/Logbook/IPAL',
+      name: 'IPAL',
+      component: () => import('@/views/Logbook/IPAL.vue'),
+    },
+
+    {
+      path: '/Logbook/PenggunaanB3',
+      name: 'PenggunaanB3',
+      component: () => import('@/views/Logbook/PenggunaanB3.vue'),
+    },
+
+    {
+      path: '/Logbook/TPSLimbahB3',
+      name: 'TPSLimbahB3',
+      component: () => import('@/views/Logbook/TPSLimbahB3.vue'),
+    },
+
+    {
+      path: '/Data/Company',
+      name: 'DataCompany',
+      component: () => import('@/views/data/Company.vue'),
     },
   ],
 })
