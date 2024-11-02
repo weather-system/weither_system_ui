@@ -1,15 +1,27 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
-import { getPencemaranAir } from '@/lib/pencemaranAir.js'
+import { getPencemaranAir, deletePencemaranAir } from '@/lib/pencemaranAir.js'
 import MainWrapper from '@/components/MainWrapper.vue' // Import MainWrapper
 
 const $loading = useLoading()
 const store = useStore()
+const router = useRouter()
 
 const pencemaranAir = ref([])
+
+const deleteData = async (id) => {
+  const loader = $loading.show()
+  try {
+    await deletePencemaranAir(id)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
 
 onMounted(async () => {
   const loader = $loading.show()
@@ -92,8 +104,8 @@ onMounted(async () => {
                     <td>{{ data.lab_penguji }}</td>
                     <td>{{ data.status }}</td>
                     <td class="d-flex" style="gap: 1rem">
-                      <button class="btn btn-success">Ubah</button>
-                      <button class="btn btn-danger">Hapus</button>
+                      <RouterLink :to="{ path: '/Pengendalian/PencemaranAir/Edit', query: { id: data.id } }" class="btn btn-success">Ubah</RouterLink>
+                      <button @click="deleteData(data.id)" class="btn btn-danger">Hapus</button>
                       <button class="btn btn-primary">Cetak</button>
                     </td>
                   </tr>

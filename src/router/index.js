@@ -133,11 +133,15 @@ const router = createRouter({
       name: 'EditLicense',
       component: () => import('@/views/data/perizinan/edit.vue'),
     },
-    
     {
       path: '/Data/Perizinan/Tambah',
       name: 'AddLicense',
       component: () => import('@/views/data/perizinan/create.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranAir/Edit',
+      name: 'PengendalianPencemaranAirEdit',
+      component: () => import('@/views/pengendalian/PencemaranAirEdit.vue'),
     },
   ],
 })
