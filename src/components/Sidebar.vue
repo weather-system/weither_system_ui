@@ -125,13 +125,10 @@ onMounted(async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/pengendalian/udara"
-                    >IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/pengendalian/limbah-b3"
-                    >TPSB3</router-link
+                  <router-link
+                    to="/Data/Perizinan"
+                    activeClass="active"
+                    >Perizinan</router-link
                   >
                 </li>
               </ul>

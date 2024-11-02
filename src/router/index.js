@@ -66,7 +66,6 @@ const router = createRouter({
       name: 'PengendalianPencemaranAirCreate',
       component: () => import('@/views/pengendalian/PencemaranAirCreate.vue'),
     },
-
     {
       path: '/Logbook/ProduksiSenyatanya',
       name: 'ProduksiSenyatanya',
@@ -114,11 +113,31 @@ const router = createRouter({
       name: 'TPSLimbahB3',
       component: () => import('@/views/Logbook/TPSLimbahB3.vue'),
     },
-
     {
       path: '/Data/Company',
       name: 'DataCompany',
       component: () => import('@/views/data/Company.vue'),
+    },
+    {
+      path: '/Data/Ipal/:company_detail_id',
+      name: 'DataIpal',
+      component: () => import('@/views/data/Ipal.vue'),
+    },
+    {
+      path: '/Data/Perizinan',
+      name: 'DataPerizinan',
+      component: () => import('@/views/data/Perizinan.vue'),
+    },
+    {
+      path: '/Data/Perizinan/Edit/:id',
+      name: 'EditLicense',
+      component: () => import('@/views/data/perizinan/edit.vue'),
+    },
+    
+    {
+      path: '/Data/Perizinan/Tambah',
+      name: 'AddLicense',
+      component: () => import('@/views/data/perizinan/create.vue'),
     },
   ],
 })

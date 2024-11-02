@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay';
 import axios from 'axios';
@@ -9,23 +9,22 @@ import MainWrapper from '@/components/MainWrapper.vue';
 const $loading = useLoading();
 const route = useRoute();
 
-const companies = ref([]); // This will hold the companies for the logged-in user
-const companyDetails = ref([]); // This will hold details for the selected company
-const userCompanies = ref([]); // This will filter the user's companies based on some criteria
+const companies = ref([]); // Holds the companies for the logged-in user
+const companyDetails = ref([]); // Holds details for the selected company
+const userCompanies = ref([]); // Filters the user's companies based on some criteria
 const loggedInUserId = 3;
+
 // Fetch the user's companies
 const fetchUserCompanies = async () => {
   const loader = $loading.show();
   try {
     companies.value = await getCompaniesbylogin({ status: route.query.status?.toUpperCase() });
     
-    // Log the companies fetched
     console.log('Fetched Companies:', JSON.stringify(companies.value, null, 2));
     
     // Filter to get user companies
     userCompanies.value = companies.value.filter(company => company.user_id === loggedInUserId);
     
-    // Log user companies
     console.log('User Companies:', JSON.stringify(userCompanies.value, null, 2));
     
     // Fetch company details for the first user's company (if exists)
@@ -45,7 +44,6 @@ const fetchCompanyDetails = async (companyId) => {
     const response = await axios.get(`http://localhost:8000/api/company_details/${companyId}`);
     companyDetails.value = response.data;
 
-    // Log the company details fetched
     console.log(`Fetched Company Details for ID ${companyId}:`, companyDetails.value);
   } catch (error) {
     console.error('Error fetching company details:', error);
@@ -76,9 +74,9 @@ onMounted(() => {
           <div class="list-btn">
             <ul>
               <li>
-                <a class="btn btn-primary" href="add-service.html">
+                <router-link class="btn btn-primary" to="add-service.html">
                   <i class="fa fa-plus me-2"></i>Tambah Perusahaan
-                </a>
+                </router-link>
               </li>
             </ul>
           </div>
@@ -125,7 +123,9 @@ onMounted(() => {
                     <td>{{ detail.employees_total }}</td>
                     <td>{{ detail.land_area }}</td>
                     <td>
-                      
+                      <router-link :to="`/Data/Ipal/${detail.id}`" class="btn btn-info m-2">Persetujuan IPAL</router-link>
+                      <router-link to="/Data/TSPB3" class="btn btn-info m-2">Persetujuan TPSB3</router-link>
+                      <router-link to="/Data/Emisi" class="btn btn-info m-2">Persetujuan Emisi</router-link>
                     </td>
                   </tr>
                 </tbody>
