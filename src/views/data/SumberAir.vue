@@ -98,7 +98,7 @@ onMounted(async () => {
                         :to="{
                           path: data.id ? `/Data/SumberAir/Edit/${data.id}` : '/Data/SumberAir/Tambah',
                           query: {
-                            jenis: data.jenis
+                            jenis: data.id ? undefined : data.jenis
                           }
                         }"
                         class="btn btn-primary"
