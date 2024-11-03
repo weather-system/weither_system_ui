@@ -2,11 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
 import { getTpsB3, deleteTpsB3 } from '@/lib/tpsb3';
+import { getPertekData } from '@/lib/company.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 
 const tpsB3 = ref([])
+const totalTpsB3 = ref(0)
 
 const deleteData = async (id) => {
   const loader = $loading.show()
@@ -23,6 +25,22 @@ onMounted(async () => {
   const loader = $loading.show()
   try {
     tpsB3.value = await getTpsB3()
+    const pertekData = await getPertekData()
+    if (pertekData) {
+      totalTpsB3.value = pertekData.tpsb3_total
+
+      const n = pertekData.tpsb3_total - tpsB3.value.length
+      if (n > 0) {
+        tpsB3.value = tpsB3.value.concat(Array(n).fill({
+          jenis_limbah_b3: '-',
+          sumber_limbah_b3: '-',
+          koordinat_x: '-',
+          koordinat_y: '-',
+          volume: '-',
+          satuan: '-',
+        }))
+      }
+    }
   } catch (e) {
     console.error(e)
   } finally {
@@ -36,7 +54,10 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
-          <h3>Data TPS B3</h3>
+          <div>
+            <h3>Data TPS B3</h3>
+            <p>Anda memasukan jumlah TPS B3 sebanyak {{ totalTpsB3 }}</p>
+          </div>
           <div class="list-btn">
             <ul>
               <li>
@@ -71,7 +92,7 @@ onMounted(async () => {
                     <td>{{ data.satuan }}</td>
                     <td>
                       <router-link
-                        :to="`/Data/TPSB3/Edit/${data.id}`"
+                        :to="data.id ? `/Data/TPSB3/Edit/${data.id}` : '/Data/TPSB3/Tambah'"
                         class="btn btn-primary"
                         >Edit</router-link
                       >

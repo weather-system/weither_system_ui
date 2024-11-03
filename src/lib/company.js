@@ -45,3 +45,8 @@ export const getMyCompany = async () => {
   const resp = await axios.get('/api/companies/myCompany')
   return resp.data
 }
+
+export const getPertekData = async () => {
+  const resp = await axios.get('/api/companies/details/getPertekData')
+  return resp.data
+}

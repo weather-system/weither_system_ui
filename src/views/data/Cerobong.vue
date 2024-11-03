@@ -2,11 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
 import { getCerobong, deleteCerobong } from '@/lib/cerobong.js'
+import { getPertekData } from '@/lib/company.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 
 const cerobong = ref([])
+const totalCerobong = ref(0)
 
 const deleteData = async (id) => {
   const loader = $loading.show()
@@ -23,6 +25,24 @@ onMounted(async () => {
   const loader = $loading.show()
   try {
     cerobong.value = await getCerobong()
+    const pertekData = await getPertekData()
+    if (pertekData) {
+      totalCerobong.value = pertekData.cerobong_total
+
+      const n = pertekData.cerobong_total - cerobong.value.length
+      if (n > 0) {
+        cerobong.value = cerobong.value.concat(Array(n).fill({
+          jenis_boiler: '-',
+          jumlah_boiler: '-',
+          tinggi_cerobong: '-',
+          diameter_cerbong: '-',
+          kapasitas_boiler: '-',
+          merk_boiler: '-',
+          pengendalian_emisi_cerobong: '-',
+          lubang_sampling: '-'
+        }))
+      }
+    }
   } catch (e) {
     console.error(e)
   } finally {
@@ -36,7 +56,10 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
-          <h3>Data Cerobong</h3>
+          <div>
+            <h3>Data Cerobong</h3>
+            <p>Anda memasukan jumlah cerobong sebanyak {{ totalCerobong }}</p>
+          </div>
           <div class="list-btn">
             <ul>
               <li>
@@ -71,7 +94,7 @@ onMounted(async () => {
                     <td>{{ data.lubang_sampling }}</td>
                     <td>
                       <router-link
-                        :to="`/Data/Cerobong/Edit/${data.id}`"
+                        :to="data.id ? `/Data/Cerobong/Edit/${data.id}` : '/Data/Cerobong/Tambah'"
                         class="btn btn-primary"
                         >Edit</router-link
                       >

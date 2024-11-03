@@ -1,5 +1,6 @@
 <script setup>
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
 import SumberAirForm from '@/components/SumberAirForm.vue';
@@ -7,6 +8,9 @@ import { createSumberAir } from '@/lib/sumberAir';
 
 const $loading = useLoading()
 const router = useRouter()
+const route = useRoute()
+
+const form = ref(null)
 
 const submit = async (data) => {
   const loader = $loading.show()
@@ -19,6 +23,14 @@ const submit = async (data) => {
     loader.hide()
   }
 }
+
+onMounted(() => {
+  if (route.query.jenis) {
+    form.value.setValues({
+      jenis: route.query.jenis
+    })
+  }
+})
 </script>
 
 <template>
@@ -29,7 +41,7 @@ const submit = async (data) => {
           <h3>Tambah Cerobong</h3>
         </div>
 
-        <SumberAirForm @submit="submit" />
+        <SumberAirForm ref="form" @submit="submit" />
       </div>
     </div>
   </MainWrapper>

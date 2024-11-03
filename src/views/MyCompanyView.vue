@@ -51,7 +51,7 @@ const formData = ref({
   land_area: '',
   any_ipal: '',
   ipal_total: null,
-  ipalTypes: [], 
+  ipalTypes: [],
   any_wells: '',
   wells_total: null,
   any_tpsb3: '',
@@ -122,6 +122,7 @@ const submitForm = async () => {
     const response = await axios.post(
       'http://localhost:8000/api/companies/details',
       {
+        ...formData.value,
         npwp: formData.value.npwp,
         local_npwp: formData.value.local_npwp,
         activity_type: formData.value.activity_type,

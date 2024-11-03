@@ -3,10 +3,12 @@ import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 import { getSumberAir, deleteSumberAir } from '@/lib/sumberAir';
+import { getPertekData } from '@/lib/company.js'
 
 const $loading = useLoading()
 
 const sumberAir = ref([])
+const totalSumberAir = ref(0)
 
 const deleteData = async (id) => {
   const loader = $loading.show()
@@ -23,6 +25,27 @@ onMounted(async () => {
   const loader = $loading.show()
   try {
     sumberAir.value = await getSumberAir()
+    const pertekData = await getPertekData()
+    if (pertekData) {
+      const pertekSumberAir = pertekData.sumber_air.split(',').map((s) => s.trim())
+
+      totalSumberAir.value = pertekSumberAir.length
+
+      const n = pertekSumberAir.length - sumberAir.value.length
+      if (n > 0) {
+        for (let i = 0; i < n; i++) {
+          sumberAir.value.push({
+            jenis: pertekSumberAir[i] == 'air_permukaan' ? 'Air Permukaan/Sungai' : '-',
+            nama: '-',
+            kedalaman: '-',
+            kapasitas: '-',
+            debit_dalam_izin: '-',
+            koordinat_x: '-',
+            koordinat_y: '-',
+          })
+        }
+      }
+    }
   } catch (e) {
     console.error(e)
   } finally {
@@ -36,7 +59,10 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
-          <h3>Data Sumber Air</h3>
+          <div>
+            <h3>Data Sumber Air</h3>
+            <p>Anda memasukan jumlah sumber air sebanyak {{ totalSumberAir }}</p>
+          </div>
           <div class="list-btn">
             <ul>
               <li>
@@ -69,7 +95,12 @@ onMounted(async () => {
                     <td>{{ data.debit_dalam_izin }}</td>
                     <td>
                       <router-link
-                        :to="`/Data/SumberAir/Edit/${data.id}`"
+                        :to="{
+                          path: data.id ? `/Data/SumberAir/Edit/${data.id}` : '/Data/SumberAir/Tambah',
+                          query: {
+                            jenis: data.jenis
+                          }
+                        }"
                         class="btn btn-primary"
                         >Edit</router-link
                       >
