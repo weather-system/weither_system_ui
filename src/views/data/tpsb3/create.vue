@@ -2,8 +2,8 @@
 import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
-import CerobongForm from '@/components/CerobongForm.vue';
-import { createCerobong } from '@/lib/cerobong';
+import TPSB3Form from '@/components/TPSB3Form.vue';
+import { createTpsB3 } from '@/lib/tpsb3';
 
 const $loading = useLoading()
 const router = useRouter()
@@ -11,8 +11,8 @@ const router = useRouter()
 const submit = async (data) => {
   const loader = $loading.show()
   try {
-    await createCerobong(data)
-    router.push('/Data/Cerobong')
+    await createTpsB3(data)
+    router.push('/Data/TPSB3')
   } catch (e) {
     console.error(e)
   } finally {
@@ -29,7 +29,7 @@ const submit = async (data) => {
           <h3>Tambah Cerobong</h3>
         </div>
 
-        <CerobongForm @submit="submit" />
+        <TPSB3Form @submit="submit" />
       </div>
     </div>
   </MainWrapper>

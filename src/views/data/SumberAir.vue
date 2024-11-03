@@ -1,17 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
-import { getCerobong, deleteCerobong } from '@/lib/cerobong.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import { getSumberAir, deleteSumberAir } from '@/lib/sumberAir';
 
 const $loading = useLoading()
 
-const cerobong = ref([])
+const sumberAir = ref([])
 
 const deleteData = async (id) => {
   const loader = $loading.show()
   try {
-    await deleteCerobong(id)
+    await deleteSumberAir(id)
   } catch (e) {
     console.error(e)
   } finally {
@@ -22,7 +22,7 @@ const deleteData = async (id) => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    cerobong.value = await getCerobong()
+    sumberAir.value = await getSumberAir()
   } catch (e) {
     console.error(e)
   } finally {
@@ -36,13 +36,13 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
-          <h3>Data Cerobong</h3>
+          <h3>Data Sumber Air</h3>
           <div class="list-btn">
             <ul>
               <li>
-                <router-link class="btn btn-primary" to="/Data/Cerobong/Tambah">
+                <router-link class="btn btn-primary" to="/Data/SumberAir/Tambah">
                   <!-- Change route as necessary -->
-                  <i class="fa fa-plus me-2"></i>Tambah Cerobong
+                  <i class="fa fa-plus me-2"></i>Tambah Sumber Air
                 </router-link>
               </li>
             </ul>
@@ -54,24 +54,22 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>Jenis Boiler/Jumlah Boiler(Buah)</th>
-                    <th>Tinggi/Diameter/Kap. Boiler</th>
-                    <th>Merk Boiler</th>
-                    <th>Sistem Pengendalian Emisi Cerobong</th>
-                    <th>Lubang Sampling</th>
+                    <th>Jenis</th>
+                    <th>Uraian</th>
+                    <th>Koordinat (X, Y)</th>
+                    <th>Debit Dalam Izin (M3/Bulan)</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="data in cerobong" :key="data.id">
-                    <td>{{ data.jenis_boiler }} ({{ data.jumlah_boiler }})</td>
-                    <td>T: {{ data.tinggi_cerobong }} D: {{ data.diameter_cerbong }} Kap: {{ data.kapasitas_boiler }}</td>
-                    <td>{{ data.merk_boiler }}</td>
-                    <td>{{ data.pengendalian_emisi_cerobong }}</td>
-                    <td>{{ data.lubang_sampling }}</td>
+                  <tr v-for="data in sumberAir" :key="data.id">
+                    <td>{{ data.jenis }}</td>
+                    <td>-</td>
+                    <td>X: {{ data.koordinat_x }} Y: {{ data.koordinat_y }}</td>
+                    <td>{{ data.debit_dalam_izin }}</td>
                     <td>
                       <router-link
-                        :to="`/Data/Cerobong/Edit/${data.id}`"
+                        :to="`/Data/SumberAir/Edit/${data.id}`"
                         class="btn btn-primary"
                         >Edit</router-link
                       >

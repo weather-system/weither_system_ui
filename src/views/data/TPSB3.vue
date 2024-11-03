@@ -1,17 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
-import { getCerobong, deleteCerobong } from '@/lib/cerobong.js'
+import { getTpsB3, deleteTpsB3 } from '@/lib/tpsb3';
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 
-const cerobong = ref([])
+const tpsB3 = ref([])
 
 const deleteData = async (id) => {
   const loader = $loading.show()
   try {
-    await deleteCerobong(id)
+    await deleteTpsB3(id)
   } catch (e) {
     console.error(e)
   } finally {
@@ -22,7 +22,7 @@ const deleteData = async (id) => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    cerobong.value = await getCerobong()
+    tpsB3.value = await getTpsB3()
   } catch (e) {
     console.error(e)
   } finally {
@@ -36,13 +36,13 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
-          <h3>Data Cerobong</h3>
+          <h3>Data TPS B3</h3>
           <div class="list-btn">
             <ul>
               <li>
-                <router-link class="btn btn-primary" to="/Data/Cerobong/Tambah">
+                <router-link class="btn btn-primary" to="/Data/TPSB3/Tambah">
                   <!-- Change route as necessary -->
-                  <i class="fa fa-plus me-2"></i>Tambah Cerobong
+                  <i class="fa fa-plus me-2"></i>Tambah TPS B3
                 </router-link>
               </li>
             </ul>
@@ -54,24 +54,24 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>Jenis Boiler/Jumlah Boiler(Buah)</th>
-                    <th>Tinggi/Diameter/Kap. Boiler</th>
-                    <th>Merk Boiler</th>
-                    <th>Sistem Pengendalian Emisi Cerobong</th>
-                    <th>Lubang Sampling</th>
+                    <th>Jenis Limbah B3</th>
+                    <th>Sumber Limbah B3</th>
+                    <th>Koordinat (X, Y)</th>
+                    <th>Volume Limbah B3 Dalam Izin</th>
+                    <th>Satuan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="data in cerobong" :key="data.id">
-                    <td>{{ data.jenis_boiler }} ({{ data.jumlah_boiler }})</td>
-                    <td>T: {{ data.tinggi_cerobong }} D: {{ data.diameter_cerbong }} Kap: {{ data.kapasitas_boiler }}</td>
-                    <td>{{ data.merk_boiler }}</td>
-                    <td>{{ data.pengendalian_emisi_cerobong }}</td>
-                    <td>{{ data.lubang_sampling }}</td>
+                  <tr v-for="data in tpsB3" :key="data.id">
+                    <td>{{ data.jenis_limbah_b3 }}</td>
+                    <td>{{ data.sumber_limbah_b3 }}</td>
+                    <td>{{ data.koordinat_x }}, {{ data.koordinat_y }}</td>
+                    <td>{{ data.volume }}</td>
+                    <td>{{ data.satuan }}</td>
                     <td>
                       <router-link
-                        :to="`/Data/Cerobong/Edit/${data.id}`"
+                        :to="`/Data/TPSB3/Edit/${data.id}`"
                         class="btn btn-primary"
                         >Edit</router-link
                       >

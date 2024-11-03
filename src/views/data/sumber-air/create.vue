@@ -2,8 +2,8 @@
 import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
-import CerobongForm from '@/components/CerobongForm.vue';
-import { createCerobong } from '@/lib/cerobong';
+import SumberAirForm from '@/components/SumberAirForm.vue';
+import { createSumberAir } from '@/lib/sumberAir';
 
 const $loading = useLoading()
 const router = useRouter()
@@ -11,8 +11,8 @@ const router = useRouter()
 const submit = async (data) => {
   const loader = $loading.show()
   try {
-    await createCerobong(data)
-    router.push('/Data/Cerobong')
+    await createSumberAir(data)
+    router.push('/Data/SumberAir')
   } catch (e) {
     console.error(e)
   } finally {
@@ -29,7 +29,7 @@ const submit = async (data) => {
           <h3>Tambah Cerobong</h3>
         </div>
 
-        <CerobongForm @submit="submit" />
+        <SumberAirForm @submit="submit" />
       </div>
     </div>
   </MainWrapper>

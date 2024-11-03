@@ -138,6 +138,20 @@ onMounted(async () => {
                     >Cerobong</router-link
                   >
                 </li>
+                <li>
+                  <router-link
+                    to="/Data/TPSB3"
+                    activeClass="active"
+                    >TPS B3</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    to="/Data/SumberAir"
+                    activeClass="active"
+                    >Sumber Air</router-link
+                  >
+                </li>
               </ul>
             </transition>
           </li>

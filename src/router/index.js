@@ -144,9 +144,44 @@ const router = createRouter({
       component: () => import('@/views/data/Cerobong.vue'),
     },
     {
+      path: '/Data/Cerobong/Edit/:id',
+      name: 'DataCerobongEdit',
+      component: () => import('@/views/data/cerobong/edit.vue'),
+    },
+    {
       path: '/Data/Cerobong/Tambah',
       name: 'DataCerobongTambah',
       component: () => import('@/views/data/cerobong/create.vue'),
+    },
+    {
+      path: '/Data/TPSB3',
+      name: 'DataTPSB3',
+      component: () => import('@/views/data/TPSB3.vue'),
+    },
+    {
+      path: '/Data/TPSB3/Edit/:id',
+      name: 'DataTPSB3Edit',
+      component: () => import('@/views/data/tpsb3/edit.vue'),
+    },
+    {
+      path: '/Data/TPSB3/Tambah',
+      name: 'DataTPSB3Tambah',
+      component: () => import('@/views/data/tpsb3/create.vue'),
+    },
+    {
+      path: '/Data/SumberAir',
+      name: 'DataSumberAir',
+      component: () => import('@/views/data/SumberAir.vue'),
+    },
+    {
+      path: '/Data/SumberAir/Edit/:id',
+      name: 'DataSumberAirEdit',
+      component: () => import('@/views/data/sumber-air/edit.vue'),
+    },
+    {
+      path: '/Data/SumberAir/Tambah',
+      name: 'DataSumberAirTambah',
+      component: () => import('@/views/data/sumber-air/create.vue'),
     },
     {
       path: '/Pengendalian/PencemaranAir/Edit',
