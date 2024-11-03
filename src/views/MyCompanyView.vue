@@ -293,8 +293,6 @@ watch(
                                       class="form-control input-dark-placeholder"
                                       placeholder="Search KODE KBLI"
                                       v-model="searchQuery"
-                                      aria-label="Search KODE KBLI"
-                                      style="placecolor: black"
                                     />
                                   </div>
                                   <select
@@ -812,8 +810,6 @@ watch(
                                       class="form-control input-dark-placeholder"
                                       placeholder="Search KODE KBLI"
                                       v-model="searchQuery"
-                                      aria-label="Search KODE KBLI"
-                                      style="placecolor: black"
                                     />
                                   </div>
                                   <select
