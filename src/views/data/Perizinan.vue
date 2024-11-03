@@ -145,7 +145,7 @@ const deleteLicence = async id => {
                       <img
                         :src="licence.photo"
                         alt="License Photo"
-                        class="license-photo"
+                        class="img img-fluid"
                       />
                     </td>
                     <td>{{ licence.type }}</td>
@@ -184,3 +184,10 @@ const deleteLicence = async id => {
     </div>
   </MainWrapper>
 </template>
+<style>
+.img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+}
+</style>
