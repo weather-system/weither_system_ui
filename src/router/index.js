@@ -121,7 +121,7 @@ const router = createRouter({
     {
       path: '/Data/Ipal/:company_detail_id',
       name: 'DataIpal',
-      component: () => import('@/views/data/Ipal.vue'),
+      component: () => import('@/views/data/ipal/Ipal.vue'),
     },
     {
       path: '/Data/Perizinan',
@@ -188,9 +188,23 @@ const router = createRouter({
       name: 'PengendalianPencemaranAirEdit',
       component: () => import('@/views/pengendalian/PencemaranAirEdit.vue'),
     },
+    {
+      path: '/Data/IPAL',
+      name: 'DataIPAL',
+      component: () => import('@/views/data/ipal/Ipal.vue'),
+    },
+    {
+      path: '/Data/IPAL/Edit/:id',
+      name: 'DataIPALEdit',
+      component: () => import('@/views/data/ipal/edit.vue'),
+    },
+    {
+      path: '/Data/IPAL/Tambah',
+      name: 'DataIPALTambah',
+      component: () => import('@/views/data/ipal/create.vue'),
+    },
   ],
 })
-
 router.beforeEach(async (to, from, next) => {
   if (to.path === '/Login' || to.path === '/RegisterCompany') {
     next()

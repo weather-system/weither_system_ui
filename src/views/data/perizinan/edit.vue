@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
+import { useLoading } from 'vue-loading-overlay'
+import { uploadFile } from '@/lib/filestorage.js'
 import Swal from 'sweetalert2' // Import SweetAlert2
 import MainWrapper from '@/components/MainWrapper.vue'
 
@@ -36,21 +38,9 @@ const photoPreview = ref('')
 const router = useRouter()
 const route = useRoute()
 const licenceId = route.params.id // Get the license ID from the route parameters
+const $loading = useLoading()
+const urlNIB = ref('')
 
-const handleFileUpload = event => {
-  const file = event.target.files[0] // Get the first file
-  if (file) {
-    const reader = new FileReader() // Create a FileReader to read the file
-    reader.onload = e => {
-      photoPreview.value = e.target.result // Set the preview URL
-      console.log(photoPreview.value) // Log the photo preview value to the console
-    }
-    reader.readAsDataURL(file) // Read the file as a data URL
-    form.value.photo = file // Store the file object instead of just the name
-  }
-}
-
-// Fetch license details from the API
 const fetchLicenceDetails = async () => {
   try {
     const response = await axios.get(
@@ -72,7 +62,7 @@ const fetchLicenceDetails = async () => {
 const submitForm = async () => {
   try {
     // Debug data sebelum dikirim
-    console.log("Data yang akan dikirim:", form.value);
+    console.log('Data yang akan dikirim:', form.value)
 
     await axios.put(
       `http://localhost:8000/api/company_licence/${licenceId}`,
@@ -81,8 +71,8 @@ const submitForm = async () => {
         headers: {
           'Content-Type': 'application/json', // Pastikan JSON header diatur, meskipun ini opsional
         },
-      }
-    );
+      },
+    )
 
     // Tampilkan alert sukses dengan SweetAlert2
     await Swal.fire({
@@ -90,17 +80,17 @@ const submitForm = async () => {
       text: 'Perizinan berhasil diperbarui!',
       icon: 'success',
       confirmButtonText: 'OK',
-    });
-    router.push('/data/perizinan'); // Redirect ke halaman list setelah update sukses
+    })
+    router.push('/data/perizinan') // Redirect ke halaman list setelah update sukses
   } catch (error) {
-    console.error('Error updating license:', error);
+    console.error('Error updating license:', error)
     if (error.response && error.response.data) {
       // Tampilkan pesan error jika tersedia
-      const errors = error.response.data;
-      let errorMessages = '';
+      const errors = error.response.data
+      let errorMessages = ''
       for (const key in errors) {
         if (errors.hasOwnProperty(key)) {
-          errorMessages += `${errors[key].join(', ')}\n`;
+          errorMessages += `${errors[key].join(', ')}\n`
         }
       }
 
@@ -110,23 +100,36 @@ const submitForm = async () => {
         text: `Gagal memperbarui perizinan:\n${errorMessages}`,
         icon: 'error',
         confirmButtonText: 'OK',
-      });
+      })
     } else {
       await Swal.fire({
         title: 'Error!',
         text: 'Gagal memperbarui perizinan.',
         icon: 'error',
         confirmButtonText: 'OK',
-      });
+      })
     }
   }
-};
-
+}
 
 // Fetch license details on component mount
 onMounted(() => {
   fetchLicenceDetails()
 })
+
+const uploadNIB = async e => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    urlNIB.value = url
+    form.value.photo = urlNIB.value
+    console.log('Uploaded URL:', urlNIB.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
 </script>
 
 <template>
@@ -458,27 +461,28 @@ onMounted(() => {
                         </div>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label for="photo">Upload Foto Dokumen</label>
-                      <input
-                        type="file"
-                        @change="handleFileUpload"
-                        class="form-control"
-                        
-                      />
-                      <div v-if="form.photo || photoPreview">
-                        <img
-                          v-if="form.photo && !photoPreview"
-                          :src="form.photo"
-                          alt="Existing Photo"
-                          class="img-preview"
-                        />
-                        <img
-                          v-if="photoPreview"
-                          :src="photoPreview"
-                          alt="New Photo Preview"
-                          class="img-preview"
-                        />
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="photo">Upload Foto Dokumen</label>
+                          <input
+                            type="file"
+                            @change="uploadNIB"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label></label>
+                          <img
+                            :src="form.photo"
+                            alt="Uploaded Photo"
+                            class="img-thumbnail mt-2"
+                          />
+                        </div>
                       </div>
                     </div>
                     <div class="row">

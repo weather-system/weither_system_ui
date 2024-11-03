@@ -1,19 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useLoading } from 'vue-loading-overlay'
+import { uploadFile } from '@/lib/filestorage.js'
+import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 
-const $loading = useLoading()
-const route = useRoute()
-
 const formData = ref({
-  ipalTypes: [],
-  system_ipal: [],
-  company_licence_id: '', // Holds the selected company license ID
-  waste_discharge_measuring_instrument_inlet_name: '', // Holds the inlet measuring instrument name
-  waste_discharge_measuring_instrument_outlet_name: '', // Holds the outlet measuring instrument name
+  ipalTypes: [], 
+  system_ipal: '', 
+  company_licence_id: '',
+  waste_discharge_measuring_instrument_inlet_name: '',
+  waste_discharge_measuring_instrument_outlet_name: '',
   year_of_manufacture_of_ipal: '',
   capacity_ipal: '',
   unit_in_capacity: '',
@@ -25,56 +24,91 @@ const formData = ref({
   water_bodies_receiving_liquid_waste: '',
   ipal_sludge_storage_site: '',
   amount_of_mud_sludge: '',
+  waste_discharge_measuring_instrument_inlet: null,
+  waste_discharge_measuring_instrument_outlet: null,
+  ipal_design_note: '',
 })
-const licenseOptions = ref([]) // Holds the license options fetched from the API
-const errorMessage = ref('') // Holds error message if no data is found
-const currentPage = ref(1) // Current page in pagination
-const perPage = 1 // Number of items per page (1 IPAL type per page)
 
-// Checkbox states
+const licenseOptions = ref([])
+const errorMessage = ref('')
+const $loading = useLoading()
+const route = useRoute()
+const router = useRouter()
+const ipalId = route.params.id
+const urlNIB = ref('')
 const isInletChecked = ref(false)
 const isOutletChecked = ref(false)
 
-// Fetch company types with pagination
-const fetchCompanyTypes = async () => {
+// Fetch IPAL data for editing
+const fetchIpalData = async () => {
   const loader = $loading.show()
-  const companyId = route.params.company_detail_id
   try {
     const response = await axios.get(
-      `http://localhost:8000/api/ipal/${companyId}`,
+      `http://localhost:8000/api/company_ipals/${ipalId}`,
     )
-    console.log('Full API Response:', response) // Log entire response for verification
-
-    const data = response.data || []
-    if (data.length === 0) {
-      errorMessage.value = 'Data tidak ditemukan' // Update error message for empty data
-      formData.value.ipalTypes = []
+    const data = response.data.data
+    if (data) {
+      Object.assign(formData.value, data)
+      formData.value.ipalTypes = data.system_ipal
+        ? data.system_ipal.split(',')
+        : []
+      isInletChecked.value =
+        data.waste_discharge_measuring_instrument_inlet === 'Ada'
+      isOutletChecked.value =
+        data.waste_discharge_measuring_instrument_outlet === 'Ada'
     } else {
-      formData.value.ipalTypes = data.map(item => item.type)
-      errorMessage.value = ''
-      if (currentPage.value > formData.value.ipalTypes.length) {
-        currentPage.value = formData.value.ipalTypes.length
-      }
+      errorMessage.value = 'Data tidak ditemukan'
     }
-    console.log(
-      `Fetched Company Types for ID ${companyId}:`,
-      formData.value.ipalTypes,
-    )
   } catch (error) {
-    console.error('Error fetching company types:', error)
+    console.error('Error fetching IPAL data:', error)
+    errorMessage.value = 'Gagal mengambil data IPAL.'
   } finally {
     loader.hide()
   }
 }
 
-// Fetch company license IDs
+const updateCompanyDetails = async () => {
+  const loader = $loading.show()
+  try {
+    formData.value.system_ipal = formData.value.ipalTypes.join(',')
+    formData.value.waste_discharge_measuring_instrument_inlet =
+      isInletChecked.value ? 'Ada' : null
+    formData.value.waste_discharge_measuring_instrument_outlet =
+      isOutletChecked.value ? 'Ada' : null
+
+    const updatedType = {
+      ...formData.value,
+      id: ipalId,
+    }
+    console.log('dataaaaaa :', updatedType)
+    await axios.put(
+      `http://localhost:8000/api/company_ipals/${ipalId}`,
+      updatedType,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+
+    Swal.fire('Berhasil', 'Data IPAL berhasil diperbarui.', 'success')
+    router.push('/Data/Ipal')
+  } catch (error) {
+    console.error('Error updating company details:', error)
+    Swal.fire('Error', 'Gagal memperbarui data IPAL.', 'error')
+  } finally {
+    loader.hide()
+  }
+}
+
+// Fetch company licenses for the dropdown
 const fetchCompanyLicences = async () => {
   const loader = $loading.show()
   try {
     const response = await axios.get(
       'http://localhost:8000/api/company_licence',
     )
-    licenseOptions.value = response.data || [] // Store the fetched licenses
+    licenseOptions.value = response.data || []
   } catch (error) {
     console.error('Error fetching company licenses:', error)
   } finally {
@@ -82,62 +116,12 @@ const fetchCompanyLicences = async () => {
   }
 }
 
-// Update company types API call
-const updateCompanyDetails = async () => {
-  const loader = $loading.show()
-  const companyId = route.params.company_detail_id
-
-  try {
-    const updatedType = {
-      ...formData.value,
-      company_detail_id: companyId,
-      type: formData.value.ipalTypes[currentPage.value - 1], // Get the type for the current page
-      id: currentPage.value,
-      system_ipal: formData.value.system_ipal.join(',')
-    }
-    console.log(updatedType)
-    // Send the request with the JSON data
-    const response = await axios.put(
-      `http://localhost:8000/api/company_ipals/${currentPage.value}`,
-      updatedType,
-      {
-        headers: {
-          'Content-Type': 'application/json', // Explicitly set the Content-Type to application/json
-        },
-      },
-    )
-
-    alert(response.data.message) // Display the success message from the backend
-  } catch (error) {
-    console.error('Error updating company types:', error)
-    alert('Failed to update company type.')
-  } finally {
-    loader.hide()
-  }
-}
-
-// Fetch company types and licenses on mount
+// Fetch data when component mounts
 onMounted(() => {
-  fetchCompanyTypes()
+  fetchIpalData()
   fetchCompanyLicences()
 })
 
-// Pagination functions
-const nextPage = () => {
-  if (currentPage.value < formData.value.ipalTypes.length) {
-    currentPage.value += 1
-    fetchCompanyTypes()
-  }
-}
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1
-    fetchCompanyTypes()
-  }
-}
-
-// Toggle functions for inlet and outlet checkboxes
 const toggleInlet = () => {
   if (!isInletChecked.value) {
     formData.value.waste_discharge_measuring_instrument_inlet_name = ''
@@ -150,13 +134,12 @@ const toggleOutlet = () => {
   }
 }
 
-// Placeholder function for file upload (to be implemented)
 const uploadNIB = async e => {
   const loader = $loading.show()
   try {
     const url = await uploadFile(e.target.files[0])
     urlNIB.value = url
-    form.value.ipal_design_note = urlNIB.value
+    formData.value.ipal_design_note = urlNIB.value
     console.log('Uploaded URL:', urlNIB.value)
   } catch (e) {
     console.error(e)
@@ -173,24 +156,16 @@ const uploadNIB = async e => {
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <div class="content-page-header mb-2">
-              <h3>Persetujuan Teknis IPAL</h3>
+              <h3>Edit Persetujuan Teknis IPAL</h3>
             </div>
-            <form
-              v-if="formData.ipalTypes.length > 0"
-              @submit.prevent="updateCompanyDetails"
-            >
-              <div v-if="errorMessage" class="alert alert-danger">
-                {{ errorMessage }}
-              </div>
+            <form @submit.prevent="updateCompanyDetails">
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label class="col-form-label"
-                      >Jenis IPAL {{ currentPage }}</label
-                    >
+                    <label class="col-form-label">Jenis IPAL</label>
                     <select
                       class="form-control"
-                      v-model="formData.ipalTypes[currentPage - 1]"
+                      v-model="formData.type"
                       required
                     >
                       <option value="" disabled>Pilih Jenis IPAL</option>
@@ -277,17 +252,18 @@ const uploadNIB = async e => {
                   </div>
                 </div>
               </div>
-              <div class="row service-cont">
+              <div class="row service-count">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="col-form-label">Sistem IPAL</label>
+                    <label class="col-form-label">Sistem Ipal</label>
                     <div class="d-flex flex-wrap">
                       <div class="form-check me-3">
                         <label>
                           <input
                             type="checkbox"
+                            id="checkboxFisika"
                             value="Fisika"
-                            v-model="formData.system_ipal"
+                            v-model="formData.ipalTypes"
                           />
                           Fisika
                         </label>
@@ -296,18 +272,20 @@ const uploadNIB = async e => {
                         <label>
                           <input
                             type="checkbox"
+                            id="checkboxKimia"
                             value="Kimia"
-                            v-model="formData.system_ipal"
+                            v-model="formData.ipalTypes"
                           />
                           Kimia
                         </label>
                       </div>
-                      <div class="form-check me-3">
+                      <div class="form-check">
                         <label>
                           <input
                             type="checkbox"
+                            id="checkboxBiologi"
                             value="Biologi"
-                            v-model="formData.system_ipal"
+                            v-model="formData.ipalTypes"
                           />
                           Biologi
                         </label>
@@ -316,6 +294,7 @@ const uploadNIB = async e => {
                   </div>
                 </div>
               </div>
+
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
@@ -359,8 +338,8 @@ const uploadNIB = async e => {
                             v-model="isInletChecked"
                             @change="toggleInlet"
                           />
-                          Inlet</label
-                        >
+                          Inlet
+                        </label>
                       </div>
                       <div class="col-md-6">
                         <div v-if="isInletChecked" class="form-group">
@@ -417,6 +396,18 @@ const uploadNIB = async e => {
                       type="file"
                       @change="uploadNIB"
                       class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label></label>
+                    <img
+                      :src="formData.ipal_design_note"
+                      alt="Uploaded Nota"
+                      class="img-thumbnail mt-2"
                     />
                   </div>
                 </div>
@@ -484,52 +475,17 @@ const uploadNIB = async e => {
                 <div class="col-md-12">
                   <div class="field-btns d-flex justify-content-between">
                     <div>
-                      <button
-                        class="btn btn-primary next_btn"
-                        type="submit"
-                        v-if="formData.ipalTypes.length > 0"
-                      >
+                      <button class="btn btn-primary next_btn" type="submit">
                         Update
                       </button>
-                      <router-link
-                        to="/Data/Company"
-                        class="btn btn-secondary m-2"
+                      <router-link to="/Data/IPAL" class="btn btn-secondary m-2"
                         >Kembali</router-link
                       >
-                    </div>
-                    <div
-                      class="pagination-controls mt-1"
-                      v-if="formData.ipalTypes.length > 0"
-                    >
-                      <button
-                        @click="prevPage"
-                        :disabled="currentPage === 1"
-                        class="btn btn-secondary"
-                      >
-                        Previous
-                      </button>
-                      <span>
-                        Page {{ currentPage }} of
-                        {{ formData.ipalTypes.length }}
-                      </span>
-                      <button
-                        @click="nextPage"
-                        :disabled="currentPage === formData.ipalTypes.length"
-                        class="btn btn-secondary"
-                      >
-                        Next
-                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </form>
-            <div v-else>
-              <p class="alert alert-warning">Data tidak ditemukan</p>
-              <router-link to="/Data/Company" class="btn btn-secondary m-2"
-                >Kembali</router-link
-              >
-            </div>
           </div>
         </div>
       </div>
