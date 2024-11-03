@@ -3,6 +3,42 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { me } from '@/lib/auth.js'
 import store from '@/store'
 
+// Array untuk halaman admin
+const adminRoutes = [
+  '/MyCompany',
+  '/Companies',
+  '/CompanyDetail',
+  '/ProfileEdit',
+  '/Profile',
+  '/Pengendalian/PencemaranAir',
+  '/Pengendalian/PencemaranAir/Create',
+  '/Logbook/ProduksiSenyatanya',
+  '/Logbook/PemakaianBahanKimia',
+  '/Logbook/PemakaianAir',
+  '/Logbook/DebitOutletIPAL',
+  '/Logbook/DebitPemakaianAir',
+  '/Logbook/IPAL',
+  '/Logbook/PenggunaanB3',
+  '/Logbook/TPSLimbahB3',
+  '/Data/Company',
+  '/Data/Ipal/:company_detail_id',
+  '/Data/Perizinan',
+  '/Data/Perizinan/Edit/:id',
+  '/Data/Perizinan/Tambah',
+  '/Data/Cerobong',
+  '/Data/Cerobong/Tambah',
+  '/Pengendalian/PencemaranAir/Edit',
+  '/Login',
+  '/Register',
+  '/RegisterCompany'
+]
+
+// Array untuk halaman utama
+const mainRoutes = [
+  '/Home',
+  '/Compro'
+]
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,9 +48,19 @@ const router = createRouter({
       component: () => import('@/views/LandingPage.vue'),
     },
     {
-      path: '/',
+      path: '/Home',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/beranda/ComproView',
+      name: 'ComproView',
+      component: () => import('@/views/beranda/ComproView.vue'),
+    },
+    {
+      path: '/beranda/ComproStructureView',
+      name: 'ComproStructureView',
+      component: () => import('@/views/beranda/ComproStructureView.vue'),
     },
     {
       path: '/Login',
@@ -182,6 +228,24 @@ router.beforeEach(async (to, from, next) => {
     next('/Login')
     return
   }
+
+  // Bersihkan CSS sebelumnya
+  document.querySelectorAll('link[data-dynamic-css]').forEach(link => link.remove())
+
+  // Tentukan CSS berdasarkan jenis halaman
+  let cssFile = ''
+  if (adminRoutes.includes(to.path)) {
+    cssFile = '/assets/admin.css'
+  } else if (mainRoutes.includes(to.path)) {
+    cssFile = '/assets/style.css'
+  }
+
+  // Memuat file CSS yang ditentukan
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = cssFile
+  link.dataset.dynamicCss = true
+  document.head.appendChild(link)
 
   next()
 })
