@@ -309,3 +309,5 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style src="/src/assets/css/admin.css"></style>
