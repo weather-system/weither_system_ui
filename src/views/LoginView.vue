@@ -9,40 +9,60 @@ import Swal from 'sweetalert2'
 const router = useRouter()
 const $loading = useLoading()
 
-// Reactive variable to toggle password visibility
+// State for password visibility and CAPTCHA
 const showPassword = ref(false)
+const captcha = ref(generateCaptcha())
 
-// Function to toggle the password visibility
+// Toggle password visibility
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
 
+// Generate random CAPTCHA
+function generateCaptcha() {
+  return Math.floor(1000 + Math.random() * 9000) // Generates a 4-digit random number
+}
+
+// Refresh CAPTCHA
+const refreshCaptcha = () => {
+  captcha.value = generateCaptcha()
+}
+
+// Handle form submission
 const submit = async e => {
   const formData = new FormData(e.target)
-
+  const enteredCaptcha = formData.get('captcha')
   const loader = $loading.show()
+
+  // Verify CAPTCHA
+  if (parseInt(enteredCaptcha) !== captcha.value) {
+    Swal.fire({
+      title: 'CAPTCHA Salah!',
+      text: 'Harap masukkan CAPTCHA yang benar.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    })
+    loader.hide()
+    return
+  }
+
   try {
+    // Login logic
     await login({
       email: formData.get('email'),
       password: formData.get('password'),
     })
     const user = await me()
-
-    // SweetAlert sukses login
     Swal.fire({
       title: 'Login Berhasil!',
       text: `Selamat datang, ${user.name || 'pengguna'}!`,
       icon: 'success',
       confirmButtonText: 'OK',
     }).then(() => {
-      if (user.role === 'USER') {
-        router.push('/MyCompany')
-      } else {
-        router.push('/Companies')
-      }
+      // Redirect based on user role
+      router.push(user.role === 'USER' ? '/MyCompany' : '/Companies')
     })
   } catch (e) {
-    // SweetAlert gagal login
     Swal.fire({
       title: 'Login Gagal!',
       text: 'Email atau password yang Anda masukkan salah. Silakan coba lagi.',
@@ -50,35 +70,6 @@ const submit = async e => {
       confirmButtonText: 'OK',
     })
     console.error(e)
-  } finally {
-    loader.hide()
-  }
-}
-// Logout function to trigger on logout action
-const logout = async () => {
-  const loader = $loading.show()
-  try {
-    // Here, you would include any necessary steps to log out the user,
-    // such as clearing tokens or session data.
-    await logoutUser() // Adjust this based on your actual logout implementation
-
-    // Show SweetAlert on successful logout
-    Swal.fire({
-      title: 'Logout Berhasil!',
-      text: 'Anda telah berhasil keluar.',
-      icon: 'success',
-      confirmButtonText: 'OK',
-    }).then(() => {
-      router.push('/login') // Redirect to login page
-    })
-  } catch (e) {
-    console.error('Logout Error:', e)
-    Swal.fire({
-      title: 'Logout Gagal!',
-      text: 'Terjadi kesalahan saat logout. Silakan coba lagi.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    })
   } finally {
     loader.hide()
   }
@@ -92,11 +83,7 @@ const logout = async () => {
         <div class="row align-items-center">
           <div class="col-lg-12">
             <div class="login-logo">
-              <img
-                src="@/assets/img/dlh.jpg"
-                alt="img"
-                style="width: 200px; height: auto"
-              />
+              <img src="@/assets/img/dlh.jpg" alt="img" style="width: 200px; height: auto" />
             </div>
           </div>
           <div class="col-lg-6 col-xl-7">
@@ -139,19 +126,30 @@ const logout = async () => {
                   </div>
                 </div>
               </div>
+              <!-- CAPTCHA Section -->
+              <div class="form-group captcha-group">
+                <label>CAPTCHA</label>
+                <div class="captcha-placeholder">
+                  <span class="captcha-code">{{ captcha }}</span>
+                  <button type="button" @click="refreshCaptcha" class="refresh-captcha">
+                    &#x21bb; <!-- Refresh icon -->
+                  </button>
+                  <input
+                    type="text"
+                    class="form-control mt-2"
+                    placeholder="Enter CAPTCHA"
+                    name="captcha"
+                  />
+                </div>
+              </div>
               <div class="login-button">
                 <button class="btn btn-login">Login</button>
               </div>
               <!-- Forgot password and sign up section -->
               <div class="login-footer mt-3 text-left">
-                <a href="forget-password.html" class="d-block mb-2"
-                  >Lupa password?</a
-                >
-                <span
-                  >Belum punya akun perusahaan?
-                  <RouterLink to="/RegisterCompany" class="signup-link"
-                    >Daftar</RouterLink
-                  >
+                <a href="forget-password.html" class="d-block mb-2">Lupa password?</a>
+                <span>Belum punya akun perusahaan?
+                  <RouterLink to="/RegisterCompany" class="signup-link">Daftar</RouterLink>
                 </span>
               </div>
             </div>
@@ -161,3 +159,32 @@ const logout = async () => {
     </div>
   </MainWrapper>
 </template>
+
+<style>
+.captcha-group {
+  margin-bottom: 20px;
+}
+
+.captcha-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.captcha-code {
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.refresh-captcha {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #007bff;
+}
+</style>
