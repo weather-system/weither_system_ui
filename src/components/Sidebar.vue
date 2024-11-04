@@ -117,18 +117,25 @@ onMounted(async () => {
             </a>
             <transition name="slide-fade">
               <ul v-if="isDataOpen" class="submenu d-block ms-4">
-                <li>
+                <!-- <li>
                   <router-link
                     to="/Data/Company"
                     activeClass="active"
                     >Usaha</router-link
                   >
-                </li>
+                </li> -->
                 <li>
                   <router-link
                     to="/Data/Perizinan"
                     activeClass="active"
                     >Perizinan</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    to="/Data/IPAL"
+                    activeClass="active"
+                    >IPAL</router-link
                   >
                 </li>
                 <li>

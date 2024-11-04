@@ -1,19 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import axios from 'axios'
-import { useLoading } from 'vue-loading-overlay'
-import MainWrapper from '@/components/MainWrapper.vue'
-
-const $loading = useLoading()
-const route = useRoute()
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { useLoading } from 'vue-loading-overlay';
+import { uploadFile } from '@/lib/filestorage.js';
+import Swal from 'sweetalert2';
+import MainWrapper from '@/components/MainWrapper.vue';
 
 const formData = ref({
   ipalTypes: [],
-  system_ipal: [],
-  company_licence_id: '', // Holds the selected company license ID
-  waste_discharge_measuring_instrument_inlet_name: '', // Holds the inlet measuring instrument name
-  waste_discharge_measuring_instrument_outlet_name: '', // Holds the outlet measuring instrument name
+  system_ipal: '',
+  company_licence_id: '',
+  waste_discharge_measuring_instrument_inlet_name: '',
+  waste_discharge_measuring_instrument_outlet_name: '',
   year_of_manufacture_of_ipal: '',
   capacity_ipal: '',
   unit_in_capacity: '',
@@ -25,145 +24,165 @@ const formData = ref({
   water_bodies_receiving_liquid_waste: '',
   ipal_sludge_storage_site: '',
   amount_of_mud_sludge: '',
-})
-const licenseOptions = ref([]) // Holds the license options fetched from the API
-const errorMessage = ref('') // Holds error message if no data is found
-const currentPage = ref(1) // Current page in pagination
-const perPage = 1 // Number of items per page (1 IPAL type per page)
+  waste_discharge_measuring_instrument_inlet: null,
+  waste_discharge_measuring_instrument_outlet: null,
+  ipal_design_note: '',
+  company_detail_id: '',
+  ipalDetails: [], // Will hold details including chemicals
+});
 
-// Checkbox states
-const isInletChecked = ref(false)
-const isOutletChecked = ref(false)
+// State variables
+const licenseOptions = ref([]);
+const errorMessage = ref('');
+const $loading = useLoading();
+const router = useRouter();
+const urlNIB = ref('');
+const isInletChecked = ref(false);
+const isOutletChecked = ref(false);
 
-// Fetch company types with pagination
-const fetchCompanyTypes = async () => {
-  const loader = $loading.show()
-  const companyId = route.params.company_detail_id
-  try {
-    const response = await axios.get(
-      `http://localhost:8000/api/ipal/${companyId}`,
-    )
-    console.log('Full API Response:', response) // Log entire response for verification
-
-    const data = response.data || []
-    if (data.length === 0) {
-      errorMessage.value = 'Data tidak ditemukan' // Update error message for empty data
-      formData.value.ipalTypes = []
-    } else {
-      formData.value.ipalTypes = data.map(item => item.type)
-      errorMessage.value = ''
-      if (currentPage.value > formData.value.ipalTypes.length) {
-        currentPage.value = formData.value.ipalTypes.length
-      }
-    }
-    console.log(
-      `Fetched Company Types for ID ${companyId}:`,
-      formData.value.ipalTypes,
-    )
-  } catch (error) {
-    console.error('Error fetching company types:', error)
-  } finally {
-    loader.hide()
-  }
-}
-
-// Fetch company license IDs
+// Fetch company licenses for the dropdown
 const fetchCompanyLicences = async () => {
-  const loader = $loading.show()
+  const loader = $loading.show();
   try {
-    const response = await axios.get(
-      'http://localhost:8000/api/company_licence',
-    )
-    licenseOptions.value = response.data || [] // Store the fetched licenses
+    const response = await axios.get('http://localhost:8000/api/company_licence');
+    licenseOptions.value = response.data || [];
   } catch (error) {
-    console.error('Error fetching company licenses:', error)
+    console.error('Error fetching company licenses:', error);
   } finally {
-    loader.hide()
+    loader.hide();
   }
-}
+};
 
-// Update company types API call
-const updateCompanyDetails = async () => {
-  const loader = $loading.show()
-  const companyId = route.params.company_detail_id
-
+const fetchCompanyDetailsID = async () => {
+  const loader = $loading.show();
   try {
-    const updatedType = {
-      ...formData.value,
-      company_detail_id: companyId,
-      type: formData.value.ipalTypes[currentPage.value - 1], // Get the type for the current page
-      id: currentPage.value,
-      system_ipal: formData.value.system_ipal.join(',')
+    const response = await axios.get('http://localhost:8000/api/company_detail');
+    console.log("API Response:", response.data);
+    
+    if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+      formData.value.company_detail_id = response.data[0].company_detail_id;
+      console.log("Company detail ID fetched: ", formData.value.company_detail_id);
+    } else if (response.data && typeof response.data === 'object' && response.data.company_detail_id) {
+      formData.value.company_detail_id = response.data.company_detail_id;
+      console.log("Company detail ID fetched: ", formData.value.company_detail_id);
+    } else {
+      console.warn("No company details found or invalid response format.");
+      formData.value.company_detail_id = null;
     }
-    console.log(updatedType)
-    // Send the request with the JSON data
-    const response = await axios.put(
-      `http://localhost:8000/api/company_ipals/${currentPage.value}`,
-      updatedType,
-      {
-        headers: {
-          'Content-Type': 'application/json', // Explicitly set the Content-Type to application/json
-        },
-      },
-    )
-
-    alert(response.data.message) // Display the success message from the backend
   } catch (error) {
-    console.error('Error updating company types:', error)
-    alert('Failed to update company type.')
+    console.error('Error fetching company details:', error);
   } finally {
-    loader.hide()
+    loader.hide();
   }
-}
+};
 
-// Fetch company types and licenses on mount
-onMounted(() => {
-  fetchCompanyTypes()
-  fetchCompanyLicences()
-})
+// Fetch initial data
+fetchCompanyLicences();
+fetchCompanyDetailsID();
 
-// Pagination functions
-const nextPage = () => {
-  if (currentPage.value < formData.value.ipalTypes.length) {
-    currentPage.value += 1
-    fetchCompanyTypes()
+// Prepare IPAL entry creation
+const createIpalEntry = async () => {
+  const loader = $loading.show();
+  try {
+    const token = localStorage.getItem('TOKEN');
+    if (!token) {
+      Swal.fire('Error', 'Silakan login ulang.', 'error');
+      return;
+    }
+
+    formData.value.system_ipal = formData.value.ipalTypes.join(',');
+
+    // Prepare ipalDetails from chemicalDetails
+    formData.value.ipalDetails = chemicalDetails.value.map(chemical => ({
+      chemicals_used: chemical.chemicals_used,
+      use_of_chemicals: chemical.use_of_chemicals,
+      unit_in_use_of_chemicals: chemical.unit_in_use_of_chemicals,
+    }));
+
+    const response = await axios.post('http://localhost:8000/api/company_ipals', formData.value, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log('Company IPAL created:', response.data);
+    console.log(response.data.id)
+    if (response.data && response.data.id) {
+      const companyIpalId = response.data.id;
+
+      // Send ipalDetails
+      for (const detail of formData.value.ipalDetails) {
+        const detailData = {
+          company_ipal_id: companyIpalId,
+          ...detail,
+        };
+
+        try {
+          const detailResponse = await axios.post('http://localhost:8000/api/ipal-details', detailData);
+          console.log('IPAL detail added:', detailResponse.data);
+        } catch (detailError) {
+          console.error('Error adding IPAL detail:', detailError);
+        }
+      }
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'IPAL entry created successfully!',
+      });
+      router.push('/Data/IPAL');
+    } else {
+      console.log('Condition not met, response data:', response.data);
+    }
+  } catch (error) {
+    console.error('Error creating IPAL entry:', error);
+    errorMessage.value = 'Failed to create IPAL entry. Please try again.';
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to create IPAL entry. Please try again.',
+    });
+  } finally {
+    loader.hide();
   }
-}
+};
 
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1
-    fetchCompanyTypes()
-  }
-}
-
-// Toggle functions for inlet and outlet checkboxes
+// Toggle functions for inlet and outlet
 const toggleInlet = () => {
   if (!isInletChecked.value) {
-    formData.value.waste_discharge_measuring_instrument_inlet_name = ''
+    formData.value.waste_discharge_measuring_instrument_inlet_name = '';
   }
-}
+};
 
 const toggleOutlet = () => {
   if (!isOutletChecked.value) {
-    formData.value.waste_discharge_measuring_instrument_outlet_name = ''
+    formData.value.waste_discharge_measuring_instrument_outlet_name = '';
   }
-}
+};
 
-// Placeholder function for file upload (to be implemented)
+// Upload NIB file
 const uploadNIB = async e => {
-  const loader = $loading.show()
+  const loader = $loading.show();
   try {
-    const url = await uploadFile(e.target.files[0])
-    urlNIB.value = url
-    form.value.ipal_design_note = urlNIB.value
-    console.log('Uploaded URL:', urlNIB.value)
+    const url = await uploadFile(e.target.files[0]);
+    urlNIB.value = url;
+    formData.value.ipal_design_note = urlNIB.value;
+    console.log('Uploaded URL:', urlNIB.value);
   } catch (e) {
-    console.error(e)
+    console.error(e);
   } finally {
-    loader.hide()
+    loader.hide();
   }
-}
+};
+
+// Chemical details management
+const chemicalDetails = ref([{ chemicals_used: '', use_of_chemicals: '', unit_in_use_of_chemicals: '' }]);
+
+const addChemical = () => {
+  chemicalDetails.value.push({ chemicals_used: '', use_of_chemicals: '', unit_in_use_of_chemicals: '' });
+};
+
+const removeChemical = (index) => {
+  chemicalDetails.value.splice(index, 1);
+};
+
 </script>
 
 <template>
@@ -173,24 +192,16 @@ const uploadNIB = async e => {
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <div class="content-page-header mb-2">
-              <h3>Persetujuan Teknis IPAL</h3>
+              <h3>Tambah Persetujuan Teknis IPAL</h3>
             </div>
-            <form
-              v-if="formData.ipalTypes.length > 0"
-              @submit.prevent="updateCompanyDetails"
-            >
-              <div v-if="errorMessage" class="alert alert-danger">
-                {{ errorMessage }}
-              </div>
+            <form @submit.prevent="createIpalEntry">
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label class="col-form-label"
-                      >Jenis IPAL {{ currentPage }}</label
-                    >
+                    <label class="col-form-label">Jenis IPAL</label>
                     <select
                       class="form-control"
-                      v-model="formData.ipalTypes[currentPage - 1]"
+                      v-model="formData.type"
                       required
                     >
                       <option value="" disabled>Pilih Jenis IPAL</option>
@@ -206,7 +217,6 @@ const uploadNIB = async e => {
                     <select
                       class="form-control"
                       v-model="formData.company_licence_id"
-                      required
                     >
                       <option value="">Pilih Data Izin</option>
                       <option
@@ -277,17 +287,18 @@ const uploadNIB = async e => {
                   </div>
                 </div>
               </div>
-              <div class="row service-cont">
+              <div class="row service-count">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="col-form-label">Sistem IPAL</label>
+                    <label class="col-form-label">Sistem Ipal</label>
                     <div class="d-flex flex-wrap">
                       <div class="form-check me-3">
                         <label>
                           <input
                             type="checkbox"
+                            id="checkboxFisika"
                             value="Fisika"
-                            v-model="formData.system_ipal"
+                            v-model="formData.ipalTypes"
                           />
                           Fisika
                         </label>
@@ -296,18 +307,20 @@ const uploadNIB = async e => {
                         <label>
                           <input
                             type="checkbox"
+                            id="checkboxKimia"
                             value="Kimia"
-                            v-model="formData.system_ipal"
+                            v-model="formData.ipalTypes"
                           />
                           Kimia
                         </label>
                       </div>
-                      <div class="form-check me-3">
+                      <div class="form-check">
                         <label>
                           <input
                             type="checkbox"
+                            id="checkboxBiologi"
                             value="Biologi"
-                            v-model="formData.system_ipal"
+                            v-model="formData.ipalTypes"
                           />
                           Biologi
                         </label>
@@ -359,8 +372,8 @@ const uploadNIB = async e => {
                             v-model="isInletChecked"
                             @change="toggleInlet"
                           />
-                          Inlet</label
-                        >
+                          Inlet
+                        </label>
                       </div>
                       <div class="col-md-6">
                         <div v-if="isInletChecked" class="form-group">
@@ -422,29 +435,89 @@ const uploadNIB = async e => {
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <div class="form-group">
-                    <label class="col-form-label"
-                      >Badan Air yang Menerima Limbah Cair</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.water_bodies_receiving_liquid_waste"
-                    />
+                    <label></label>
+                    <img :src="formData.ipal_design_note" class="" />
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label"
-                      >Tempat Penampungan Lumpur IPAL</label
+              </div>
+              <div>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Bahan Kimia Yang Digunakan</th>
+                      <th>Pemakaian Bahan Kimia</th>
+                      <th>Satuan</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(chemical, index) in chemicalDetails"
+                      :key="index"
                     >
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.ipal_sludge_storage_site"
-                    />
-                  </div>
+                      <td>{{ index + 1 }}</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="chemical.chemicals_used"
+                          placeholder="Enter Chemicals Used"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="chemical.use_of_chemicals"
+                          placeholder="Enter Use of Chemicals"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="chemical.unit_in_use_of_chemicals"
+                          placeholder="Enter Unit of Chemicals"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          @click="removeChemical(index)"
+                          class="btn btn-danger"
+                        >
+                          -
+                        </button>
+                        <button @click="addChemical" class="btn btn-success">
+                          +
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label"
+                  >Badan Air Yang Menerima Limbah Cair</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="formData.water_bodies_receiving_liquid_waste"
+                />
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label"
+                    >Tempat Penampungan Lumpur IPAL</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.ipal_sludge_storage_site"
+                  />
                 </div>
               </div>
               <div class="row">
@@ -479,57 +552,8 @@ const uploadNIB = async e => {
                   v-model="formData.further_sludge_handling"
                 />
               </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="field-btns d-flex justify-content-between">
-                    <div>
-                      <button
-                        class="btn btn-primary next_btn"
-                        type="submit"
-                        v-if="formData.ipalTypes.length > 0"
-                      >
-                        Update
-                      </button>
-                      <router-link
-                        to="/Data/Company"
-                        class="btn btn-secondary m-2"
-                        >Kembali</router-link
-                      >
-                    </div>
-                    <div
-                      class="pagination-controls mt-1"
-                      v-if="formData.ipalTypes.length > 0"
-                    >
-                      <button
-                        @click="prevPage"
-                        :disabled="currentPage === 1"
-                        class="btn btn-secondary"
-                      >
-                        Previous
-                      </button>
-                      <span>
-                        Page {{ currentPage }} of
-                        {{ formData.ipalTypes.length }}
-                      </span>
-                      <button
-                        @click="nextPage"
-                        :disabled="currentPage === formData.ipalTypes.length"
-                        class="btn btn-secondary"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
-            <div v-else>
-              <p class="alert alert-warning">Data tidak ditemukan</p>
-              <router-link to="/Data/Company" class="btn btn-secondary m-2"
-                >Kembali</router-link
-              >
-            </div>
           </div>
         </div>
       </div>
@@ -538,10 +562,14 @@ const uploadNIB = async e => {
 </template>
 
 <style scoped>
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
+.service-count {
+  margin-top: 20px;
+}
+.table {
+  width: 100%;
+  margin-top: 20px;
+}
+.btn {
+  margin-left: 5px; /* Adjust spacing between buttons */
 }
 </style>
