@@ -251,6 +251,28 @@ const uploadNIB = async e => {
                 </div>
               </div>
               <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">Longitude</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="formData.longitude"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">Latitude</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="formData.latitude"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="col-form-label">Tahun Pembuatan IPAL</label>
@@ -279,6 +301,69 @@ const uploadNIB = async e => {
                       class="form-control"
                       v-model="formData.unit_in_capacity"
                     />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-form-label">Alat Ukur Debit Limbah</label>
+                    <div class="d-flex align-items-center">
+                      <div class="form-check me-3">
+                        <label>
+                          <input
+                            type="checkbox"
+                            id="inletCheckbox"
+                            v-model="isInletChecked"
+                            @change="toggleInlet"
+                          />
+                          Inlet
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <div v-if="isInletChecked" class="form-group">
+                          <input
+                            type="text"
+                            class="form-control input-dark-placeholder"
+                            v-model="
+                              formData.waste_discharge_measuring_instrument_inlet_name
+                            "
+                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="d-flex align-items-center">
+                      <div class="form-check me-3">
+                        <label>
+                          <input
+                            type="checkbox"
+                            id="outletCheckbox"
+                            v-model="isOutletChecked"
+                            @change="toggleOutlet"
+                          />
+                          Outlet</label
+                        >
+                      </div>
+                      <div class="col-md-6">
+                        <div v-if="isOutletChecked" class="form-group">
+                          <input
+                            type="text"
+                            class="form-control input-dark-placeholder"
+                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
+                            v-model="
+                              formData.waste_discharge_measuring_instrument_outlet_name
+                            "
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -348,104 +433,19 @@ const uploadNIB = async e => {
                   </div>
                 </div>
               </div>
-
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Longitude</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.longitude"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Latitude</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.latitude"
-                    />
-                  </div>
-                </div>
-              </div>
               <div class="form-group">
-                <label class="col-form-label">Upaya Daur Ulang</label>
+                <label class="col-form-label">Upaya Pengelolaan</label>
                 <input
                   type="text"
                   class="form-control"
                   v-model="formData.recycle_efforts"
                 />
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="col-form-label">Alat Ukur Debit Limbah</label>
-                    <div class="d-flex align-items-center">
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="inletCheckbox"
-                            v-model="isInletChecked"
-                            @change="toggleInlet"
-                          />
-                          Inlet
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <div v-if="isInletChecked" class="form-group">
-                          <input
-                            type="text"
-                            class="form-control input-dark-placeholder"
-                            v-model="
-                              formData.waste_discharge_measuring_instrument_inlet_name
-                            "
-                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <div class="d-flex align-items-center">
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="outletCheckbox"
-                            v-model="isOutletChecked"
-                            @change="toggleOutlet"
-                          />
-                          Outlet</label
-                        >
-                      </div>
-                      <div class="col-md-6">
-                        <div v-if="isOutletChecked" class="form-group">
-                          <input
-                            type="text"
-                            class="form-control input-dark-placeholder"
-                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
-                            v-model="
-                              formData.waste_discharge_measuring_instrument_outlet_name
-                            "
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="photo">Upload Nota Design IPAL</label>
+                    <label for="photo">Upload Persetujuan Teknis IPAL</label>
                     <input
                       type="file"
                       @change="uploadNIB"

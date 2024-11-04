@@ -26,7 +26,7 @@ const submit = async (data) => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header mb-2">
-          <h3>Tambah Cerobong</h3>
+          <h3>Rincian Teknis TPS LB3</h3>
         </div>
 
         <TPSB3Form @submit="submit" />

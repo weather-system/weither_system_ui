@@ -234,6 +234,12 @@ const router = createRouter({
       name: 'PengendalianPencemaranAirEdit',
       component: () => import('@/views/pengendalian/PencemaranAirEdit.vue'),
     },
+    
+    {
+      path: '/Pengendalian/PencemaranUdara',
+      name: 'PengendalianPencemaranUdara',
+      component: () => import('@/views/pengendalian/PencemaranUdara.vue'),
+    },
     {
       path: '/Data/IPAL',
       name: 'DataIPAL',

@@ -66,7 +66,7 @@ onMounted(() => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
-          <h3>Data IPAL</h3>
+          <h3>Persetujuan Teknis IPAL</h3>
           <div class="list-btn">
             <ul>
               <li>

@@ -170,7 +170,7 @@ onMounted(async () => {
               :class="{ active: route.path.startsWith('/Pengendalian') }"
             >
               <i class="fas fa-cogs"></i>
-              <span>Pengendalian</span>
+              <span>Pemantauan</span>
               <i
                 class="fe"
                 :class="{
@@ -189,7 +189,7 @@ onMounted(async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/pengendalian/udara"
+                  <router-link to="/Pengendalian/PencemaranUdara"
                     >Pencemaran Udara</router-link
                   >
                 </li>
