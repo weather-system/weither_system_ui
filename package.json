@@ -23,6 +23,7 @@
     "dlh-cimahi-frontend": "file:",
     "feather-icons": "^4.29.2",
     "firebase": "^11.0.1",
+    "jenesius-vue-modal": "^1.11.9",
     "jquery": "^3.7.1",
     "sweetalert2": "^11.14.4",
     "vee-validate": "^4.14.6",

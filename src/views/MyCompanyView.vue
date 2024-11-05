@@ -1,15 +1,20 @@
 <script setup>
 import axios from 'axios'
 import MainWrapper from '@/components/MainWrapper.vue'
+import KBLIModal from '@/components/KBLIModal.vue'
 import { ref, watch, computed, onMounted } from 'vue'
 import { logout as authLogout } from '@/lib/auth.js'
 import { useStore } from 'vuex'
 import { useLoading } from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
+import { promptModal } from "jenesius-vue-modal";
 import Swal from 'sweetalert2'
 const $loading = useLoading()
 const store = useStore()
 const router = useRouter()
+
+const kbli = ref([])
+const jenisUsaha = ref([])
 
 const logout = async () => {
   const loader = $loading.show()
@@ -98,7 +103,7 @@ const submitForm = async () => {
     const requiredFields = [
       'npwp',
       'local_npwp',
-      'activity_type',
+      // 'activity_type',
       'any_genset',
       'any_tpsb3',
       'any_wells',
@@ -119,27 +124,31 @@ const submitForm = async () => {
       }
     }
 
+    const data = {
+      ...formData.value,
+      npwp: formData.value.npwp,
+      local_npwp: formData.value.local_npwp,
+      // activity_type: formData.value.activity_type,
+      any_genset: formData.value.any_genset,
+      any_tpsb3: formData.value.any_tpsb3,
+      any_wells: formData.value.any_wells,
+      building_area: formData.value.building_area,
+      employees_total: formData.value.employees_total,
+      green_open_space_area: formData.value.green_open_space_area,
+      land_area: formData.value.land_area,
+      pic_name: formData.value.pic_name,
+      production_capacity: formData.value.production_capacity,
+      shift_count: formData.value.shift_count,
+      source: formData.value.source.toString(),
+      any_ipal: formData.value.any_ipal,
+      ipal_total: formData.value.ipal_total,
+      kbli: kbli.value,
+      jenisUsaha: jenisUsaha.value
+    }
+
     const response = await axios.post(
       'http://localhost:8000/api/companies/details',
-      {
-        ...formData.value,
-        npwp: formData.value.npwp,
-        local_npwp: formData.value.local_npwp,
-        activity_type: formData.value.activity_type,
-        any_genset: formData.value.any_genset,
-        any_tpsb3: formData.value.any_tpsb3,
-        any_wells: formData.value.any_wells,
-        building_area: formData.value.building_area,
-        employees_total: formData.value.employees_total,
-        green_open_space_area: formData.value.green_open_space_area,
-        land_area: formData.value.land_area,
-        pic_name: formData.value.pic_name,
-        production_capacity: formData.value.production_capacity,
-        shift_count: formData.value.shift_count,
-        source: formData.value.source.toString(),
-        any_ipal: formData.value.any_ipal,
-        ipal_total: formData.value.ipal_total,
-      },
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -183,6 +192,7 @@ watch(kodekbli, (newValue) => {
 })
 
 const userStatus = ref(null)
+const companyDetail = ref(false)
 const loading = ref(true)
 const fetchUserStatus = async () => {
   const token = localStorage.getItem('TOKEN')
@@ -195,11 +205,34 @@ const fetchUserStatus = async () => {
       },
     })
     userStatus.value = response.data.status
+    companyDetail.value = response.data.detail
   } catch (error) {
     console.error('Error fetching user status:', error)
   } finally {
     loading.value = false
   }
+}
+
+const openKbliModal = async () => {
+  const selectedKbli = await promptModal(KBLIModal)
+  kbli.value.push(selectedKbli)
+}
+
+const deleteKbli = (data) => {
+  kbli.value = kbli.value.filter((v) => {
+    return v.kode != data.kode
+  })
+}
+
+const addJenisUsaha = (event) => {
+  jenisUsaha.value.push(event.target.value)
+  event.target.value = ''
+}
+
+const deleteJenisUsaha = (data) => {
+  jenisUsaha.value = jenisUsaha.value.filter((v) => {
+    return v != data
+  })
 }
 
 onMounted(() => {
@@ -216,7 +249,7 @@ watch(
 
 
 <template>
-  <div v-if="userStatus === 'DITERIMA'">
+  <div v-if="userStatus === 'DITERIMA' && !companyDetail">
     <MainWrapper>
       <div class="page-wrapper">
         <div class="content">
@@ -224,6 +257,7 @@ watch(
             <div class="row">
               <div class="col-md-12 col-lg-10 mx-auto">
                 <h3 class="mb-5">Lengkapi seluruh persyaratan pendaftaran</h3>
+                <p>{{ userStatus }} - {{ companyDetail }}</p>
 
                 <!-- Service List -->
                 <!-- <ul id="progressbar">
@@ -277,54 +311,28 @@ watch(
                               <h6>Data Perusahaan</h6>
                             </div>
                             <div class="row">
-                              <div class="col-md-6">
+                              <div class="col">
                                 <div class="form-group">
-                                  <label class="col-form-label"
-                                    >KODE KBLI</label
+                                  <label class="col-form-label m-0"
+                                    >KBLI</label
                                   >
-                                  <div class="input-group mb-2">
-                                    <span
-                                      class="input-group-text"
-                                      id="search-addon"
-                                    >
-                                      <i class="fas fa-search"></i>
-                                    </span>
-                                    <input
-                                      type="text"
-                                      class="form-control input-dark-placeholder"
-                                      placeholder="Search KODE KBLI"
-                                      v-model="searchQuery"
-                                    />
+                                  <div v-if="kbli.length < 1">
+                                    <p class="mb-1">Tidak ada KBLI</p>
                                   </div>
-                                  <select
-                                    class="form-control"
-                                    v-model="kodekbli"
-                                  >
-                                    <option value="" disabled selected>
-                                      Pilih KODE KBLI
-                                    </option>
-
-                                    <option
-                                      v-for="(
-                                        value, key
-                                      ) in filteredKbliOptions"
-                                      :key="key"
-                                      :value="key"
-                                    >
-                                      {{ key }}
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                  <label class="col-form-label">Judul</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    :value="kodeJudul"
-                                    readonly
-                                  />
+                                  <div>
+                                    <div v-for="data in kbli" :key="data.kode" class="card mb-3">
+                                      <div class="card-header p-2">{{ data.kode }} - {{ data.judul }}</div>
+                                      <div class="card-body p-2">
+                                        <p class="card-text">{{ data.uraian }}</p>
+                                        <div class="d-flex justify-content-end mt-1">
+                                          <button @click="deleteKbli(data)" type="button" class="btn btn-danger">Hapus</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <button @click="openKbliModal" type="button" class="btn btn-primary">Tambah KBLI</button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -355,12 +363,50 @@ watch(
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="col-form-label">Jenis Usaha</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Masukkan Jenis Usaha"
-                                v-model="formData.activity_type"
-                              />
+                              <select class="form-control" @change="addJenisUsaha">
+                                   <option value="">Pilih</option>
+                                   <option value="Peternakaan sapi dan babi - (Satuan Produksi : Ekor/Bulan)">Peternakaan sapi dan babi - (Satuan Produksi : Ekor/Bulan)</option>
+                                    <option value="Perhotelan - (Satuan Produksi : Orang/Bulan)">Perhotelan - (Satuan Produksi : Orang/Bulan)</option>
+                                    <option value="Pemotongan Hewan - (Satuan Produksi : Ekor/Bulan)">Pemotongan Hewan - (Satuan Produksi : Ekor/Bulan)</option>
+                                    <option value="Industri Tekstil (Q<=100 m3/hari) - (Satuan Produksi : Ton/Bulan)">Industri Tekstil (Q<=100 m3/hari) - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Tekstil (Q=100-1000 m3/hari) - (Satuan Produksi : Ton/bulan)">Industri Tekstil (Q=100-1000 m3/hari) - (Satuan Produksi : Ton/bulan)</option>
+                                    <option value="Industri Tekstil (Q>=1000m3/hari) - (Satuan Produksi : Ton/bulan)">Industri Tekstil (Q>=1000m3/hari) - (Satuan Produksi : Ton/bulan)</option>
+                                    <option value="Industri Tekstil - (Satuan Produksi : Ton/Bulan)">Industri Tekstil - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Pelapisan Logam dan Galvanis - (Satuan Produksi : m2/Bulan)">Industri Pelapisan Logam dan Galvanis - (Satuan Produksi : m2/Bulan)</option>
+                                    <option value="Industri Kayu lapis - (Satuan Produksi : m3/bulan)">Industri Kayu lapis - (Satuan Produksi : m3/bulan)</option>
+                                    <option value="Industri Cat - (Satuan Produksi : Liter Cat Water Base/Bulan)">Industri Cat - (Satuan Produksi : Liter Cat Water Base/Bulan)</option>
+                                    <option value="Fasilitas Pelayanan Kesehatan - (Satuan Produksi : Orang/Bulan)">Fasilitas Pelayanan Kesehatan - (Satuan Produksi : Orang/Bulan)</option>
+                                    <option value="Industri Domestik - (Satuan Produksi : Orang/Bulan)">Industri Domestik - (Satuan Produksi : Orang/Bulan)</option>
+                                    <option value="Pengolahan kedelai - (Satuan Produksi : Ton/Bulan)">Pengolahan kedelai - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Pengolahan Daging - (Satuan Produksi : Ton/Bulan)">Pengolahan Daging - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Pengolahan susu - (Satuan Produksi : Ton/Bulan)">Pengolahan susu - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Yang belum Memiliki Baku mutu Air Limbah yang ditetapkan - (Satuan Produksi : Ton/Bulan)">Industri Yang belum Memiliki Baku mutu Air Limbah yang ditetapkan - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Minuman Ringan - (Satuan Produksi : Ton/Bulan)">Industri Minuman Ringan - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Tapioka - (Satuan Produksi : Ton/Bulan)">Industri Tapioka - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Soda Kostik - (Satuan Produksi : Ton/Bulan)">Industri Soda Kostik - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Sabun, deterjen produk minyak nabati - (Satuan Produksi : Ton/Bulan)">Industri Sabun, deterjen produk minyak nabati - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri PET - (Satuan Produksi : Ton/Bulan)">Industri PET - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Penyamaan Kulit - (Satuan Produksi : Ton/Bulan)">Industri Penyamaan Kulit - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri MSG IMP - (Satuan Produksi : Ton/Bulan)">Industri MSG IMP - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Baterai Timbal Asam (AKI) - (Satuan Produksi : Ton/Bulan)">Industri Baterai Timbal Asam (AKI) - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Karet - (Satuan Produksi : Ton/Bulan)">Industri Karet - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Farmasi - (Satuan Produksi : Ton/Bulan)">Industri Farmasi - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Elektronika - (Satuan Produksi : Ton/Bulan)">Industri Elektronika - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Asam Tereftalat PTA - (Satuan Produksi : Ton/Bulan)">Industri Asam Tereftalat PTA - (Satuan Produksi : Ton/Bulan)</option>
+                                    <option value="Industri Garment - (Satuan Produksi : ton/bulan)">Industri Garment - (Satuan Produksi : ton/bulan)</option>
+                                    <option value="Industri Lainnya - (Satuan Produksi : ton/bulan)">Industri Lainnya - (Satuan Produksi : ton/bulan)</option>
+                                </select>
+                                <div v-if="jenisUsaha.length < 1" class="mt-2">
+                                  <p>Tidak ada Jenis Usaha</p>
+                                </div>
+                                <div>
+                                  <div v-for="data in jenisUsaha" :key="data" class="card mt-2 mb-0">
+                                      <div class="card-header p-2 d-flex justify-content-between align-items-center">
+                                        <p>{{ data }}</p>
+                                        <button @click="deleteJenisUsaha(data)" type="button" class="btn btn-danger">Hapus</button>
+                                      </div>
+                                  </div>
+                                </div>
                             </div>
                           </div>
                           <div class="col-md-6">
@@ -734,7 +780,7 @@ watch(
       </div>
     </MainWrapper>
   </div>
-  <div v-else>
+  <div v-else-if="userStatus != 'DITERIMA' && !companyDetail">
     <MainWrapper>
       <div class="page-wrapper">
         <div class="content">
@@ -1240,6 +1286,20 @@ watch(
         <a @click="logout" href="#" class="logout-button">Log Out</a>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <MainWrapper>
+      <div class="page-wrapper">
+        <div class="content">
+          <div class="container">
+            <div class="row">
+              <h1>Selamat datang</h1>
+              <p>Silahkan lanjutkan mengisi data Perizinan, IPAL, Cerobong, TPS B3, dan Sumber Air</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainWrapper>
   </div>
 </template>
 
