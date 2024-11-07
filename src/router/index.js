@@ -43,14 +43,14 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'HomeView',
+      component: () => import('@/views/HomeView.vue'),
+    },
+    {
       path: '/LandingPage',
       name: 'LandingPage',
       component: () => import('@/views/LandingPage.vue'),
-    },
-    {
-      path: '/Home',
-      name: 'HomeView',
-      component: () => import('@/views/HomeView.vue'),
     },
     {
       path: '/beranda/ComproView',
@@ -234,7 +234,7 @@ const router = createRouter({
       name: 'PengendalianPencemaranAirEdit',
       component: () => import('@/views/pengendalian/PencemaranAirEdit.vue'),
     },
-    
+
     {
       path: '/Pengendalian/PencemaranUdara',
       name: 'PengendalianPencemaranUdara',
@@ -258,7 +258,7 @@ const router = createRouter({
   ],
 })
 router.beforeEach(async (to, from, next) => {
-  if (to.path === '/Login' || to.path === '/RegisterCompany') {
+  if (to.path === '/Login' || to.path === '/RegisterCompany' || to.path === '/') {
     next()
     return
   }
