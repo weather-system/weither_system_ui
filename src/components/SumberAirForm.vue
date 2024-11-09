@@ -32,14 +32,7 @@ defineExpose({ setValues })
             <div class="mt-2">
                 <div class="col-4">
                     <label class="form-label">Jenis</label>
-                    <Field v-model="type" name="jenis" class="form-control" as="select">
-                        <option value="">Pilih</option>
-                        <option value="Air Tanah">Air Tanah</option>
-                        <option value="Air Permukaan/Sungai">Air Permukaan/Sungai</option>
-                        <option value="Penyedian Air(PDAM/Swasta)">Penyedian Air(PDAM/Swasta)</option>
-                        <option value="Recycle">Recycle</option>
-                        <option value="Air Hujan">Air Hujan</option>
-                    </Field>
+                    <Field v-model="type" name="jenis" class="form-control" />
                     <ErrorMessage name="jenis" />
                 </div>
                 <div v-if="['Air Permukaan/Sungai', 'Penyedian Air(PDAM/Swasta)'].includes(type)" class="col-4">

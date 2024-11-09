@@ -27,15 +27,12 @@ onMounted(async () => {
     sumberAir.value = await getSumberAir()
     const pertekData = await getPertekData()
     if (pertekData) {
-      const pertekSumberAir = pertekData.sumber_air.split(',').map((s) => s.trim())
-
-      totalSumberAir.value = pertekSumberAir.length
-
-      const n = pertekSumberAir.length - sumberAir.value.length
+      totalSumberAir.value = pertekData.sumber_air.length
+      const n = totalSumberAir.value - sumberAir.value.length
       if (n > 0) {
         for (let i = 0; i < n; i++) {
           sumberAir.value.push({
-            jenis: pertekSumberAir[i] == 'air_permukaan' ? 'Air Permukaan/Sungai' : '-',
+            jenis: pertekData.sumber_air[i],
             nama: '-',
             kedalaman: '-',
             kapasitas: '-',
