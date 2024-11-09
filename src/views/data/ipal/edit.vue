@@ -67,7 +67,7 @@ const fetchIpalData = async () => {
     loader.hide()
   }
 }
-const removeChemical = (index) => {
+const removeChemical = index => {
   formData.value.ipal_details.splice(index, 1)
 }
 const addChemical = () => {
@@ -77,11 +77,14 @@ const addChemical = () => {
     unit_in_use_of_chemicals: '',
   })
 }
-const updateIpalDetails = async (detailId) => {
-  if (!$loading.isActive) {  // Prevents repeated loading states
+const updateIpalDetails = async detailId => {
+  if (!$loading.isActive) {
+    // Prevents repeated loading states
     const loader = $loading.show()
     try {
-      const detailToUpdate = formData.value.ipal_details.find(detail => detail.id === detailId)
+      const detailToUpdate = formData.value.ipal_details.find(
+        detail => detail.id === detailId,
+      )
       if (!detailToUpdate) {
         throw new Error('Detail not found')
       }
@@ -96,7 +99,7 @@ const updateIpalDetails = async (detailId) => {
       // Make API request to update the specific detail
       const response = await axios.put(
         `http://localhost:8000/api/ipal-details/${detailId}`,
-        updatedDetail
+        updatedDetail,
       )
 
       // Show a success alert using Swal
@@ -104,23 +107,21 @@ const updateIpalDetails = async (detailId) => {
         title: 'Success!',
         text: 'IPAL detail updated successfully.',
         icon: 'success',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       })
-
     } catch (error) {
       console.error('Error updating IPAL detail:', error)
       Swal.fire({
         title: 'Error!',
         text: error.response?.data?.message || 'Failed to update IPAL detail.',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       })
     } finally {
       loader.hide()
     }
   }
 }
-
 
 const updateCompanyDetails = async () => {
   const loader = $loading.show()
@@ -441,7 +442,6 @@ const uploadNIB = async e => {
                   v-model="formData.recycle_efforts"
                 />
               </div>
-              
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
@@ -474,42 +474,56 @@ const uploadNIB = async e => {
                     </tr>
                   </thead>
                   <tbody>
-              <tr v-for="(detail, index) in formData.ipal_details" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="detail.chemicals_used"
-                    @blur="updateIpalDetails(detail.id)"
-                    placeholder="Enter Chemicals Used"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="detail.use_of_chemicals"
-                    @blur="updateIpalDetails(detail.id)"
-                    placeholder="Enter Use of Chemicals"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="detail.unit_in_use_of_chemicals"
-                    @blur="updateIpalDetails(detail.id)"
-                    placeholder="Enter Unit of Chemicals"
-                  />
-                </td>
-                <td>
-                  <button @click="removeChemical(index)" class="btn btn-danger">-</button>
-                  <button @click="addChemical" class="btn btn-success">+</button>
-                </td>
-              </tr>
+                    <tr v-if="!formData.ipal_details.length">
+                      <td colspan="5" class="text-center">
+                        Data Tidak Ditemukan
+                      </td>
+                    </tr>
+                    <tr
+                      v-for="(detail, index) in formData.ipal_details"
+                      :key="index"
+                    >
+                      <td>{{ index + 1 }}</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.chemicals_used"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Enter Chemicals Used"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.use_of_chemicals"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Enter Use of Chemicals"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.unit_in_use_of_chemicals"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Enter Unit of Chemicals"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          @click="removeChemical(index)"
+                          class="btn btn-danger"
+                        >
+                          -
+                        </button>
+                        <button @click="addChemical" class="btn btn-success">
+                          +
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
-
                 </table>
               </div>
               <div class="row">
