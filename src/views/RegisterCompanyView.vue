@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import { registerCompany } from '@/lib/company.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import HeaderHome from '@/components/HeaderHome.vue'
 
 const $loading = useLoading()
 const router = useRouter()
@@ -169,6 +170,7 @@ const uploadPKPLHFile = async e => {
 </script>
 
 <template>
+  <HeaderHome />
   <MainWrapper :header="false" :sidebar="false">
     <div
       class="login-pages d-flex align-items-center justify-content-center min-vh-100"
