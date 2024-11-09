@@ -96,6 +96,8 @@ const validateForm = () => {
 }
 
 const submitForm = async () => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
   try {
     const token = localStorage.getItem('TOKEN')
     if (!token) {
@@ -198,7 +200,10 @@ const submitForm = async () => {
       'error',
     )
     console.error(error)
-  }
+  }finally {
+        loader.hide() // Hide loader after operation
+      }
+    }
 }
 
 const kodekbli = ref('')

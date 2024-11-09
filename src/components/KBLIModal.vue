@@ -1,13 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
-import { Modal } from "jenesius-vue-modal";
+import { closeModal, Modal } from "jenesius-vue-modal";
 import { searchKbli } from '@/lib/kbli.js'
 
 const $loading = useLoading()
 
 const emit = defineEmits([Modal.EVENT_PROMPT])
-
 const query = ref('')
 const kbli = ref([])
 
@@ -56,7 +55,7 @@ const addKbli = (data) => {
     </div>
 
     <div class="d-flex justify-content-end mt-3">
-      <button class="btn btn-danger">Close</button>
+      <button @click="closeModal" class="btn btn-danger">Close</button>
     </div>
   </div>
 </template>
