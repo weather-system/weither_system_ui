@@ -1,8 +1,10 @@
 import axios from 'axios'
+import store from '@/store'
 
 export const login = async data => {
   const resp = await axios.post('/api/login', data)
   localStorage.setItem('TOKEN', resp.data.access_token)
+  store.commit('auth/setUser', resp.data)
   return resp.data
 }
 
@@ -12,12 +14,14 @@ export const me = async () => {
       Authorization: `Bearer ${localStorage.getItem('TOKEN')}`,
     },
   })
+  store.commit('auth/setUser', resp.data)
   return resp.data
 }
 
 export const logout = async () => {
   const resp = await axios.post('/api/logout')
   localStorage.removeItem('TOKEN')
+  store.commit('auth/setUser', null)
   return resp.data
 }
 export const statusCompanies = async () => {
