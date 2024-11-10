@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const formData = ref({
+  management_efforts: [],
   ipal_details: [],
   ipalTypes: [],
   system_ipal: '',
@@ -102,6 +103,43 @@ const removeChemical = async (detailId, index) => {
   }
 }
 
+const removeEffort = async (detailId, index) => {
+  if (!$loading.isActive) {
+    const confirmation = await Swal.fire({
+      title: 'Anda yakin ?',
+      text: 'Aksi ini tidak dapat dikembalikan.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Tidak',
+    })
+
+    if (confirmation.isConfirmed) {
+      const loader = $loading.show() // Show loader
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/management_efforts/${detailId}`,
+        )
+        if (response.status === 200) {
+          // Remove the item from the local list (UI update)
+          formData.value.management_efforts.splice(index, 1)
+          Swal.fire('Deleted!', 'Data Berhasil Dihapus.', 'success')
+        } else {
+          Swal.fire('Error!', 'Data Gagal Dihapus.', 'error')
+        }
+      } catch (error) {
+        console.error('Error during delete operation:', error)
+        Swal.fire(
+          'Error!',
+          'An error occurred while deleting the data.',
+          'error',
+        )
+      } finally {
+        loader.hide() // Hide loader after operation
+      }
+    }
+  }
+}
 const addChemical = () => {
   formData.value.ipal_details.push({
     chemicals_used: '',
@@ -152,8 +190,55 @@ const updateIpalDetails = async detailId => {
     }
   }
 }
-const companyIpalId = route.params.id
 
+const updateEffort = async detailId => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
+    try {
+      const detailToUpdate = formData.value.management_efforts.find(
+        detail => detail.id === detailId,
+      )
+      if (!detailToUpdate) {
+        throw new Error('Detail not found')
+      }
+      const updatedDetail = {
+        recycling_effort: detailToUpdate.recycling_effort,
+      }
+
+      console.log('Sending update for:', updatedDetail) // Log payload
+
+      // Make API request to update the specific detail
+      const response = await axios.put(
+        `http://localhost:8000/api/management_efforts/${detailId}`,
+        updatedDetail,
+      )
+
+      // Log API response
+      console.log('API Response:', response.data)
+
+      // Show success alert using Swal
+      Swal.fire({
+        title: 'Success!',
+        text: 'Upaya Pengelolaan updated successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      })
+    } catch (error) {
+      console.error('Error updating IPAL detail:', error)
+      Swal.fire({
+        title: 'Error!',
+        text: error.response?.data?.message || 'Failed to update IPAL detail.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    } finally {
+      loader.hide()
+    }
+  }
+}
+
+const companyIpalId = route.params.id
+const isModalEffortOpen = ref(false)
 const isModalOpen = ref(false)
 const newChemical = ref({
   chemicals_used: '',
@@ -161,18 +246,26 @@ const newChemical = ref({
   unit_in_use_of_chemicals: '',
   company_ipal_id: companyIpalId,
 })
-
-const openModal = () => {
-  console.log('Opening modal')
-  isModalOpen.value = true
-  console.log('isModalOpen:', isModalOpen.value)
+const newEffort = ref({
+  recycling_effort: '',
+  company_ipal_id: companyIpalId,
+})
+const openModalEffort = () => {
+  isModalEffortOpen.value = true
 }
-console.log(isModalOpen.value)
+const openModal = () => {
+  isModalOpen.value = true
+}
+console.log(isModalEffortOpen.value)
 const closeModal = () => {
   isModalOpen.value = false
   newChemical.value.chemicals_used = ''
   newChemical.value.use_of_chemicals = ''
   newChemical.value.unit_in_use_of_chemicals = ''
+}
+const closeModalEffort = () => {
+  isModalEffortOpen.value = false
+  newEffort.value.recycling_effort = ''
 }
 const saveNewChemical = async () => {
   if (!$loading.isActive) {
@@ -185,6 +278,52 @@ const saveNewChemical = async () => {
           use_of_chemicals: newChemical.value.use_of_chemicals,
           unit_in_use_of_chemicals: newChemical.value.unit_in_use_of_chemicals,
           company_ipal_id: newChemical.value.company_ipal_id,
+        },
+      )
+      if (response.status === 200 || response.status === 201) {
+        console.log('Data successfully saved:', response.data)
+        // Show a success SweetAlert
+        Swal.fire({
+          title: 'Success!',
+          text: 'Data berhasil disimpan.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        })
+        closeModal()
+        fetchIpalData()
+      } else {
+        console.error('Failed to save data:', response.data)
+        // Show an error SweetAlert
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to save data.',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+        })
+      }
+    } catch (error) {
+      console.error('Error during save operation:', error)
+      Swal.fire({
+        title: 'Oops!',
+        text: 'An error occurred while saving the data.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    } finally {
+      loader.hide() // Hide loader after operation
+    }
+  }
+}
+
+const saveNewEffort = async () => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/management_efforts',
+        {
+          recycling_effort: newEffort.value.recycling_effort,
+          company_ipal_id: newEffort.value.company_ipal_id,
         },
       )
       if (response.status === 200 || response.status === 201) {
@@ -526,13 +665,95 @@ const uploadNIB = async e => {
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <label class="col-form-label">Upaya Pengelolaan</label>
-              <input
-                type="text"
-                class="form-control"
-                v-model="formData.recycle_efforts"
-              />
+            <div>
+              <table class="table table-bordered" style="table-layout: fixed">
+                <thead>
+                  <tr>
+                    <th style="width: 50px">No</th>
+                    <th style="width: 200px">Upaya Pengelolaan</th>
+                    <th style="width: 100px">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="!formData.management_efforts.length">
+                    <td colspan="3" class="text-center">
+                      Data Tidak Ditemukan
+                    </td>
+                  </tr>
+                  <tr
+                    v-for="(detail, index) in formData.management_efforts"
+                    :key="index"
+                  >
+                    <td>{{ index + 1 }}</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="form-control"
+                        v-model="detail.recycling_effort"
+                        @blur="updateEffort(detail.id)"
+                        placeholder="Masukkan Upaya Pengelolaan"
+                        style="word-wrap: break-word; overflow-wrap: break-word"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        @click="removeEffort(detail.id, index)"
+                        class="btn btn-danger"
+                      >
+                        -
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="d-flex justify-content-end mt-4 mb-5">
+                <button
+                  @click="openModalEffort"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Tambah Data Baru
+                </button>
+              </div>
+              <div v-if="isModalEffortOpen" class="modal-backdrop">
+                <div class="overlay"></div>
+                <div class="modal show" tabindex="-1" style="display: block">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5>Tambah Data Upaya Pengelolaan</h5>
+                        <button
+                          @click="closeModalEffort"
+                          class="btn-close"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label>Upaya Pengelolaan</label>
+                          <input
+                            type="text"
+                            v-model="newEffort.recycling_effort"
+                            class="form-control"
+                            placeholder="Masukkan Bahan Kimia Yang Digunakan"
+                          />
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button @click="saveNewEffort" class="btn btn-primary">
+                          Simpan
+                        </button>
+                        <button
+                          @click="closeModalEffort"
+                          class="btn btn-secondary"
+                        >
+                          Batal
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -551,65 +772,68 @@ const uploadNIB = async e => {
               </div>
             </div>
             <div>
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Bahan Kimia Yang Digunakan</th>
-                    <th>Pemakaian Bahan Kimia</th>
-                    <th>Satuan</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="!formData.ipal_details.length">
-                    <td colspan="5" class="text-center">
-                      Data Tidak Ditemukan
-                    </td>
-                  </tr>
-                  <tr
-                    v-for="(detail, index) in formData.ipal_details"
-                    :key="index"
-                  >
-                    <td>{{ index + 1 }}</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="detail.chemicals_used"
-                        @blur="updateIpalDetails(detail.id)"
-                        placeholder="Enter Chemicals Used"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="detail.use_of_chemicals"
-                        @blur="updateIpalDetails(detail.id)"
-                        placeholder="Enter Use of Chemicals"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="detail.unit_in_use_of_chemicals"
-                        @blur="updateIpalDetails(detail.id)"
-                        placeholder="Enter Unit of Chemicals"
-                      />
-                    </td>
-                    <td>
-                      <button
-                        @click="removeChemical(detail.id, index)"
-                        class="btn btn-danger"
-                      >
-                        -
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Bahan Kimia Yang Digunakan</th>
+                      <th>Pemakaian Bahan Kimia</th>
+                      <th>Satuan</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-if="!formData.ipal_details.length">
+                      <td colspan="5" class="text-center">
+                        Data Tidak Ditemukan
+                      </td>
+                    </tr>
+                    <tr
+                      v-for="(detail, index) in formData.ipal_details"
+                      :key="index"
+                    >
+                      <td>{{ index + 1 }}</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.chemicals_used"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Masukkan Bahan Kimia"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.use_of_chemicals"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Masukkan Penggunaan Bahan Kimia"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.unit_in_use_of_chemicals"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Masukkan Satuan"
+                          style="min-width: 120px"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          @click="removeChemical(detail.id, index)"
+                          class="btn btn-danger"
+                        >
+                          -
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="d-flex justify-content-end mt-4 mb-5">
                 <button
                   @click="openModal"
@@ -660,15 +884,6 @@ const uploadNIB = async e => {
                             placeholder="Masukkan Satuan"
                           />
                         </div>
-                        <!-- <div class="form-group">
-                            <label>Company IPAL ID</label>
-                            <input
-                              type="text"
-                              v-model="newChemical.company_ipal_id"
-                              class="form-control"
-                              readonly
-                            />
-                          </div> -->
                       </div>
                       <div class="modal-footer">
                         <button

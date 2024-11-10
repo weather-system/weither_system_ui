@@ -10,7 +10,7 @@
                 <span></span>
               </span>
             </a>
-            <a href="/" class="navbar-brand logo">
+            <a href="/" class="dlh">
               <img src="@/assets/img/dlh.jpg" class="img-fluid" alt="Logo" />
             </a>
             <a href="/" class="navbar-brand logo-small">
