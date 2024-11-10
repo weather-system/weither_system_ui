@@ -1,6 +1,12 @@
 <script setup>
 import HeaderHome from '@/components/HeaderHome.vue'
+import '@/assets/css/admin.css'
+
 </script>
+
+<style scoped>
+@import "@/assets/css/admin.css";
+</style>
 
 <template>
   <main>

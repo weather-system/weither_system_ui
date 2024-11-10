@@ -451,6 +451,7 @@ const uploadNIB = async e => {
                       @change="uploadNIB"
                       class="form-control"
                     />
+                    <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                   </div>
                 </div>
               </div>

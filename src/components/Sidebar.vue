@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { getUserStatus } from '@/lib/company.js'
+import '@/assets/css/admin.css'
 
 const route = useRoute()
 const $loading = useLoading()
@@ -63,6 +64,10 @@ onMounted(async () => {
 })
 </script>
 
+<style scoped>
+@import '@/assets/css/admin.css';
+</style>
+
 <template>
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -116,7 +121,7 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isDataOpen" class="submenu d-block ms-4">
+              <ul v-if="isDataOpen" class="submenu d-block ms-0">
                 <!-- <li>
                   <router-link
                     to="/Data/Company"
@@ -125,38 +130,33 @@ onMounted(async () => {
                   >
                 </li> -->
                 <li>
-                  <router-link
-                    to="/Data/Perizinan"
-                    activeClass="active"
-                    >Perizinan</router-link
+                  <router-link to="/Data/Perizinan" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Perizinan</router-link
                   >
                 </li>
                 <li>
-                  <router-link
-                    to="/Data/IPAL"
-                    activeClass="active"
-                    >IPAL</router-link
+                  <router-link to="/Data/IPAL" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    IPAL</router-link
                   >
                 </li>
                 <li>
-                  <router-link
-                    to="/Data/Cerobong"
-                    activeClass="active"
-                    >Cerobong</router-link
+                  <router-link to="/Data/Cerobong" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Cerobong</router-link
                   >
                 </li>
                 <li>
-                  <router-link
-                    to="/Data/TPSB3"
-                    activeClass="active"
-                    >TPS B3</router-link
+                  <router-link to="/Data/TPSB3" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    TPS B3</router-link
                   >
                 </li>
                 <li>
-                  <router-link
-                    to="/Data/SumberAir"
-                    activeClass="active"
-                    >Sumber Air</router-link
+                  <router-link to="/Data/SumberAir" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Sumber Air</router-link
                   >
                 </li>
               </ul>
@@ -180,23 +180,30 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isPengendalianOpen" class="submenu d-block ms-4">
+              <ul v-if="isPengendalianOpen" class="submenu d-block ms-0">
                 <li>
                   <router-link
                     to="/Pengendalian/PencemaranAir"
                     activeClass="active"
-                    >Pencemaran Air</router-link
                   >
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <!-- Panah ke kanan -->
+                    Pencemaran Air
+                  </router-link>
                 </li>
                 <li>
-                  <router-link to="/Pengendalian/PencemaranUdara"
-                    >Pencemaran Udara</router-link
-                  >
+                  <router-link to="/Pengendalian/PencemaranUdara">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <!-- Panah ke kanan -->
+                    Pencemaran Udara
+                  </router-link>
                 </li>
                 <li>
-                  <router-link to="/pengendalian/limbah-b3"
-                    >Pengelolaan Limbah B3</router-link
-                  >
+                  <router-link to="/pengendalian/limbah-b3">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <!-- Panah ke kanan -->
+                    Pengelolaan Limbah B3
+                  </router-link>
                 </li>
               </ul>
             </transition>
@@ -215,41 +222,52 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isLogbookOpen" class="submenu d-block ms-4">
+              <ul v-if="isLogbookOpen" class="submenu d-block ms-0">
                 <li>
-                  <router-link to="/logbook/produksisenyatanya"
-                    >Produksi Senyatanya</router-link
+                  <router-link to="/logbook/produksisenyatanya">
+                    <i class="fas fa-chevron-right me-2"></i> 
+                    Produksi Senyatanya</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/PemakaianBahanKimia"
-                    >Pemakaian Bahan Kimia</router-link
+                  <router-link to="/logbook/PemakaianBahanKimia">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Pemakaian Kimia</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/PemakaianAir">Pemakaian Air</router-link>
-                </li>
-                <li>
-                  <router-link to="/logbook/DebitOutletIPAL">Debit Outlet IPAL</router-link>
-                </li>
-                <li>
-                  <router-link to="/logbook/DebitPemakaianAir"
-                    >DebitPemakaian Air</router-link
+                  <router-link to="/logbook/PemakaianAir">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Pemakaian Air</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/IPAL"
-                    >IPAL</router-link
+                  <router-link to="/logbook/DebitOutletIPAL">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Debit Outlet IPAL</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/PenggunaanB3"
-                    >Penggunaan B3</router-link
+                  <router-link to="/logbook/DebitPemakaianAir">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Debit Pemakaian Air</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/TPSLimbahB3"
-                    >TPS Limbah B3</router-link
+                  <router-link to="/logbook/IPAL">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    IPAL</router-link>
+                </li>
+                <li>
+                  <router-link to="/logbook/PenggunaanB3">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Penggunaan B3</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/logbook/TPSLimbahB3">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    TPS Limbah B3</router-link
                   >
                 </li>
               </ul>
@@ -269,15 +287,17 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isImportLogbookOpen" class="submenu d-block ms-4">
+              <ul v-if="isImportLogbookOpen" class="submenu d-block ms-0">
                 <li>
-                  <router-link to="/import-logbook/ipal"
-                    >Logbook IPAL</router-link
+                  <router-link to="/import-logbook/ipal">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Logbook IPAL</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/import-logbook/limbah-b3"
-                    >Logbook Limbah B3</router-link
+                  <router-link to="/import-logbook/limbah-b3">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Logbook Limbah B3</router-link
                   >
                 </li>
               </ul>
@@ -297,15 +317,17 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isTiketOpen" class="submenu d-block ms-4">
+              <ul v-if="isTiketOpen" class="submenu d-block ms-0">
                 <li>
-                  <router-link to="/tiket/pengaduan"
-                    >Daftar Pengaduan</router-link
+                  <router-link to="/tiket/pengaduan">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Daftar Pengaduan</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/tiket/pengaduan-baru"
-                    >Pengaduan</router-link
+                  <router-link to="/tiket/pengaduan-baru">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Pengaduan</router-link
                   >
                 </li>
               </ul>
@@ -316,5 +338,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style src="/src/assets/css/admin.css"></style>

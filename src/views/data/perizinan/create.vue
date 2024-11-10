@@ -407,6 +407,7 @@ const submitForm = async () => {
                         @change="uploadNIB"
                         class="form-control"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                     <div class="row">
                       <div class="col-md-12">

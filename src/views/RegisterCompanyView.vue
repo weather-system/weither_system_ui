@@ -291,6 +291,7 @@ const uploadPKPLHFile = event => {
                         class="form-control"
                         @change="uploadSKKLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
 
@@ -314,6 +315,7 @@ const uploadPKPLHFile = event => {
                         class="form-control"
                         @change="uploadPKPLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="row mt-3">
@@ -333,6 +335,7 @@ const uploadPKPLHFile = event => {
                         class="form-control"
                         @change="uploadNIB"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="col-md-12" style="margin-top: 20px">
@@ -537,6 +540,7 @@ const uploadPKPLHFile = event => {
                         class="form-control"
                         @change="uploadSKKLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
 
@@ -560,6 +564,7 @@ const uploadPKPLHFile = event => {
                         class="form-control"
                         @change="uploadPKPLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="row mt-3">
@@ -579,6 +584,7 @@ const uploadPKPLHFile = event => {
                         class="form-control"
                         @change="uploadNIB"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="col-md-12" style="margin-top: 20px">

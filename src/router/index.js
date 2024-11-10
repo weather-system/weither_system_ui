@@ -35,8 +35,9 @@ const adminRoutes = [
 
 // Array untuk halaman utama
 const mainRoutes = [
-  '/Home',
-  '/Compro'
+  '/',
+  '/beranda/ComproView',
+  '/beranda/ComproStructureView'
 ]
 
 const router = createRouter({
