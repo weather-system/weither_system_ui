@@ -55,33 +55,46 @@ import '@/assets/css/style.css'
             <li class="has-submenu">
               <a href="">Pelayanan <i class="fas fa-chevron-down"></i></a>
               <ul class="submenu">
-                <li><a href="customer-dashboard.html">Izin Lingkungan</a></li>
                 <li>
-                  <a href="customer-booking.html">Laboratorium Lingkungan</a>
+                  <router-link to="/beranda/IzinLingkunganView"
+                    >Izin Lingkungan</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/beranda/LaboratoryView"
+                    >Laboratorium Lingkungan</router-link
+                  >
                 </li>
               </ul>
             </li>
             <li class="has-submenu">
               <a href="">Info Publik <i class="fas fa-chevron-down"></i></a>
               <ul class="submenu">
-                <li><a href="provider-dashboard.html">Berita</a></li>
-                <li><a href="provider-services.html">Agenda</a></li>
-                <li><a href="provider-booking.html">Pengumuman</a></li>
-                <li><a href="provider-payout.html">Artikel</a></li>
+                <li>
+                  <router-link to="/beranda/BeritaView">Berita</router-link>
+                </li>
+                <li>
+                  <router-link to="/beranda/AgendaView">Agenda</router-link>
+                </li>
+                <li>
+                  <router-link to="/beranda/ArtikelView">Artikel</router-link>
+                </li>
+                <li>
+                  <router-link to="/beranda/PengumumanView">Pengumuman</router-link>
+                </li>
               </ul>
             </li>
             <li class="has-submenu">
-              <a href="">Download <i class="fas fa-chevron-down"></i></a>
+              <a href="">Multimedia <i class="fas fa-chevron-down"></i></a>
               <ul class="submenu">
-                <li><a href="about-us.html">Peraturan Perundang</a></li>
-                <li><a href="contact-us.html">Formulir</a></li>
+                <li>
+                  <router-link to="/beranda/DownloadView">Download</router-link>
+                </li>
+                <li><a href="contact-us.html">Galeri</a></li>
               </ul>
             </li>
-            <li><a href="admin/index.html">Multimedia</a></li>
             <li>
-              <router-link to="/beranda/Contact"
-                >Kontak</router-link
-              >
+              <router-link to="/beranda/Contact">Kontak</router-link>
             </li>
           </ul>
         </div>

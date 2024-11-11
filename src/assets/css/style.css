@@ -22312,3 +22312,7 @@ fieldset {
 	max-height: 300px; /* Atur tinggi maksimum sesuai preferensi */
 	object-fit: contain; /* Memastikan logo tidak terdistorsi */
 }
+
+.justify-text{
+	text-align: justify;
+}

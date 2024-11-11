@@ -13,6 +13,14 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  data.items = data.items.map((v) => {
+    delete v.company_tps_b3_id
+    delete v.created_at
+    delete v.updated_at
+
+    return v
+  })
+
   const loader = $loading.show()
   try {
     await updateTpsB3(route.params.id, data)
@@ -27,7 +35,7 @@ const submit = async (data) => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    const data = await getTpsB3Detail(route.params.id) 
+    const data = await getTpsB3Detail(route.params.id)
     form.value.setValues(data)
   } catch (e) {
     console.error(e)

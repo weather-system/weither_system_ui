@@ -32,7 +32,7 @@ const logout = async () => {
 </script>
 
 <style scoped>
-@import "@/assets/css/admin.css";
+@import '@/assets/css/admin.css';
 </style>
 
 <template>

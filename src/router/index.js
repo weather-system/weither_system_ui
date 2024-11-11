@@ -30,7 +30,8 @@ const adminRoutes = [
   '/Pengendalian/PencemaranAir/Edit',
   '/Login',
   '/Register',
-  '/RegisterCompany'
+  '/RegisterCompany',
+  '/Master/User'
 ]
 
 // Array untuk halaman utama
@@ -38,7 +39,13 @@ const mainRoutes = [
   '/',
   '/beranda/ComproView',
   '/beranda/ComproStructureView',
-  '/beranda/ContactView'
+  '/beranda/Contact',
+  '/beranda/LaboratoryView',
+  '/beranda/IzinLingkunganView',
+  '/beranda/BeritaView',
+  '/beranda/ArtikelView',
+  '/beranda/PengumumanView',
+  '/beranda/DownloadView'
 ]
 
 const router = createRouter({
@@ -58,6 +65,41 @@ const router = createRouter({
       path: '/beranda/ComproView',
       name: 'ComproView',
       component: () => import('@/views/beranda/ComproView.vue'),
+    },
+    {
+      path: '/beranda/LaboratoryView',
+      name: 'LaboratoryView',
+      component: () => import('@/views/beranda/LaboratoryView.vue'),
+    },
+    {
+      path: '/beranda/IzinLingkunganView',
+      name: 'IzinLingkunganView',
+      component: () => import('@/views/beranda/IzinLingkunganView.vue'),
+    },
+    {
+      path: '/beranda/BeritaView',
+      name: 'BeritaView',
+      component: () => import('@/views/beranda/BeritaView.vue'),
+    },
+    {
+      path: '/beranda/ArtikelView',
+      name: 'ArtikelView',
+      component: () => import('@/views/beranda/ArtikelView.vue'),
+    },
+    {
+      path: '/beranda/DownloadView',
+      name: 'DownloadView',
+      component: () => import('@/views/beranda/DownloadView.vue'),
+    },
+    {
+      path: '/beranda/PengumumanView',
+      name: 'PengumumanView',
+      component: () => import('@/views/beranda/PengumumanView.vue'),
+    },
+    {
+      path: '/beranda/AgendaView',
+      name: 'AgendaView',
+      component: () => import('@/views/beranda/AgendaView.vue'),
     },
     {
       path: '/beranda/Contact',
@@ -262,9 +304,43 @@ const router = createRouter({
       name: 'DataIPALTambah',
       component: () => import('@/views/data/ipal/create.vue'),
     },
+    {
+      path: '/Master/User',
+      name: 'MasterUserView',
+      component: () => import('@/views/Master/UserView.vue'),
+    },
+    {
+      path: '/Master/User/Create',
+      name: 'MasterUserCreateView',
+      component: () => import('@/views/Master/UserCreateView.vue'),
+    },
+    {
+      path: '/Master/User/:id',
+      name: 'MasterUserEditView',
+      component: () => import('@/views/Master/UserEditView.vue'),
+    },
   ],
 })
+
 router.beforeEach(async (to, from, next) => {
+  // Bersihkan CSS sebelumnya
+  document.querySelectorAll('link[data-dynamic-css]').forEach(link => link.remove())
+
+  // Tentukan CSS berdasarkan jenis halaman
+  let cssFile = ''
+  if (adminRoutes.includes(to.path)) {
+    cssFile = await import('@/assets/css/admin.css')
+  } else if (mainRoutes.includes(to.path)) {
+    cssFile = await import('@/assets/css/style.css')
+  }
+
+  // Memuat file CSS yang ditentukan
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = cssFile.default
+  link.dataset.dynamicCss = true
+  document.head.appendChild(link)
+
   if (to.path === '/Login' || to.path === '/RegisterCompany' || to.path === '/') {
     next()
     return
@@ -290,24 +366,6 @@ router.beforeEach(async (to, from, next) => {
     next('/Login')
     return
   }
-
-  // Bersihkan CSS sebelumnya
-  document.querySelectorAll('link[data-dynamic-css]').forEach(link => link.remove())
-
-  // Tentukan CSS berdasarkan jenis halaman
-  let cssFile = ''
-  if (adminRoutes.includes(to.path)) {
-    cssFile = '/assets/admin.css'
-  } else if (mainRoutes.includes(to.path)) {
-    cssFile = '/assets/style.css'
-  }
-
-  // Memuat file CSS yang ditentukan
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = cssFile
-  link.dataset.dynamicCss = true
-  document.head.appendChild(link)
 
   next()
 })

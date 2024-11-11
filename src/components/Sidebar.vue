@@ -1,10 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { getUserStatus } from '@/lib/company.js'
 import '@/assets/css/admin.css'
 
+const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
 
@@ -12,9 +14,17 @@ const isUserPending = ref(false)
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
+const isMasterOpen = ref(false)
 const isLogbookOpen = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
+
+const dashboardRoute = computed(() => {
+  if (store.state.auth.user.role == 'ADMIN') {
+    return '/Companies'
+  }
+  return '/MyCompany'
+})
 
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
@@ -23,6 +33,10 @@ const togglePengendalian = () => {
 const toggleData = () => {
   console.log('Data clicked') // Debugging log
   isDataOpen.value = !isDataOpen.value
+}
+
+const toggleMaster = () => {
+  isMasterOpen.value = !isMasterOpen.value
 }
 
 const toggleLogbook = () => {
@@ -98,10 +112,39 @@ onMounted(async () => {
             <h6>Home</h6>
           </li>
           <li>
-            <router-link to="/MyCompany" activeClass="active">
+            <router-link :to="dashboardRoute" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
             </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a
+              href="javascript:void(0);"
+              @click="toggleMaster"
+              :class="{ active: route.path.startsWith('/Master') }"
+            >
+              <i class="fas fa-book-bookmark"></i>
+              <span>Master</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isMasterOpen" class="submenu d-block ms-4">
+                <li>
+                  <router-link
+                    to="/Master/User"
+                    activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    User</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
           </li>
 
           <li v-if="!isUserPending">
