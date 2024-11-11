@@ -38,22 +38,18 @@ import '@/assets/css/style.css'
               <div class="blog-content">
                 <div class="blog-category">
                   <ul>
-                    <li><span class="cat-blog">Car Wash</span></li>
-                    <li><i class="feather-calendar me-1"></i>28 Sep 2022</li>
+                    <li><span class="cat-blog">Special</span></li>
+                    <li><i class="feather-calendar me-1"></i>21 Februari</li>
                   </ul>
                 </div>
                 <h3 class="blog-title">
-                  <a href="blog-details.html"
-                    >Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam,</a
-                  >
+                  <a href="blog-details.html">Hari Sampah Nasional</a>
                 </h3>
                 <p>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa aspernatur aut odit aut fugit, sed quia consequuntur
-                  magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Hari Sampah Nasional Indonesia, diperingati setiap 21 Februari
+                  untuk mengenang tragedi longsornya TPA Leuwigajah pada 2005,
+                  menjadi momentum bagi masyarakat untuk meningkatkan kesadaran
+                  dan aksi nyata dalam pengelolaan sampah yang berkelanjutan.
                 </p>
                 <div class="blog-info">
                   <ul>
@@ -89,22 +85,18 @@ import '@/assets/css/style.css'
               <div class="blog-content">
                 <div class="blog-category">
                   <ul>
-                    <li><span class="cat-blog">Construction</span></li>
-                    <li><i class="feather-calendar me-1"></i>28 Sep 2022</li>
+                    <li><span class="cat-blog">Special</span></li>
+                    <li><i class="feather-calendar me-1"></i>16 September</li>
                   </ul>
                 </div>
                 <h3 class="blog-title">
-                  <a href="blog-details.html"
-                    >Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam,</a
-                  >
+                  <a href="blog-details.html">Hari Ozon Internasional</a>
                 </h3>
                 <p>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa aspernatur aut odit aut fugit, sed quia consequuntur
-                  magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Hari Ozon Internasional diperingati setiap 16 September untuk
+                  meningkatkan kesadaran global tentang pentingnya lapisan ozon
+                  dan mendukung upaya perlindungannya melalui Protokol Montreal
+                  agar bumi terlindungi dari dampak sinar ultraviolet berbahaya.
                 </p>
                 <div class="blog-info">
                   <ul>
@@ -140,22 +132,19 @@ import '@/assets/css/style.css'
               <div class="blog-content">
                 <div class="blog-category">
                   <ul>
-                    <li><span class="cat-blog">Cleaning</span></li>
-                    <li><i class="feather-calendar me-1"></i>28 Sep 2022</li>
+                    <li><span class="cat-blog">Special</span></li>
+                    <li><i class="feather-calendar me-1"></i>10 Agustus</li>
                   </ul>
                 </div>
                 <h3 class="blog-title">
-                  <a href="blog-details.html"
-                    >Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam,</a
-                  >
+                  <a href="blog-details.html">Hari Konservasi Alam Nasional</a>
                 </h3>
                 <p>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa aspernatur aut odit aut fugit, sed quia consequuntur
-                  magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Hari Konservasi Alam Nasional, yang diperingati setiap 10
+                  Agustus di Indonesia, bertujuan untuk meningkatkan kesadaran
+                  akan pentingnya pelestarian keanekaragaman hayati dan
+                  perlindungan ekosistem demi keberlanjutan alam bagi generasi
+                  mendatang.
                 </p>
                 <div class="blog-info">
                   <ul>
@@ -191,22 +180,19 @@ import '@/assets/css/style.css'
               <div class="blog-content">
                 <div class="blog-category">
                   <ul>
-                    <li><span class="cat-blog">Carpentry</span></li>
-                    <li><i class="feather-calendar me-1"></i>28 Sep 2022</li>
+                    <li><span class="cat-blog">Spesial</span></li>
+                    <li><i class="feather-calendar me-1"></i>5 Juni</li>
                   </ul>
                 </div>
                 <h3 class="blog-title">
-                  <a href="blog-details.html"
-                    >Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam,</a
-                  >
+                  <a href="blog-details.html">Hari Lingkungan Hidup</a>
                 </h3>
                 <p>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa aspernatur aut odit aut fugit, sed quia consequuntur
-                  magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Hari Lingkungan Hidup Sedunia, diperingati setiap 5 Juni,
+                  bertujuan untuk meningkatkan kesadaran dan aksi global dalam
+                  melindungi lingkungan dari polusi, perubahan iklim, dan
+                  ancaman terhadap keanekaragaman hayati demi keberlanjutan
+                  bumi.
                 </p>
                 <div class="blog-info">
                   <ul>
@@ -288,84 +274,44 @@ import '@/assets/css/style.css'
             <!-- Latest Posts -->
             <div class="card post-widget">
               <div class="card-body">
-                <h4 class="side-title">Latest News</h4>
+                <h4 class="side-title">Agenda Terdekat</h4>
                 <ul class="latest-posts">
                   <li>
-                    <div class="post-thumb">
-                      <a href="blog-details.html">
-                        <img
-                          class="img-fluid"
-                          src="@/assets/img/services/service-01.jpg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div class="post-info">
-                      <p>06 Nov 2022</p>
+                    <div class="post-info-tes">
+                      <p>21 Februari 2025</p>
                       <h4>
                         <a href="blog-details.html"
-                          >Lorem ipsum dolor amet, consectetur adipiscing elit.
-                          Amet.</a
+                          >Hari Sampah Nasional</a
                         >
                       </h4>
                     </div>
                   </li>
                   <li>
-                    <div class="post-thumb">
-                      <a href="blog-details.html">
-                        <img
-                          class="img-fluid"
-                          src="@/assets/img/services/service-02.jpg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div class="post-info">
-                      <p>06 Nov 2022</p>
+                    <div class="post-info-tes">
+                      <p>5 Juni 2025</p>
                       <h4>
                         <a href="blog-details.html"
-                          >Lorem ipsum dolor amet, consectetur adipiscing elit.
-                          Amet.</a
+                          >Hari Lingkungan Hidup</a
                         >
                       </h4>
                     </div>
                   </li>
                   <li>
-                    <div class="post-thumb">
-                      <a href="blog-details.html">
-                        <img
-                          class="img-fluid"
-                          src="@/assets/img/services/service-03.jpg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div class="post-info">
-                      <p>06 Nov 2022</p>
+                    <div class="post-info-tes">
+                      <p>10 Agustus 2025</p>
                       <h4>
                         <a href="blog-details.html"
-                          >Lorem ipsum dolor amet, consectetur adipiscing elit.
-                          Amet.</a
+                          >Hari Konservasi Alam Nasional</a
                         >
                       </h4>
                     </div>
                   </li>
                   <li>
-                    <div class="post-thumb">
-                      <a href="blog-details.html">
-                        <img
-                          class="img-fluid"
-                          src="@/assets/img/services/service-04.jpg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div class="post-info">
-                      <p>06 Nov 2022</p>
+                    <div class="post-info-tes">
+                      <p>16 September 2025</p>
                       <h4>
                         <a href="blog-details.html"
-                          >Lorem ipsum dolor amet, consectetur adipiscing elit.
-                          Amet.</a
+                          >Hari Ozon Internasional</a
                         >
                       </h4>
                     </div>
@@ -380,8 +326,7 @@ import '@/assets/css/style.css'
               <div class="card-body">
                 <h4 class="side-title">Tags</h4>
                 <ul class="tags">
-                  <li><a href="#" class="tag">Consulting</a></li>
-                  <li><a href="#" class="tag">Design</a></li>
+                  <li><a href="#" class="tag">Special</a></li>
                 </ul>
               </div>
             </div>

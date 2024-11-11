@@ -39,29 +39,30 @@ import '@/assets/css/style.css'
                 <a href="blog-details.html"
                   ><img
                     class="img-fluid"
-                    src="@/assets/img/blog/blog-04.jpg"
+                    src="@/assets/img/lh.png"
                     alt="Post Image"
                 /></a>
               </div>
               <div class="blog-content">
                 <div class="blog-category">
                   <ul>
-                    <li><span class="cat-blog">Car Wash</span></li>
-                    <li><i class="feather-calendar me-1"></i>28 Sep 2022</li>
+                    <li><span class="cat-blog">Pemerintah</span></li>
+                    <li><i class="feather-calendar me-1"></i>05 November 2024</li>
                   </ul>
                 </div>
                 <h3 class="blog-title">
                   <a href="blog-details.html"
-                    >Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam,</a
+                    >Kementerian Lingkungan Hidup Soroti Kendala TPPAS Legok
+                    Nangka</a
                   >
                 </h3>
                 <p>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa aspernatur aut odit aut fugit, sed quia consequuntur
-                  magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Wakil Menteri Lingkungan Hidup atau Wakil Kepala Badan
+                  Pengendalian Lingkungan Hidup (Wamen LH/Waka BPLH) Diaz
+                  Hendropriyono berkunjung ke Gedung Sate pada Selasa
+                  (5/11/2024). Penjabat Gubernur Jabar, Bey Machmudin menyambut
+                  kehadirannya untuk bersama membahas percepatan pembangunan
+                  Pengolah Sampah Menjadi Energi Listrik (PSEL) Legok Nangka.
                 </p>
                 <div class="blog-info">
                   <ul>

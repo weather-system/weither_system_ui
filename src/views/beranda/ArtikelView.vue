@@ -39,29 +39,30 @@ import '@/assets/css/style.css'
                 <a href="blog-details.html"
                   ><img
                     class="img-fluid"
-                    src="@/assets/img/blog/blog-04.jpg"
+                    src="@/assets/img/artikel1.png"
                     alt="Post Image"
                 /></a>
               </div>
               <div class="blog-content">
                 <div class="blog-category">
                   <ul>
-                    <li><span class="cat-blog">Car Wash</span></li>
-                    <li><i class="feather-calendar me-1"></i>28 Sep 2022</li>
+                    <li><span class="cat-blog">Artikel</span></li>
+                    <li>
+                      <i class="feather-calendar me-1"></i>29 Januari 2020
+                    </li>
                   </ul>
                 </div>
                 <h3 class="blog-title">
                   <a href="blog-details.html"
-                    >Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam,</a
+                    >LINGKUNGAN BERSIH CIPTAKAN HIDUP SEHAT</a
                   >
                 </h3>
                 <p>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa aspernatur aut odit aut fugit, sed quia consequuntur
-                  magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Lingkungan adalah kombinasi antara kondisi fisik yang mencakup
+                  keadaan sumber daya alam, serta flora dan fauna yang tumbuh di
+                  darat maupun di dalam laut. Lingkungan terdiri dari dua
+                  komponen biotik ( segala sesuatu yang bernyawa) dan abiotik (
+                  segala yang tidak bernyawa ).
                 </p>
                 <div class="blog-info">
                   <ul>
