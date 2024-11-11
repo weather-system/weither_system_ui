@@ -37,7 +37,8 @@ const adminRoutes = [
 const mainRoutes = [
   '/',
   '/beranda/ComproView',
-  '/beranda/ComproStructureView'
+  '/beranda/ComproStructureView',
+  '/beranda/ContactView'
 ]
 
 const router = createRouter({
@@ -57,6 +58,11 @@ const router = createRouter({
       path: '/beranda/ComproView',
       name: 'ComproView',
       component: () => import('@/views/beranda/ComproView.vue'),
+    },
+    {
+      path: '/beranda/Contact',
+      name: 'Contact',
+      component: () => import('@/views/beranda/Contact.vue'),
     },
     {
       path: '/beranda/ComproStructureView',

@@ -78,7 +78,11 @@ import '@/assets/css/style.css'
               </ul>
             </li>
             <li><a href="admin/index.html">Multimedia</a></li>
-            <li><a href="admin/index.html">Kontak</a></li>
+            <li>
+              <router-link to="/beranda/Contact"
+                >Kontak</router-link
+              >
+            </li>
           </ul>
         </div>
         <ul class="nav header-navbar-rht">
