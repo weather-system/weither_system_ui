@@ -1100,6 +1100,11 @@ table.dataTable thead .sorting_desc_disabled:after {
 	width: 60px; /* Sesuaikan dengan ukuran yang diinginkan */
 	height: auto; /* Menjaga aspek rasio */
   }
+.dlh img {
+	margin-right: 0;
+	width: 125px; /* Sesuaikan dengan ukuran yang diinginkan */
+	height: auto; /* Menjaga aspek rasio */
+  }
 .logo img {
     height: auto;
     max-width: 100%;

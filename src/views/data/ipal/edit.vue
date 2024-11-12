@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const formData = ref({
+  management_efforts: [],
   ipal_details: [],
   ipalTypes: [],
   system_ipal: '',
@@ -29,7 +30,6 @@ const formData = ref({
   waste_discharge_measuring_instrument_outlet: null,
   ipal_design_note: '',
 })
-
 const licenseOptions = ref([])
 const errorMessage = ref('')
 const $loading = useLoading()
@@ -39,8 +39,6 @@ const ipalId = route.params.id
 const urlNIB = ref('')
 const isInletChecked = ref(false)
 const isOutletChecked = ref(false)
-
-// Fetch IPAL data for editing
 const fetchIpalData = async () => {
   const loader = $loading.show()
   try {
@@ -67,8 +65,80 @@ const fetchIpalData = async () => {
     loader.hide()
   }
 }
-const removeChemical = (index) => {
-  formData.value.ipal_details.splice(index, 1)
+const removeChemical = async (detailId, index) => {
+  if (!$loading.isActive) {
+    const confirmation = await Swal.fire({
+      title: 'Anda yakin ?',
+      text: 'Aksi ini tidak dapat dikembalikan.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Tidak',
+    })
+
+    if (confirmation.isConfirmed) {
+      const loader = $loading.show() // Show loader
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/ipal-details/${detailId}`,
+        )
+        if (response.status === 200) {
+          // Remove the item from the local list (UI update)
+          formData.value.ipal_details.splice(index, 1)
+          Swal.fire('Deleted!', 'Data Berhasil Dihapus.', 'success')
+        } else {
+          Swal.fire('Error!', 'Data Gagal Dihapus.', 'error')
+        }
+      } catch (error) {
+        console.error('Error during delete operation:', error)
+        Swal.fire(
+          'Error!',
+          'An error occurred while deleting the data.',
+          'error',
+        )
+      } finally {
+        loader.hide() // Hide loader after operation
+      }
+    }
+  }
+}
+
+const removeEffort = async (detailId, index) => {
+  if (!$loading.isActive) {
+    const confirmation = await Swal.fire({
+      title: 'Anda yakin ?',
+      text: 'Aksi ini tidak dapat dikembalikan.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Tidak',
+    })
+
+    if (confirmation.isConfirmed) {
+      const loader = $loading.show() // Show loader
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/management_efforts/${detailId}`,
+        )
+        if (response.status === 200) {
+          // Remove the item from the local list (UI update)
+          formData.value.management_efforts.splice(index, 1)
+          Swal.fire('Deleted!', 'Data Berhasil Dihapus.', 'success')
+        } else {
+          Swal.fire('Error!', 'Data Gagal Dihapus.', 'error')
+        }
+      } catch (error) {
+        console.error('Error during delete operation:', error)
+        Swal.fire(
+          'Error!',
+          'An error occurred while deleting the data.',
+          'error',
+        )
+      } finally {
+        loader.hide() // Hide loader after operation
+      }
+    }
+  }
 }
 const addChemical = () => {
   formData.value.ipal_details.push({
@@ -77,16 +147,17 @@ const addChemical = () => {
     unit_in_use_of_chemicals: '',
   })
 }
-const updateIpalDetails = async (detailId) => {
-  if (!$loading.isActive) {  // Prevents repeated loading states
+const updateIpalDetails = async detailId => {
+  if (!$loading.isActive) {
+    // Prevents repeated loading states
     const loader = $loading.show()
     try {
-      const detailToUpdate = formData.value.ipal_details.find(detail => detail.id === detailId)
+      const detailToUpdate = formData.value.ipal_details.find(
+        detail => detail.id === detailId,
+      )
       if (!detailToUpdate) {
         throw new Error('Detail not found')
       }
-
-      // Prepare data for the update request
       const updatedDetail = {
         chemicals_used: detailToUpdate.chemicals_used,
         use_of_chemicals: detailToUpdate.use_of_chemicals,
@@ -96,7 +167,7 @@ const updateIpalDetails = async (detailId) => {
       // Make API request to update the specific detail
       const response = await axios.put(
         `http://localhost:8000/api/ipal-details/${detailId}`,
-        updatedDetail
+        updatedDetail,
       )
 
       // Show a success alert using Swal
@@ -104,16 +175,15 @@ const updateIpalDetails = async (detailId) => {
         title: 'Success!',
         text: 'IPAL detail updated successfully.',
         icon: 'success',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       })
-
     } catch (error) {
       console.error('Error updating IPAL detail:', error)
       Swal.fire({
         title: 'Error!',
         text: error.response?.data?.message || 'Failed to update IPAL detail.',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       })
     } finally {
       loader.hide()
@@ -121,7 +191,175 @@ const updateIpalDetails = async (detailId) => {
   }
 }
 
+const updateEffort = async detailId => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
+    try {
+      const detailToUpdate = formData.value.management_efforts.find(
+        detail => detail.id === detailId,
+      )
+      if (!detailToUpdate) {
+        throw new Error('Detail not found')
+      }
+      const updatedDetail = {
+        recycling_effort: detailToUpdate.recycling_effort,
+      }
 
+      console.log('Sending update for:', updatedDetail) // Log payload
+
+      // Make API request to update the specific detail
+      const response = await axios.put(
+        `http://localhost:8000/api/management_efforts/${detailId}`,
+        updatedDetail,
+      )
+
+      // Log API response
+      console.log('API Response:', response.data)
+
+      // Show success alert using Swal
+      Swal.fire({
+        title: 'Success!',
+        text: 'Upaya Pengelolaan updated successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      })
+    } catch (error) {
+      console.error('Error updating IPAL detail:', error)
+      Swal.fire({
+        title: 'Error!',
+        text: error.response?.data?.message || 'Failed to update IPAL detail.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    } finally {
+      loader.hide()
+    }
+  }
+}
+
+const companyIpalId = route.params.id
+const isModalEffortOpen = ref(false)
+const isModalOpen = ref(false)
+const newChemical = ref({
+  chemicals_used: '',
+  use_of_chemicals: '',
+  unit_in_use_of_chemicals: '',
+  company_ipal_id: companyIpalId,
+})
+const newEffort = ref({
+  recycling_effort: '',
+  company_ipal_id: companyIpalId,
+})
+const openModalEffort = () => {
+  isModalEffortOpen.value = true
+}
+const openModal = () => {
+  isModalOpen.value = true
+}
+console.log(isModalEffortOpen.value)
+const closeModal = () => {
+  isModalOpen.value = false
+  newChemical.value.chemicals_used = ''
+  newChemical.value.use_of_chemicals = ''
+  newChemical.value.unit_in_use_of_chemicals = ''
+}
+const closeModalEffort = () => {
+  isModalEffortOpen.value = false
+  newEffort.value.recycling_effort = ''
+}
+const saveNewChemical = async () => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/ipal-details',
+        {
+          chemicals_used: newChemical.value.chemicals_used,
+          use_of_chemicals: newChemical.value.use_of_chemicals,
+          unit_in_use_of_chemicals: newChemical.value.unit_in_use_of_chemicals,
+          company_ipal_id: newChemical.value.company_ipal_id,
+        },
+      )
+      if (response.status === 200 || response.status === 201) {
+        console.log('Data successfully saved:', response.data)
+        // Show a success SweetAlert
+        Swal.fire({
+          title: 'Success!',
+          text: 'Data berhasil disimpan.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        })
+        closeModal()
+        fetchIpalData()
+      } else {
+        console.error('Failed to save data:', response.data)
+        // Show an error SweetAlert
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to save data.',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+        })
+      }
+    } catch (error) {
+      console.error('Error during save operation:', error)
+      Swal.fire({
+        title: 'Oops!',
+        text: 'An error occurred while saving the data.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    } finally {
+      loader.hide() // Hide loader after operation
+    }
+  }
+}
+
+const saveNewEffort = async () => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/management_efforts',
+        {
+          recycling_effort: newEffort.value.recycling_effort,
+          company_ipal_id: newEffort.value.company_ipal_id,
+        },
+      )
+      if (response.status === 200 || response.status === 201) {
+        console.log('Data successfully saved:', response.data)
+        // Show a success SweetAlert
+        Swal.fire({
+          title: 'Success!',
+          text: 'Data berhasil disimpan.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        })
+        closeModal()
+        fetchIpalData()
+      } else {
+        console.error('Failed to save data:', response.data)
+        // Show an error SweetAlert
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to save data.',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+        })
+      }
+    } catch (error) {
+      console.error('Error during save operation:', error)
+      Swal.fire({
+        title: 'Oops!',
+        text: 'An error occurred while saving the data.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    } finally {
+      loader.hide() // Hide loader after operation
+    }
+  }
+}
 const updateCompanyDetails = async () => {
   const loader = $loading.show()
   try {
@@ -156,7 +394,6 @@ const updateCompanyDetails = async () => {
   }
 }
 
-// Fetch company licenses for the dropdown
 const fetchCompanyLicences = async () => {
   const loader = $loading.show()
   try {
@@ -213,257 +450,330 @@ const uploadNIB = async e => {
             <div class="content-page-header mb-2">
               <h3>Edit Persetujuan Teknis IPAL</h3>
             </div>
-            <form @submit.prevent="updateCompanyDetails">
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="col-form-label">Jenis IPAL</label>
-                    <select
-                      class="form-control"
-                      v-model="formData.type"
-                      required
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="col-form-label">Jenis IPAL</label>
+                  <select class="form-control" v-model="formData.type" required>
+                    <option value="" disabled>Pilih Jenis IPAL</option>
+                    <option value="Domestik">Domestik</option>
+                    <option value="Industri">Industri</option>
+                    <option value="Integrasi">Integrasi</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="col-form-label">Izin Perusahaan</label>
+                  <select
+                    class="form-control"
+                    v-model="formData.company_licence_id"
+                  >
+                    <option value="">Pilih Data Izin</option>
+                    <option
+                      v-for="license in licenseOptions"
+                      :key="license.id"
+                      :value="license.id"
                     >
-                      <option value="" disabled>Pilih Jenis IPAL</option>
-                      <option value="Domestik">Domestik</option>
-                      <option value="Industri">Industri</option>
-                      <option value="Integrasi">Integrasi</option>
-                    </select>
+                      {{ license.license_number }} - {{ license.type }} -
+                      {{ license.issuing_agency }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Longitude</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.longitude"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Latitude</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.latitude"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="col-form-label">Tahun Pembuatan IPAL</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.year_of_manufacture_of_ipal"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="col-form-label">Kapasitas IPAL</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    v-model="formData.capacity_ipal"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="col-form-label">Satuan Kapasitas</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.unit_in_capacity"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">Alat Ukur Debit Limbah</label>
+                  <div class="d-flex align-items-center">
+                    <div class="form-check me-3">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="inletCheckbox"
+                          v-model="isInletChecked"
+                          @change="toggleInlet"
+                        />
+                        Inlet
+                      </label>
+                    </div>
+                    <div class="col-md-6">
+                      <div v-if="isInletChecked" class="form-group">
+                        <input
+                          type="text"
+                          class="form-control input-dark-placeholder"
+                          v-model="
+                            formData.waste_discharge_measuring_instrument_inlet_name
+                          "
+                          placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label class="col-form-label">Izin Perusahaan</label>
-                    <select
-                      class="form-control"
-                      v-model="formData.company_licence_id"
-                    >
-                      <option value="">Pilih Data Izin</option>
-                      <option
-                        v-for="license in licenseOptions"
-                        :key="license.id"
-                        :value="license.id"
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="d-flex align-items-center">
+                    <div class="form-check me-3">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="outletCheckbox"
+                          v-model="isOutletChecked"
+                          @change="toggleOutlet"
+                        />
+                        Outlet</label
                       >
-                        {{ license.license_number }} - {{ license.type }} -
-                        {{ license.issuing_agency }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Longitude</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.longitude"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Latitude</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.latitude"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="col-form-label">Tahun Pembuatan IPAL</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.year_of_manufacture_of_ipal"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="col-form-label">Kapasitas IPAL</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      v-model="formData.capacity_ipal"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="col-form-label">Satuan Kapasitas</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.unit_in_capacity"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="col-form-label">Alat Ukur Debit Limbah</label>
-                    <div class="d-flex align-items-center">
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="inletCheckbox"
-                            v-model="isInletChecked"
-                            @change="toggleInlet"
-                          />
-                          Inlet
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <div v-if="isInletChecked" class="form-group">
-                          <input
-                            type="text"
-                            class="form-control input-dark-placeholder"
-                            v-model="
-                              formData.waste_discharge_measuring_instrument_inlet_name
-                            "
-                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
-                          />
-                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div v-if="isOutletChecked" class="form-group">
+                        <input
+                          type="text"
+                          class="form-control input-dark-placeholder"
+                          placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
+                          v-model="
+                            formData.waste_discharge_measuring_instrument_outlet_name
+                          "
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <div class="d-flex align-items-center">
-                      <div class="form-check me-3">
-                        <label>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label"
+                    >Debit Air Limbah Yang Diijinkan</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.permissible_waste_water_discharge"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Sumber Air Limbah</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.waste_water_source"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row service-count">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">Sistem Ipal</label>
+                  <div class="d-flex flex-wrap">
+                    <div class="form-check me-3">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="checkboxFisika"
+                          value="Fisika"
+                          v-model="formData.ipalTypes"
+                        />
+                        Fisika
+                      </label>
+                    </div>
+                    <div class="form-check me-3">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="checkboxKimia"
+                          value="Kimia"
+                          v-model="formData.ipalTypes"
+                        />
+                        Kimia
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="checkboxBiologi"
+                          value="Biologi"
+                          v-model="formData.ipalTypes"
+                        />
+                        Biologi
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <table class="table table-bordered" style="table-layout: fixed">
+                <thead>
+                  <tr>
+                    <th style="width: 50px">No</th>
+                    <th style="width: 200px">Upaya Pengelolaan</th>
+                    <th style="width: 100px">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="!formData.management_efforts.length">
+                    <td colspan="3" class="text-center">
+                      Data Tidak Ditemukan
+                    </td>
+                  </tr>
+                  <tr
+                    v-for="(detail, index) in formData.management_efforts"
+                    :key="index"
+                  >
+                    <td>{{ index + 1 }}</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="form-control"
+                        v-model="detail.recycling_effort"
+                        @blur="updateEffort(detail.id)"
+                        placeholder="Masukkan Upaya Pengelolaan"
+                        style="word-wrap: break-word; overflow-wrap: break-word"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        @click="removeEffort(detail.id, index)"
+                        class="btn btn-danger"
+                      >
+                        -
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="d-flex justify-content-end mt-4 mb-5">
+                <button
+                  @click="openModalEffort"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Tambah Data Baru
+                </button>
+              </div>
+              <div v-if="isModalEffortOpen" class="modal-backdrop">
+                <div class="overlay"></div>
+                <div class="modal show" tabindex="-1" style="display: block">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5>Tambah Data Upaya Pengelolaan</h5>
+                        <button
+                          @click="closeModalEffort"
+                          class="btn-close"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label>Upaya Pengelolaan</label>
                           <input
-                            type="checkbox"
-                            id="outletCheckbox"
-                            v-model="isOutletChecked"
-                            @change="toggleOutlet"
+                            type="text"
+                            v-model="newEffort.recycling_effort"
+                            class="form-control"
+                            placeholder="Masukkan Bahan Kimia Yang Digunakan"
                           />
-                          Outlet</label
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button @click="saveNewEffort" class="btn btn-primary">
+                          Simpan
+                        </button>
+                        <button
+                          @click="closeModalEffort"
+                          class="btn btn-secondary"
                         >
-                      </div>
-                      <div class="col-md-6">
-                        <div v-if="isOutletChecked" class="form-group">
-                          <input
-                            type="text"
-                            class="form-control input-dark-placeholder"
-                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
-                            v-model="
-                              formData.waste_discharge_measuring_instrument_outlet_name
-                            "
-                          />
-                        </div>
+                          Batal
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label"
-                      >Debit Air Limbah Yang Diijinkan</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.permissible_waste_water_discharge"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Sumber Air Limbah</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.waste_water_source"
-                    />
-                  </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="photo">Upload Persetujuan Teknis IPAL</label>
+                  <input type="file" @change="uploadNIB" class="form-control" />
+                  <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                 </div>
               </div>
-              <div class="row service-count">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="col-form-label">Sistem Ipal</label>
-                    <div class="d-flex flex-wrap">
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="checkboxFisika"
-                            value="Fisika"
-                            v-model="formData.ipalTypes"
-                          />
-                          Fisika
-                        </label>
-                      </div>
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="checkboxKimia"
-                            value="Kimia"
-                            v-model="formData.ipalTypes"
-                          />
-                          Kimia
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="checkboxBiologi"
-                            value="Biologi"
-                            v-model="formData.ipalTypes"
-                          />
-                          Biologi
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label></label>
+                  <img :src="formData.ipal_design_note" />
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-form-label">Upaya Pengelolaan</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="formData.recycle_efforts"
-                />
-              </div>
-              
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="photo">Upload Persetujuan Teknis IPAL</label>
-                    <input
-                      type="file"
-                      @change="uploadNIB"
-                      class="form-control"
-                    />
-                    <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label></label>
-                    <img :src="formData.ipal_design_note" />
-                  </div>
-                </div>
-              </div>
-              <div>
+            </div>
+            <div>
+              <div class="table-responsive">
                 <table class="table table-bordered">
                   <thead>
                     <tr>
@@ -475,118 +785,199 @@ const uploadNIB = async e => {
                     </tr>
                   </thead>
                   <tbody>
-              <tr v-for="(detail, index) in formData.ipal_details" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="detail.chemicals_used"
-                    @blur="updateIpalDetails(detail.id)"
-                    placeholder="Enter Chemicals Used"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="detail.use_of_chemicals"
-                    @blur="updateIpalDetails(detail.id)"
-                    placeholder="Enter Use of Chemicals"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="detail.unit_in_use_of_chemicals"
-                    @blur="updateIpalDetails(detail.id)"
-                    placeholder="Enter Unit of Chemicals"
-                  />
-                </td>
-                <td>
-                  <button @click="removeChemical(index)" class="btn btn-danger">-</button>
-                  <button @click="addChemical" class="btn btn-success">+</button>
-                </td>
-              </tr>
+                    <tr v-if="!formData.ipal_details.length">
+                      <td colspan="5" class="text-center">
+                        Data Tidak Ditemukan
+                      </td>
+                    </tr>
+                    <tr
+                      v-for="(detail, index) in formData.ipal_details"
+                      :key="index"
+                    >
+                      <td>{{ index + 1 }}</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.chemicals_used"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Masukkan Bahan Kimia"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.use_of_chemicals"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Masukkan Penggunaan Bahan Kimia"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="detail.unit_in_use_of_chemicals"
+                          @blur="updateIpalDetails(detail.id)"
+                          placeholder="Masukkan Satuan"
+                          style="min-width: 120px"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          @click="removeChemical(detail.id, index)"
+                          class="btn btn-danger"
+                        >
+                          -
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
-
                 </table>
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label"
-                      >Badan Air yang Menerima Limbah Cair</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.water_bodies_receiving_liquid_waste"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label"
-                      >Tempat Penampungan Lumpur IPAL</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.ipal_sludge_storage_site"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="col-form-label">Jumlah Lumpur</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      v-model="formData.amount_of_mud_sludge"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="col-form-label">Satuan Jumlah Lumpur</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.unit_in_amount_of_mud_sludge"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label"
-                  >Penanganan Lumpur Selanjutnya</label
+              <div class="d-flex justify-content-end mt-4 mb-5">
+                <button
+                  @click="openModal"
+                  class="btn btn-primary"
+                  type="button"
                 >
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="formData.further_sludge_handling"
-                />
+                  Tambah Data Baru
+                </button>
               </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="field-btns d-flex justify-content-between">
-                    <div>
-                      <button class="btn btn-primary next_btn" type="submit">
-                        Update
-                      </button>
-                      <router-link to="/Data/IPAL" class="btn btn-secondary m-2"
-                        >Kembali</router-link
-                      >
+              <div v-if="isModalOpen" class="modal-backdrop">
+                <div class="overlay"></div>
+                <div class="modal show" tabindex="-1" style="display: block">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5>Tambah Data Penggunakan Bahan Kimia</h5>
+                        <button
+                          @click="closeModal"
+                          class="btn-close"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label>Bahan Kimia Yang Digunakan</label>
+                          <input
+                            type="text"
+                            v-model="newChemical.chemicals_used"
+                            class="form-control"
+                            placeholder="Masukkan Bahan Kimia Yang Digunakan"
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label>Pemakaian Bahan Kimia</label>
+                          <input
+                            type="text"
+                            v-model="newChemical.use_of_chemicals"
+                            class="form-control"
+                            placeholder="Masukkan Pemakaian Bahan Kimia"
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label>Satuan</label>
+                          <input
+                            type="text"
+                            v-model="newChemical.unit_in_use_of_chemicals"
+                            class="form-control"
+                            placeholder="Masukkan Satuan"
+                          />
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          @click="saveNewChemical"
+                          class="btn btn-primary"
+                        >
+                          Simpan
+                        </button>
+                        <button @click="closeModal" class="btn btn-secondary">
+                          Batal
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label"
+                    >Badan Air yang Menerima Limbah Cair</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.water_bodies_receiving_liquid_waste"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label"
+                    >Tempat Penampungan Lumpur IPAL</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.ipal_sludge_storage_site"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="col-form-label">Jumlah Lumpur</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    v-model="formData.amount_of_mud_sludge"
+                  />
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="col-form-label">Satuan Jumlah Lumpur</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.unit_in_amount_of_mud_sludge"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-form-label"
+                >Penanganan Lumpur Selanjutnya</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                v-model="formData.further_sludge_handling"
+              />
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="field-btns d-flex justify-content-between">
+                  <div>
+                    <button
+                      class="btn btn-primary next_btn"
+                      @click="updateCompanyDetails"
+                    >
+                      Update
+                    </button>
+                    <router-link to="/Data/IPAL" class="btn btn-secondary m-2"
+                      >Kembali</router-link
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -607,6 +998,35 @@ const uploadNIB = async e => {
   margin-top: 20px;
 }
 .btn {
-  margin-left: 5px; /* Adjust spacing between buttons */
+  margin-left: 5px;
+}
+
+.modal-backdrop {
+  display: block;
+  background-color: rgba(255, 255, 255, 0.8);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.modal-dialog {
+  padding-top: 100px;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.modal-content {
+  background-color: white;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 </style>

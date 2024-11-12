@@ -7,7 +7,7 @@ import { logout as authLogout } from '@/lib/auth.js'
 import { useStore } from 'vuex'
 import { useLoading } from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
-import { promptModal } from "jenesius-vue-modal";
+import { promptModal } from 'jenesius-vue-modal'
 import Swal from 'sweetalert2'
 const $loading = useLoading()
 const store = useStore()
@@ -52,8 +52,11 @@ const formData = ref({
   local_npwp: '',
   activity_type: '',
   production_capacity: '',
+  unit_production: '',
   employees_total: '',
   land_area: '',
+  kdb: '',
+  kdh: '',
   any_ipal: '',
   ipal_total: null,
   ipalTypes: [],
@@ -78,6 +81,7 @@ const validateForm = () => {
     'local_npwp',
     'activity_type',
     'production_capacity',
+    'unit_production',
     'employees_total',
     'land_area',
     'any_ipal',
@@ -92,11 +96,13 @@ const validateForm = () => {
 }
 
 const submitForm = async () => {
+  if (!$loading.isActive) {
+    const loader = $loading.show()
   try {
-    const token = localStorage.getItem('TOKEN');
+    const token = localStorage.getItem('TOKEN')
     if (!token) {
-      Swal.fire('Error', 'Silakan login ulang.', 'error');
-      return;
+      Swal.fire('Error', 'Silakan login ulang.', 'error')
+      return
     }
 
     // Pastikan semua field wajib terisi
@@ -108,19 +114,26 @@ const submitForm = async () => {
       'any_tpsb3',
       'any_wells',
       'building_area',
+      'kdb',
+      'kdh',
       'employees_total',
       'green_open_space_area',
       'land_area',
       'pic_name',
       'production_capacity',
+      'unit_production',
       'shift_count',
       'source',
-    ];
+    ]
 
     for (const field of requiredFields) {
       if (!formData.value[field]) {
-        Swal.fire('Error', `${field.replace(/_/g, ' ')} tidak boleh kosong.`, 'error');
-        return;
+        Swal.fire(
+          'Error',
+          `${field.replace(/_/g, ' ')} tidak boleh kosong.`,
+          'error',
+        )
+        return
       }
     }
 
@@ -145,11 +158,14 @@ const submitForm = async () => {
       any_tpsb3: formData.value.any_tpsb3,
       any_wells: formData.value.any_wells,
       building_area: formData.value.building_area,
+      kdb: formData.value.kdb.toString(),
+      kdh: formData.value.kdh.toString(),
       employees_total: formData.value.employees_total,
       green_open_space_area: formData.value.green_open_space_area,
       land_area: formData.value.land_area,
       pic_name: formData.value.pic_name,
       production_capacity: formData.value.production_capacity,
+      unit_production: formData.value.unit_production,
       shift_count: formData.value.shift_count,
       source: formData.value.source.toString(),
       any_ipal: formData.value.any_ipal,
@@ -166,41 +182,46 @@ const submitForm = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
-    const companyId = response.data.data.id;
-    const ipalPromises = formData.value.ipalTypes.map(async (type) => {
-    if (type) {
-      return axios.post(
-        'http://localhost:8000/api/company_ipals',
-        {
-          company_detail_id: companyId, // Ensure you are using the correct ID here
-          type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      },
+    )
+    const companyId = response.data.data.id
+    const ipalPromises = formData.value.ipalTypes.map(async type => {
+      if (type) {
+        return axios.post(
+          'http://localhost:8000/api/company_ipals',
+          {
+            company_detail_id: companyId, // Ensure you are using the correct ID here
+            type,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+      }
+    })
+    if (ipalPromises.length > 0) {
+      await Promise.all(ipalPromises) // Tunggu hingga semua IPAL disimpan
     }
-  });
-  if (ipalPromises.length > 0) {
-  await Promise.all(ipalPromises); // Tunggu hingga semua IPAL disimpan
-  }
 
-    Swal.fire('Success', 'Data berhasil disimpan.', 'success');
+    Swal.fire('Success', 'Data berhasil disimpan.', 'success')
   } catch (error) {
-    Swal.fire('Error', error.response.data.message || 'Gagal menyimpan data.', 'error');
-    console.error(error);
-  }
-};
-
-
+    Swal.fire(
+      'Error',
+      error.response.data.message || 'Gagal menyimpan data.',
+      'error',
+    )
+    console.error(error)
+  }finally {
+        loader.hide() // Hide loader after operation
+      }
+    }
+}
 
 const kodekbli = ref('')
 const kodeJudul = ref('')
-watch(kodekbli, (newValue) => {
+watch(kodekbli, newValue => {
   kodeJudul.value = kbliOptions[newValue] || ''
 })
 
@@ -231,19 +252,19 @@ const openKbliModal = async () => {
   kbli.value.push(selectedKbli)
 }
 
-const deleteKbli = (data) => {
-  kbli.value = kbli.value.filter((v) => {
+const deleteKbli = data => {
+  kbli.value = kbli.value.filter(v => {
     return v.kode != data.kode
   })
 }
 
-const addJenisUsaha = (event) => {
+const addJenisUsaha = event => {
   jenisUsaha.value.push(event.target.value)
   event.target.value = ''
 }
 
-const deleteJenisUsaha = (data) => {
-  jenisUsaha.value = jenisUsaha.value.filter((v) => {
+const deleteJenisUsaha = data => {
+  jenisUsaha.value = jenisUsaha.value.filter(v => {
     return v != data
   })
 }
@@ -252,14 +273,30 @@ onMounted(() => {
   fetchUserStatus()
 })
 const updateIpalTypes = () => {
-  formData.value.ipalTypes = Array.from({ length: formData.value.ipal_total }, () => '');
+  formData.value.ipalTypes = Array.from(
+    { length: formData.value.ipal_total },
+    () => '',
+  )
 }
+const calculateBuildingAreaAndGreenSpace = () => {
+  const landArea = parseFloat(formData.value.land_area) || 0
+  const kdb = parseFloat(formData.value.kdb) || 0
+  const kdh = parseFloat(formData.value.kdh) || 0
+
+  formData.value.building_area = ((landArea * kdb) / 100).toFixed(2)
+  formData.value.green_open_space_area = ((landArea * kdh) / 100).toFixed(2)
+}
+
+watch(
+  () => [formData.value.land_area, formData.value.kdb, formData.value.kdh],
+  () => calculateBuildingAreaAndGreenSpace(),
+)
+
 watch(
   () => formData.value.ipal_total,
-  () => updateIpalTypes()
+  () => updateIpalTypes(),
 )
 </script>
-
 
 <template>
   <div v-if="userStatus === 'DITERIMA' && !companyDetail">
@@ -325,25 +362,45 @@ watch(
                             <div class="row">
                               <div class="col">
                                 <div class="form-group">
-                                  <label class="col-form-label m-0"
-                                    >KBLI</label
-                                  >
+                                  <label class="col-form-label m-0">KBLI</label>
                                   <div v-if="kbli.length < 1">
                                     <p class="mb-1">Tidak ada KBLI</p>
                                   </div>
                                   <div>
-                                    <div v-for="data in kbli" :key="data.kode" class="card mb-3">
-                                      <div class="card-header p-2">{{ data.kode }} - {{ data.judul }}</div>
+                                    <div
+                                      v-for="data in kbli"
+                                      :key="data.kode"
+                                      class="card mb-3"
+                                    >
+                                      <div class="card-header p-2">
+                                        {{ data.kode }} - {{ data.judul }}
+                                      </div>
                                       <div class="card-body p-2">
-                                        <p class="card-text">{{ data.uraian }}</p>
-                                        <div class="d-flex justify-content-end mt-1">
-                                          <button @click="deleteKbli(data)" type="button" class="btn btn-danger">Hapus</button>
+                                        <p class="card-text">
+                                          {{ data.uraian }}
+                                        </p>
+                                        <div
+                                          class="d-flex justify-content-end mt-1"
+                                        >
+                                          <button
+                                            @click="deleteKbli(data)"
+                                            type="button"
+                                            class="btn btn-danger"
+                                          >
+                                            Hapus
+                                          </button>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div>
-                                    <button @click="openKbliModal" type="button" class="btn btn-primary">Tambah KBLI</button>
+                                    <button
+                                      @click="openKbliModal"
+                                      type="button"
+                                      class="btn btn-primary"
+                                    >
+                                      Tambah KBLI
+                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -375,50 +432,213 @@ watch(
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="col-form-label">Jenis Usaha</label>
-                              <select class="form-control" @change="addJenisUsaha">
-                                   <option value="">Pilih</option>
-                                   <option value="Peternakaan sapi dan babi - (Satuan Produksi : Ekor/Bulan)">Peternakaan sapi dan babi - (Satuan Produksi : Ekor/Bulan)</option>
-                                    <option value="Perhotelan - (Satuan Produksi : Orang/Bulan)">Perhotelan - (Satuan Produksi : Orang/Bulan)</option>
-                                    <option value="Pemotongan Hewan - (Satuan Produksi : Ekor/Bulan)">Pemotongan Hewan - (Satuan Produksi : Ekor/Bulan)</option>
-                                    <option value="Industri Tekstil (Q<=100 m3/hari) - (Satuan Produksi : Ton/Bulan)">Industri Tekstil (Q<=100 m3/hari) - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Tekstil (Q=100-1000 m3/hari) - (Satuan Produksi : Ton/bulan)">Industri Tekstil (Q=100-1000 m3/hari) - (Satuan Produksi : Ton/bulan)</option>
-                                    <option value="Industri Tekstil (Q>=1000m3/hari) - (Satuan Produksi : Ton/bulan)">Industri Tekstil (Q>=1000m3/hari) - (Satuan Produksi : Ton/bulan)</option>
-                                    <option value="Industri Tekstil - (Satuan Produksi : Ton/Bulan)">Industri Tekstil - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Pelapisan Logam dan Galvanis - (Satuan Produksi : m2/Bulan)">Industri Pelapisan Logam dan Galvanis - (Satuan Produksi : m2/Bulan)</option>
-                                    <option value="Industri Kayu lapis - (Satuan Produksi : m3/bulan)">Industri Kayu lapis - (Satuan Produksi : m3/bulan)</option>
-                                    <option value="Industri Cat - (Satuan Produksi : Liter Cat Water Base/Bulan)">Industri Cat - (Satuan Produksi : Liter Cat Water Base/Bulan)</option>
-                                    <option value="Fasilitas Pelayanan Kesehatan - (Satuan Produksi : Orang/Bulan)">Fasilitas Pelayanan Kesehatan - (Satuan Produksi : Orang/Bulan)</option>
-                                    <option value="Industri Domestik - (Satuan Produksi : Orang/Bulan)">Industri Domestik - (Satuan Produksi : Orang/Bulan)</option>
-                                    <option value="Pengolahan kedelai - (Satuan Produksi : Ton/Bulan)">Pengolahan kedelai - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Pengolahan Daging - (Satuan Produksi : Ton/Bulan)">Pengolahan Daging - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Pengolahan susu - (Satuan Produksi : Ton/Bulan)">Pengolahan susu - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Yang belum Memiliki Baku mutu Air Limbah yang ditetapkan - (Satuan Produksi : Ton/Bulan)">Industri Yang belum Memiliki Baku mutu Air Limbah yang ditetapkan - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Minuman Ringan - (Satuan Produksi : Ton/Bulan)">Industri Minuman Ringan - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Tapioka - (Satuan Produksi : Ton/Bulan)">Industri Tapioka - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Soda Kostik - (Satuan Produksi : Ton/Bulan)">Industri Soda Kostik - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Sabun, deterjen produk minyak nabati - (Satuan Produksi : Ton/Bulan)">Industri Sabun, deterjen produk minyak nabati - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri PET - (Satuan Produksi : Ton/Bulan)">Industri PET - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Penyamaan Kulit - (Satuan Produksi : Ton/Bulan)">Industri Penyamaan Kulit - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri MSG IMP - (Satuan Produksi : Ton/Bulan)">Industri MSG IMP - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Baterai Timbal Asam (AKI) - (Satuan Produksi : Ton/Bulan)">Industri Baterai Timbal Asam (AKI) - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Karet - (Satuan Produksi : Ton/Bulan)">Industri Karet - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Farmasi - (Satuan Produksi : Ton/Bulan)">Industri Farmasi - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Elektronika - (Satuan Produksi : Ton/Bulan)">Industri Elektronika - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Asam Tereftalat PTA - (Satuan Produksi : Ton/Bulan)">Industri Asam Tereftalat PTA - (Satuan Produksi : Ton/Bulan)</option>
-                                    <option value="Industri Garment - (Satuan Produksi : ton/bulan)">Industri Garment - (Satuan Produksi : ton/bulan)</option>
-                                    <option value="Industri Lainnya - (Satuan Produksi : ton/bulan)">Industri Lainnya - (Satuan Produksi : ton/bulan)</option>
-                                </select>
-                                <div v-if="jenisUsaha.length < 1" class="mt-2">
-                                  <p>Tidak ada Jenis Usaha</p>
-                                </div>
-                                <div>
-                                  <div v-for="data in jenisUsaha" :key="data" class="card mt-2 mb-0">
-                                      <div class="card-header p-2 d-flex justify-content-between align-items-center">
-                                        <p>{{ data }}</p>
-                                        <button @click="deleteJenisUsaha(data)" type="button" class="btn btn-danger">Hapus</button>
-                                      </div>
+                              <select
+                                class="form-control"
+                                @change="addJenisUsaha"
+                              >
+                                <option value="">Pilih</option>
+                                <option
+                                  value="Peternakaan sapi dan babi - (Satuan Produksi : Ekor/Bulan)"
+                                >
+                                  Peternakaan sapi dan babi - (Satuan Produksi :
+                                  Ekor/Bulan)
+                                </option>
+                                <option
+                                  value="Perhotelan - (Satuan Produksi : Orang/Bulan)"
+                                >
+                                  Perhotelan - (Satuan Produksi : Orang/Bulan)
+                                </option>
+                                <option
+                                  value="Pemotongan Hewan - (Satuan Produksi : Ekor/Bulan)"
+                                >
+                                  Pemotongan Hewan - (Satuan Produksi :
+                                  Ekor/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Tekstil (Q<=100 m3/hari) - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Tekstil (Q<=100 m3/hari) - (Satuan
+                                  Produksi : Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Tekstil (Q=100-1000 m3/hari) - (Satuan Produksi : Ton/bulan)"
+                                >
+                                  Industri Tekstil (Q=100-1000 m3/hari) -
+                                  (Satuan Produksi : Ton/bulan)
+                                </option>
+                                <option
+                                  value="Industri Tekstil (Q>=1000m3/hari) - (Satuan Produksi : Ton/bulan)"
+                                >
+                                  Industri Tekstil (Q>=1000m3/hari) - (Satuan
+                                  Produksi : Ton/bulan)
+                                </option>
+                                <option
+                                  value="Industri Tekstil - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Tekstil - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Pelapisan Logam dan Galvanis - (Satuan Produksi : m2/Bulan)"
+                                >
+                                  Industri Pelapisan Logam dan Galvanis -
+                                  (Satuan Produksi : m2/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Kayu lapis - (Satuan Produksi : m3/bulan)"
+                                >
+                                  Industri Kayu lapis - (Satuan Produksi :
+                                  m3/bulan)
+                                </option>
+                                <option
+                                  value="Industri Cat - (Satuan Produksi : Liter Cat Water Base/Bulan)"
+                                >
+                                  Industri Cat - (Satuan Produksi : Liter Cat
+                                  Water Base/Bulan)
+                                </option>
+                                <option
+                                  value="Fasilitas Pelayanan Kesehatan - (Satuan Produksi : Orang/Bulan)"
+                                >
+                                  Fasilitas Pelayanan Kesehatan - (Satuan
+                                  Produksi : Orang/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Domestik - (Satuan Produksi : Orang/Bulan)"
+                                >
+                                  Industri Domestik - (Satuan Produksi :
+                                  Orang/Bulan)
+                                </option>
+                                <option
+                                  value="Pengolahan kedelai - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Pengolahan kedelai - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Pengolahan Daging - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Pengolahan Daging - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Pengolahan susu - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Pengolahan susu - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Yang belum Memiliki Baku mutu Air Limbah yang ditetapkan - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Yang belum Memiliki Baku mutu Air
+                                  Limbah yang ditetapkan - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Minuman Ringan - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Minuman Ringan - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Tapioka - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Tapioka - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Soda Kostik - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Soda Kostik - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Sabun, deterjen produk minyak nabati - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Sabun, deterjen produk minyak nabati
+                                  - (Satuan Produksi : Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri PET - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri PET - (Satuan Produksi : Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Penyamaan Kulit - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Penyamaan Kulit - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri MSG IMP - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri MSG IMP - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Baterai Timbal Asam (AKI) - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Baterai Timbal Asam (AKI) - (Satuan
+                                  Produksi : Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Karet - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Karet - (Satuan Produksi : Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Farmasi - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Farmasi - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Elektronika - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Elektronika - (Satuan Produksi :
+                                  Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Asam Tereftalat PTA - (Satuan Produksi : Ton/Bulan)"
+                                >
+                                  Industri Asam Tereftalat PTA - (Satuan
+                                  Produksi : Ton/Bulan)
+                                </option>
+                                <option
+                                  value="Industri Garment - (Satuan Produksi : ton/bulan)"
+                                >
+                                  Industri Garment - (Satuan Produksi :
+                                  ton/bulan)
+                                </option>
+                                <option
+                                  value="Industri Lainnya - (Satuan Produksi : ton/bulan)"
+                                >
+                                  Industri Lainnya - (Satuan Produksi :
+                                  ton/bulan)
+                                </option>
+                              </select>
+                              <div v-if="jenisUsaha.length < 1" class="mt-2">
+                                <p>Tidak ada Jenis Usaha</p>
+                              </div>
+                              <div>
+                                <div
+                                  v-for="data in jenisUsaha"
+                                  :key="data"
+                                  class="card mt-2 mb-0"
+                                >
+                                  <div
+                                    class="card-header p-2 d-flex justify-content-between align-items-center"
+                                  >
+                                    <p>{{ data }}</p>
+                                    <button
+                                      @click="deleteJenisUsaha(data)"
+                                      type="button"
+                                      class="btn btn-danger"
+                                    >
+                                      Hapus
+                                    </button>
                                   </div>
                                 </div>
+                              </div>
                             </div>
                           </div>
                           <div class="col-md-6">
@@ -433,9 +653,21 @@ watch(
                                   placeholder="Masukkan Kapasitas Produksi"
                                   v-model="formData.production_capacity"
                                 />
-                                <span class="mins"
-                                  >Satuan : $data jenis usaha</span
-                                >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="col-form-label"
+                                >Satuan Produksi
+                              </label>
+                              <div class="form-duration">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Masukkan Satuan Produksi"
+                                  v-model="formData.unit_production"
+                                />
                               </div>
                             </div>
                           </div>
@@ -474,18 +706,40 @@ watch(
                         </div>
                         <div class="addservice-info">
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                               <div class="form-group">
                                 <label class="col-form-label">Luas Lahan</label>
                                 <div class="form-duration">
                                   <input
-                                    type="text"
+                                    type="number"
                                     class="form-control"
                                     placeholder="Masukkan Luas Lahan"
                                     v-model="formData.land_area"
                                     step="0.01"
+                                    @input="calculateBuildingAreaAndGreenSpace"
                                   />
                                   <span class="mins">m2</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="addservice-info">
+                          <div class="row service-cont">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="col-form-label">KDB</label>
+                                <div class="form-duration">
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="Masukkan KDB"
+                                    v-model="formData.kdb"
+                                    step="0.01"
+                                    @input="calculateBuildingAreaAndGreenSpace"
+                                  />
+                                  <span class="mins">%</span>
                                 </div>
                               </div>
                             </div>
@@ -500,8 +754,29 @@ watch(
                                     class="form-control"
                                     placeholder="Masukkan Luas Bangunan"
                                     v-model="formData.building_area"
+                                    readonly
                                   />
                                   <span class="mins">m2</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="addservice-info">
+                          <div class="row service-cont">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="col-form-label">KDH</label>
+                                <div class="form-duration">
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="Masukkan KDH"
+                                    v-model="formData.kdh"
+                                    @input="calculateBuildingAreaAndGreenSpace"
+                                  />
+                                  <span class="mins">%</span>
                                 </div>
                               </div>
                             </div>
@@ -516,6 +791,7 @@ watch(
                                     class="form-control"
                                     placeholder="Masukkan Luas Ruang Terbuka Hijau"
                                     v-model="formData.green_open_space_area"
+                                    readonly
                                   />
                                   <span class="mins">m2</span>
                                 </div>
@@ -544,7 +820,10 @@ watch(
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label class="col-form-label">IPAL</label>
-                                <select class="form-control" v-model="formData.any_ipal">
+                                <select
+                                  class="form-control"
+                                  v-model="formData.any_ipal"
+                                >
                                   <option value="">Pilih Status IPAL</option>
                                   <option value="Ada">Ada</option>
                                   <option value="Tidak Ada">Tidak Ada</option>
@@ -553,9 +832,14 @@ watch(
                             </div>
 
                             <!-- IPAL Count Input -->
-                            <div class="col-md-6" v-if="formData.any_ipal === 'Ada'">
+                            <div
+                              class="col-md-6"
+                              v-if="formData.any_ipal === 'Ada'"
+                            >
                               <div class="form-group">
-                                <label class="col-form-label">Jumlah IPAL</label>
+                                <label class="col-form-label"
+                                  >Jumlah IPAL</label
+                                >
                                 <input
                                   type="number"
                                   class="form-control"
@@ -574,16 +858,23 @@ watch(
                               v-if="formData.any_ipal === 'Ada'"
                             >
                               <div class="form-group">
-                                <label class="col-form-label">Jenis IPAL {{ index + 1 }}</label>
-                                <select class="form-control" v-model="formData.ipalTypes[index]">
-                                  <option value="" disabled selected>Pilih Jenis IPAL</option>
+                                <label class="col-form-label"
+                                  >Jenis IPAL {{ index + 1 }}</label
+                                >
+                                <select
+                                  class="form-control"
+                                  v-model="formData.ipalTypes[index]"
+                                >
+                                  <option value="" disabled selected>
+                                    Pilih Jenis IPAL
+                                  </option>
                                   <option value="Domestik">Domestik</option>
                                   <option value="Industri">Industri</option>
                                   <option value="Integrasi">Integrasi</option>
                                 </select>
                               </div>
                             </div>
-                        </div>
+                          </div>
                           <div class="row service-cont">
                             <div class="col-md-6">
                               <div class="form-group">
@@ -721,6 +1012,7 @@ watch(
                                     />
                                     Lainnya
                                   </div>
+                                </div>
 
                                   <!-- Input Tambahan jika Checkbox Terpilih -->
 
@@ -751,6 +1043,41 @@ watch(
                                     </div>
                                   </div>
                               </div>
+                            </div>
+                          </div>
+                          <!-- Input Tambahan jika Checkbox Terpilih -->
+                          <div class="row mt-3">
+                            <div
+                              class="col-md-6"
+                              v-if="formData.source.includes('PDAM LAINNYA')"
+                            >
+                              <div class="form-group">
+                                <label class="col-form-label"
+                                  >Masukkan Nama PDAM</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Masukkan nama PDAM lainnya"
+                                  v-model="formData.pdam_lainnya"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="col-md-6"
+                            v-if="formData.source.includes('lainnya')"
+                          >
+                            <div class="form-group">
+                              <label class="col-form-label"
+                                >Masukkan Detail Lainnya</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Masukkan detail lainnya"
+                                v-model="formData.lainnya_detail"
+                              />
                             </div>
                           </div>
                           <div class="col-md-12">
@@ -939,7 +1266,7 @@ watch(
                               />
                             </div>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-4">
                             <div class="form-group">
                               <label class="col-form-label"
                                 >Kapasitas Produksi
@@ -951,13 +1278,25 @@ watch(
                                   placeholder="Masukkan Kapasitas Produksi"
                                   v-model="formData.production_capacity"
                                 />
-                                <span class="mins"
-                                  >Satuan : $data jenis usaha</span
-                                >
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="col-form-label"
+                                >Satuan Produksi
+                              </label>
+                              <div class="form-duration">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Masukkan Satuan Produksi"
+                                  v-model="formData.unit_production"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
                             <div class="form-group">
                               <label class="col-form-label"
                                 >Jumlah Karyawan</label
@@ -996,7 +1335,7 @@ watch(
                         </div>
                         <div class="addservice-info">
                           <div class="row service-cont">
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                               <div class="form-group">
                                 <label class="col-form-label">Luas Lahan</label>
                                 <div class="form-duration">
@@ -1008,6 +1347,33 @@ watch(
                                     step="0.01"
                                   />
                                   <span class="mins">m2</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-6"></div>
+                          <div class="col-sm-6">
+                            <div
+                              class="status-toggle sml-status float-sm-end mb-3"
+                            ></div>
+                          </div>
+                        </div>
+                        <div class="addservice-info">
+                          <div class="row service-cont">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="col-form-label">KDB</label>
+                                <div class="form-duration">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Masukkan KDB"
+                                    v-model="formData.land_area"
+                                    step="0.01"
+                                  />
+                                  <span class="mins">%</span>
                                 </div>
                               </div>
                             </div>
@@ -1024,6 +1390,24 @@ watch(
                                     v-model="formData.building_area"
                                   />
                                   <span class="mins">m2</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="addservice-info">
+                          <div class="row service-cont">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="col-form-label">KDH</label>
+                                <div class="form-duration">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Masukkan KDH"
+                                    v-model="formData.green_open_space_area"
+                                  />
+                                  <span class="mins">%</span>
                                 </div>
                               </div>
                             </div>
@@ -1307,7 +1691,10 @@ watch(
           <div class="container">
             <div class="row">
               <h1>Selamat datang</h1>
-              <p>Silahkan lanjutkan mengisi data Perizinan, IPAL, Cerobong, TPS B3, dan Sumber Air</p>
+              <p>
+                Silahkan lanjutkan mengisi data Perizinan, IPAL, Cerobong, TPS
+                B3, dan Sumber Air
+              </p>
             </div>
           </div>
         </div>
@@ -1323,11 +1710,11 @@ export default {
       formData: {
         source: [],
         pdam_lainnya: '',
-        lainnya_detail: ''
-      }
-    };
-  }
-};
+        lainnya_detail: '',
+      },
+    }
+  },
+}
 </script>
 
 <style scoped>

@@ -165,13 +165,12 @@ const submitForm = async () => {
                       <div class="col-md-6">
                         <div class="form-group">
                           <label for="permit_date_expired"
-                            >Tanggal Izin Berakhir</label
+                            >Tanggal Izin Berakhir (Jika Ada)</label
                           >
                           <input
                             type="date"
                             v-model="form.permit_date_expired"
                             class="form-control"
-                            required
                           />
                         </div>
                       </div>
