@@ -760,6 +760,7 @@ const uploadNIB = async e => {
                 <div class="form-group">
                   <label for="photo">Upload Persetujuan Teknis IPAL</label>
                   <input type="file" @change="uploadNIB" class="form-control" />
+                  <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                 </div>
               </div>
             </div>

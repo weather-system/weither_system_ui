@@ -142,6 +142,7 @@ import MainWrapper from '@/components/MainWrapper.vue'
                 id="nibFile"
                 placeholder="Upload NIB file"
               />
+              <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
             </div>
           </div>
           <div class="col-lg-6 col-12">

@@ -191,6 +191,7 @@ defineExpose({ setValues })
                 type="file"
                 @change="onUploadDocument($event, 'file_hasil_pemeriksaan_lab')"
               />
+              <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
             </div>
             <div class="col-4 mt-2">
               <label class="form-label"
@@ -201,6 +202,7 @@ defineExpose({ setValues })
                 type="file"
                 @change="onUploadDocument($event, 'file_dokumentasi_sampling')"
               />
+              <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
             </div>
 
             <div>

@@ -4,6 +4,7 @@ import { useLoading } from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
 import { logout as authLogout } from '@/lib/auth.js'
 import Swal from 'sweetalert2'
+import '@/assets/css/admin.css'
 
 const $loading = useLoading()
 const store = useStore()
@@ -29,6 +30,10 @@ const logout = async () => {
   }
 }
 </script>
+
+<style scoped>
+@import '@/assets/css/admin.css';
+</style>
 
 <template>
   <div class="header">
@@ -101,4 +106,3 @@ const logout = async () => {
   </div>
 </template>
 
-<style src="/src/assets/css/admin.css"></style>

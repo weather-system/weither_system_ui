@@ -11360,6 +11360,25 @@ fieldset {
 .post-info {
 	margin-left: 95px;
 }
+.post-info-tes {
+	margin-left: 20px;
+}
+.post-info-tes h4 {
+	font-size: 16px;
+	font-weight: 500;
+	margin: 0;
+}
+.post-info-tes h4 a {
+	color: #28283C;
+}
+.post-info-tes h4 a:hover {
+	color: #4c40ed;
+}
+.post-info-tes p {
+	color: #71717A;
+	font-size: 13px;
+	margin-bottom: 7px;
+}
 .post-info h4 {
 	font-size: 16px;
 	font-weight: 500;
@@ -22316,4 +22335,8 @@ fieldset {
 	max-width: 500px; /* Atur lebar maksimum sesuai preferensi */
 	max-height: 300px; /* Atur tinggi maksimum sesuai preferensi */
 	object-fit: contain; /* Memastikan logo tidak terdistorsi */
+}
+
+.justify-text{
+	text-align: justify;
 }

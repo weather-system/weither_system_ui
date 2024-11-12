@@ -324,6 +324,7 @@ const uploadPKPLHFile = async e => {
                         class="form-control"
                         @change="uploadSKKLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
 
@@ -347,6 +348,7 @@ const uploadPKPLHFile = async e => {
                         class="form-control"
                         @change="uploadPKPLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="row mt-3">
@@ -367,6 +369,7 @@ const uploadPKPLHFile = async e => {
                         class="form-control"
                         @change="uploadNIB"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="col-md-6" style="margin-top: 20px">
@@ -571,6 +574,7 @@ const uploadPKPLHFile = async e => {
                         class="form-control"
                         @change="uploadSKKLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
 
@@ -594,6 +598,7 @@ const uploadPKPLHFile = async e => {
                         class="form-control"
                         @change="uploadPKPLHFile"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="row mt-3">
@@ -613,6 +618,7 @@ const uploadPKPLHFile = async e => {
                         class="form-control"
                         @change="uploadNIB"
                       />
+                      <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
                   </div>
                   <div class="col-md-6" style="margin-top: 20px">

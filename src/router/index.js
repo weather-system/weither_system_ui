@@ -37,7 +37,15 @@ const adminRoutes = [
 // Array untuk halaman utama
 const mainRoutes = [
   '/',
-  '/Compro'
+  '/beranda/ComproView',
+  '/beranda/ComproStructureView',
+  '/beranda/Contact',
+  '/beranda/LaboratoryView',
+  '/beranda/IzinLingkunganView',
+  '/beranda/BeritaView',
+  '/beranda/ArtikelView',
+  '/beranda/PengumumanView',
+  '/beranda/DownloadView'
 ]
 
 const router = createRouter({
@@ -57,6 +65,46 @@ const router = createRouter({
       path: '/beranda/ComproView',
       name: 'ComproView',
       component: () => import('@/views/beranda/ComproView.vue'),
+    },
+    {
+      path: '/beranda/LaboratoryView',
+      name: 'LaboratoryView',
+      component: () => import('@/views/beranda/LaboratoryView.vue'),
+    },
+    {
+      path: '/beranda/IzinLingkunganView',
+      name: 'IzinLingkunganView',
+      component: () => import('@/views/beranda/IzinLingkunganView.vue'),
+    },
+    {
+      path: '/beranda/BeritaView',
+      name: 'BeritaView',
+      component: () => import('@/views/beranda/BeritaView.vue'),
+    },
+    {
+      path: '/beranda/ArtikelView',
+      name: 'ArtikelView',
+      component: () => import('@/views/beranda/ArtikelView.vue'),
+    },
+    {
+      path: '/beranda/DownloadView',
+      name: 'DownloadView',
+      component: () => import('@/views/beranda/DownloadView.vue'),
+    },
+    {
+      path: '/beranda/PengumumanView',
+      name: 'PengumumanView',
+      component: () => import('@/views/beranda/PengumumanView.vue'),
+    },
+    {
+      path: '/beranda/AgendaView',
+      name: 'AgendaView',
+      component: () => import('@/views/beranda/AgendaView.vue'),
+    },
+    {
+      path: '/beranda/Contact',
+      name: 'Contact',
+      component: () => import('@/views/beranda/Contact.vue'),
     },
     {
       path: '/beranda/ComproStructureView',
