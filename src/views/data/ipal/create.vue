@@ -28,7 +28,8 @@ const formData = ref({
   waste_discharge_measuring_instrument_outlet: null,
   ipal_design_note: '',
   company_detail_id: '',
-  ipalDetails: [], // Will hold details including chemicals
+  ipalDetails: [],
+  managament_efforts :[]
 });
 
 // State variables
@@ -92,11 +93,13 @@ const createIpalEntry = async () => {
 
     formData.value.system_ipal = formData.value.ipalTypes.join(',');
 
-    // Prepare ipalDetails from chemicalDetails
     formData.value.ipalDetails = chemicalDetails.value.map(chemical => ({
       chemicals_used: chemical.chemicals_used,
       use_of_chemicals: chemical.use_of_chemicals,
       unit_in_use_of_chemicals: chemical.unit_in_use_of_chemicals,
+    }));
+    formData.value.managament_efforts = recycleDetails.value.map(recycle => ({
+      recycling_effort: recycle.recycling_effort,
     }));
 
     const response = await axios.post('http://localhost:8000/api/company_ipals', formData.value, {
@@ -122,10 +125,30 @@ const createIpalEntry = async () => {
           console.error('Error adding IPAL detail:', detailError);
         }
       }
+      for (const effort of formData.value.managament_efforts) {
+        const effortData = {
+          company_ipal_id: companyIpalId,
+          ...effort,
+        };
+        // try {
+        //   const effortResponse = await axios.post('http://localhost:8000/api/management_efforts', effortData, {headers});
+        //   console.log('Upaya Pengelolaan berhasil:', effortResponse.data);
+        // } catch (detailError) {
+        //   console.error('Upaya Pengelolaan gagal:', detailError);
+        // }
+        try {
+          const effortResponse = await axios.post('http://localhost:8000/api/management_efforts', effortData, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          });
+          console.log('Management effort added:', effortResponse.data);
+        } catch (effortError) {
+          console.error('Error adding management effort:', effortError);
+        }
+      }
       Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: 'IPAL entry created successfully!',
+        text: 'Data Persetujuan IPAL Berhasil dibuat!',
       });
       router.push('/Data/IPAL');
     } else {
@@ -183,6 +206,15 @@ const removeChemical = (index) => {
   chemicalDetails.value.splice(index, 1);
 };
 
+const recycleDetails = ref([{ recycling_effort: ''}]);
+
+const addRecycle = () => {
+  recycleDetails.value.push({ recycling_effort: '' });
+};
+
+const removeRecycle = (index) => {
+  recycleDetails.value.splice(index, 1);
+};
 </script>
 
 <template>
@@ -194,7 +226,6 @@ const removeChemical = (index) => {
             <div class="content-page-header mb-2">
               <h3>Tambah Persetujuan Teknis IPAL</h3>
             </div>
-            <form @submit.prevent="createIpalEntry">
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
@@ -231,6 +262,29 @@ const removeChemical = (index) => {
                   </div>
                 </div>
               </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">Longitude</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="formData.longitude"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">Latitude</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="formData.latitude"
+                    />
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
@@ -260,6 +314,70 @@ const removeChemical = (index) => {
                       class="form-control"
                       v-model="formData.unit_in_capacity"
                     />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-form-label">Alat Ukur Debit Limbah</label>
+                    <div class="d-flex align-items-center">
+                      <div class="form-check me-3">
+                        <label>
+                          <input
+                            type="checkbox"
+                            id="inletCheckbox"
+                            v-model="isInletChecked"
+                            @change="toggleInlet"
+                          />
+                          Inlet
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <div v-if="isInletChecked" class="form-group">
+                          <input
+                            type="text"
+                            class="form-control input-dark-placeholder"
+                            v-model="
+                              formData.waste_discharge_measuring_instrument_inlet_name
+                            "
+                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="d-flex align-items-center">
+                      <div class="form-check me-3">
+                        <label>
+                          <input
+                            type="checkbox"
+                            id="outletCheckbox"
+                            v-model="isOutletChecked"
+                            @change="toggleOutlet"
+                          />
+                          Outlet</label
+                        >
+                      </div>
+                      <div class="col-md-6">
+                        <div v-if="isOutletChecked" class="form-group">
+                          <input
+                            type="text"
+                            class="form-control input-dark-placeholder"
+                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
+                            v-model="
+                              formData.waste_discharge_measuring_instrument_outlet_name
+                            "
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -329,98 +447,43 @@ const removeChemical = (index) => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Longitude</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.longitude"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="col-form-label">Latitude</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="formData.latitude"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label">Upaya Daur Ulang</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="formData.recycle_efforts"
-                />
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="col-form-label">Alat Ukur Debit Limbah</label>
-                    <div class="d-flex align-items-center">
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="inletCheckbox"
-                            v-model="isInletChecked"
-                            @change="toggleInlet"
-                          />
-                          Inlet
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <div v-if="isInletChecked" class="form-group">
-                          <input
-                            type="text"
-                            class="form-control input-dark-placeholder"
-                            v-model="
-                              formData.waste_discharge_measuring_instrument_inlet_name
-                            "
-                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <div class="d-flex align-items-center">
-                      <div class="form-check me-3">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="outletCheckbox"
-                            v-model="isOutletChecked"
-                            @change="toggleOutlet"
-                          />
-                          Outlet</label
+              <div>
+                <table class="table table-bordered mb-4">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Upaya Daur Ulang</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(recycle, index) in recycleDetails"
+                      :key="index"
+                    >
+                      <td>{{ index + 1 }}</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="recycle.recycling_effort"
+                          placeholder="Masukkan Upaya Daur Ulang"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          @click="removeRecycle(index)"
+                          class="btn btn-danger"
                         >
-                      </div>
-                      <div class="col-md-6">
-                        <div v-if="isOutletChecked" class="form-group">
-                          <input
-                            type="text"
-                            class="form-control input-dark-placeholder"
-                            placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
-                            v-model="
-                              formData.waste_discharge_measuring_instrument_outlet_name
-                            "
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                          -
+                        </button>
+                        <button @click="addRecycle" class="btn btn-success">
+                          +
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <div class="row">
                 <div class="col-md-4">
@@ -443,7 +506,7 @@ const removeChemical = (index) => {
                 </div>
               </div>
               <div>
-                <table class="table table-bordered">
+                <table class="table table-bordered mb-4">
                   <thead>
                     <tr>
                       <th>No</th>
@@ -552,8 +615,11 @@ const removeChemical = (index) => {
                   v-model="formData.further_sludge_handling"
                 />
               </div>
-              <button type="submit" class="btn btn-primary">Simpan</button>
-            </form>
+              <button @click="createIpalEntry" class="btn btn-primary">Simpan</button>
+              
+              <router-link to="/Data/IPAL" class="btn btn-secondary m-2"
+                        >Kembali</router-link
+                      >
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import { registerCompany } from '@/lib/company.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import HeaderHome from '@/components/HeaderHome.vue'
 
 const $loading = useLoading()
 const router = useRouter()
@@ -16,6 +17,8 @@ const confirmPassword = ref('')
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 const urlNIB = ref('')
+const urlSKKLH = ref('')
+const urlPKPLH = ref('')
 
 const kecamatanData = [
   {
@@ -64,6 +67,7 @@ const uploadNIB = async e => {
   } finally {
     loader.hide()
   }
+  console.log(urlNIB.value)
 }
 const isPasswordMatch = computed(() => {
   const match = password.value && password.value === confirmPassword.value
@@ -81,15 +85,19 @@ const submit = async e => {
   console.log('Selected Kelurahan:', selectedKelurahan.value)
   formData.append('kecamatan', selectedKecamatan.value)
   formData.append('kelurahan', selectedKelurahan.value)
+  formData.append('businessmen', registrationType.value)
+  formData.append('document_type', selectedDocumentType.value)
   const formDataObj = Object.fromEntries(formData)
   formDataObj['status'] = 'PENDING'
   console.log('Data to be sent to backend:', {
     ...formDataObj,
-    nib: urlNIB.value,
+    photo_nib: urlNIB.value,
+    photo_pkplh: urlPKPLH.value,
+    photo_skklh: urlSKKLH.value,
   })
   const loader = $loading.show()
   try {
-    const data = await registerCompany({ ...formDataObj, nib: urlNIB.value })
+    const data = await registerCompany({ ...formDataObj, photo_nib: urlNIB.value, photo_pkplh: urlPKPLH.value, photo_skklh: urlSKKLH.value })
 
     // SweetAlert success message
     Swal.fire({
@@ -134,35 +142,51 @@ const handleSubmit = () => {
 }
 
 // Fungsi untuk menangani upload file SKKLH
-const uploadSKKLHFile = event => {
-  const file = event.target.files[0]
-  console.log('Uploaded SKKLH File:', file)
+const uploadSKKLHFile = async e => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    urlSKKLH.value = url
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+  console.log(urlSKKLH.value)
 }
-
 // Fungsi untuk menangani upload file PKPLH
-const uploadPKPLHFile = event => {
-  const file = event.target.files[0]
-  console.log('Uploaded PKPLH File:', file)
+const uploadPKPLHFile = async e => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    urlPKPLH.value = url
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+  console.log(urlPKPLH.value)
 }
 </script>
 
 <template>
+  <HeaderHome />
   <MainWrapper :header="false" :sidebar="false">
     <div
       class="login-pages d-flex align-items-center justify-content-center min-vh-100"
     >
       <div class="container">
         <div class="row justify-content-center">
-          <div class="login-logo">
+          <!-- <div class="login-logo">
             <img
               src="@/assets/img/dlh.jpg"
               alt="img"
               style="width: 200px; height: auto"
             />
-          </div>
+          </div> -->
 
           <!-- Form Card -->
-          <div class="col-lg-6">
+          <div class="col-lg-12">
             <div class="card shadow-lg p-5">
               <div class="login-contenthead mb-3">
                 <h5
@@ -185,8 +209,17 @@ const uploadPKPLHFile = event => {
 
               <!-- Dropdown to select registration type -->
               <div class="row">
+                <label
+                  class="form-label"
+                  style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    color: #6c757d;
+                  "
+                  >Pelaku Usaha :</label
+                >
                 <!-- Company Signup -->
-                <div class="col-md-6 d-flex">
+                <div class="col-md-6">
                   <div class="choose-signup flex-fill">
                     <h6>Perusahaan</h6>
                     <div class="choose-img">
@@ -205,7 +238,7 @@ const uploadPKPLHFile = event => {
                 <!-- /Company Signup -->
 
                 <!-- Individual Signup -->
-                <div class="col-md-6 d-flex">
+                <div class="col-md-6">
                   <div class="choose-signup flex-fill mb-0">
                     <h6>Perseorangan</h6>
                     <div class="choose-img">
@@ -244,7 +277,7 @@ const uploadPKPLHFile = event => {
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Nama Pimpinan</label>
                     <input
-                      name="name"
+                      name="leader_name"
                       type="text"
                       class="form-control"
                       placeholder="Masukkan Nama Pimpinan"
@@ -253,10 +286,10 @@ const uploadPKPLHFile = event => {
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Nama PJ Dokling</label>
                     <input
-                      name="name"
+                      name="pj_dokling_name"
                       type="text"
                       class="form-control"
-                      placeholder="Masukkan Penanggung Jawab"
+                      placeholder="Masukkan Nama PJ Dokling"
                     />
                   </div>
                   <div class="col-md-12 mt-3">
@@ -278,7 +311,7 @@ const uploadPKPLHFile = event => {
                         >Nomor Persetujuan Lingkungan SKKLH</label
                       >
                       <input
-                        name="skklh_number"
+                        name="no_skklh"
                         type="text"
                         class="form-control"
                         placeholder="Masukkan Nomor Persetujuan SKKLH"
@@ -329,13 +362,14 @@ const uploadPKPLHFile = event => {
                     <div class="col-md-6">
                       <label class="form-label">Upload File NIB</label>
                       <input
+                        name="photo_nib"
                         type="file"
                         class="form-control"
                         @change="uploadNIB"
                       />
                     </div>
                   </div>
-                  <div class="col-md-12" style="margin-top: 20px">
+                  <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Jenis Kegiatan</label>
                     <input
                       name="activity_type"
@@ -353,7 +387,7 @@ const uploadPKPLHFile = event => {
                       placeholder="Masukkan Alamat (Jalan, RT, RW)"
                     />
                   </div>
-                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                  <div class="col-md-6 mt-3" style="margin-top: 20px">
                     <label class="form-label">Kecamatan</label>
                     <select
                       v-model="selectedKecamatan"
@@ -370,7 +404,7 @@ const uploadPKPLHFile = event => {
                       </option>
                     </select>
                   </div>
-                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                  <div class="col-md-6 mt-3" style="margin-top: 20px">
                     <label class="form-label">Kelurahan</label>
                     <select
                       v-model="selectedKelurahan"
@@ -487,22 +521,22 @@ const uploadPKPLHFile = event => {
                 @submit.prevent="submit"
               >
                 <div class="row">
-                  <div class="col-md-12" style="margin-top: 20px">
+                  <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Nama Pimpinan</label>
                     <input
-                      name="name"
+                      name="leader_name"
                       type="text"
                       class="form-control"
                       placeholder="Masukkan Nama Pimpinan"
                     />
                   </div>
-                  <div class="col-md-12" style="margin-top: 20px">
+                  <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Nama PJ Dokling</label>
                     <input
-                      name="name"
+                      name="pj_dokling_name"
                       type="text"
                       class="form-control"
-                      placeholder="Masukkan Penanggung Jawab"
+                      placeholder="Masukkan Nama PJ Dokling"
                     />
                   </div>
                   <div class="col-md-12 mt-3">
@@ -524,7 +558,7 @@ const uploadPKPLHFile = event => {
                         >Nomor Persetujuan Lingkungan SKKLH</label
                       >
                       <input
-                        name="skklh_number"
+                        name="no_skklh"
                         type="text"
                         class="form-control"
                         placeholder="Masukkan Nomor Persetujuan SKKLH"
@@ -581,7 +615,7 @@ const uploadPKPLHFile = event => {
                       />
                     </div>
                   </div>
-                  <div class="col-md-12" style="margin-top: 20px">
+                  <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Jenis Kegiatan</label>
                     <input
                       name="activity_type"
@@ -599,7 +633,7 @@ const uploadPKPLHFile = event => {
                       placeholder="Masukkan Alamat (Jalan, RT, RW)"
                     />
                   </div>
-                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                  <div class="col-md-6 mt-3" style="margin-top: 20px">
                     <label class="form-label">Kecamatan</label>
                     <select
                       v-model="selectedKecamatan"
@@ -616,7 +650,7 @@ const uploadPKPLHFile = event => {
                       </option>
                     </select>
                   </div>
-                  <div class="col-md-12 mt-3" style="margin-top: 20px">
+                  <div class="col-md-6 mt-3" style="margin-top: 20px">
                     <label class="form-label">Kelurahan</label>
                     <select
                       v-model="selectedKelurahan"

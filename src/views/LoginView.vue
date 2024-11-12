@@ -5,7 +5,7 @@ import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 import { login, me } from '@/lib/auth.js'
 import Swal from 'sweetalert2'
-
+import HeaderHome from '@/components/HeaderHome.vue'
 const router = useRouter()
 const $loading = useLoading()
 
@@ -77,14 +77,12 @@ const submit = async e => {
 </script>
 
 <template>
+  <HeaderHome />
   <MainWrapper :header="false" :sidebar="false">
     <div class="login-pages">
       <div class="container-fluid">
         <div class="row align-items-center">
           <div class="col-lg-12">
-            <div class="login-logo">
-              <img src="@/assets/img/dlh.jpg" alt="img" style="width: 200px; height: auto" />
-            </div>
           </div>
           <div class="col-lg-6 col-xl-7">
             <div class="login-images">

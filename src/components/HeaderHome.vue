@@ -10,10 +10,10 @@
                 <span></span>
               </span>
             </a>
-            <a href="index.html" class="navbar-brand logo">
+            <a href="/" class="dlh">
               <img src="@/assets/img/dlh.jpg" class="img-fluid" alt="Logo" />
             </a>
-            <a href="index.html" class="navbar-brand logo-small">
+            <a href="/" class="navbar-brand logo-small">
               <img
                 src="@/assets/img/dlh.jpg"
                 class="img-fluid"
@@ -23,7 +23,7 @@
           </div>
           <div class="main-menu-wrapper">
             <div class="menu-header">
-              <a href="index.html" class="menu-logo">
+              <a href="/" class="menu-logo">
                 <img src="@/assets/img/logo.svg" class="img-fluid" alt="Logo" />
               </a>
               <a id="menu_close" class="menu-close" href="javascript:void(0);">
