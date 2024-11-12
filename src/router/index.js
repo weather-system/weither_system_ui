@@ -45,7 +45,8 @@ const mainRoutes = [
   '/beranda/BeritaView',
   '/beranda/ArtikelView',
   '/beranda/PengumumanView',
-  '/beranda/DownloadView'
+  '/beranda/DownloadView',
+  '/beranda/AgendaView'
 ]
 
 const router = createRouter({
@@ -341,7 +342,7 @@ router.beforeEach(async (to, from, next) => {
   link.dataset.dynamicCss = true
   document.head.appendChild(link)
 
-  if (to.path === '/Login' || to.path === '/RegisterCompany' || to.path === '/') {
+  if (to.path === '/Login' || to.path === '/RegisterCompany' || mainRoutes.includes(to.path)) {
     next()
     return
   }

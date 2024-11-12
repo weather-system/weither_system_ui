@@ -1016,7 +1016,6 @@ watch(
 
                                   <!-- Input Tambahan jika Checkbox Terpilih -->
 
-                                </div>
                                 <div class="row mt-3">
                                     <div class="col-md-6" v-if="formData.source.includes('PDAM Lainnya')">
                                       <div class="form-group">

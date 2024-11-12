@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import axios from 'axios'
@@ -8,10 +9,11 @@ import Swal from 'sweetalert2' // Import SweetAlert
 
 const $loading = useLoading()
 const route = useRoute()
+const store = useStore()
 
 const companyLicences = ref([]) // Holds the company licenses for the logged-in user
 const userCompanies = ref([]) // Filters the user's companies based on some criteria
-const loggedInUserId = 3 // Change this to fetch the logged-in user's ID dynamically
+const loggedInUserId = store.state.auth.user.id // Change this to fetch the logged-in user's ID dynamically
 
 // Fetch the user's companies
 const fetchUserCompanies = async () => {

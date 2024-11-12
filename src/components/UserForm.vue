@@ -44,6 +44,7 @@ defineExpose({ setValues })
             <option value="ADMIN">ADMIN</option>
             <option value="USER">USER</option>
             <option value="EKSEKUTIF">EKSEKUTIF</option>
+            <option value="PENGAWAS">PENGAWAS</option>
           </Field>
           <ErrorMessage name="role" />
       </div>

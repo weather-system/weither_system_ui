@@ -36,12 +36,12 @@ import '@/assets/css/style.css'
             <!-- Blog Post -->
             <div class="blog blog-list">
               <div class="blog-image">
-                <a href="blog-details.html"
+                <!-- <a href="blog-details.html"
                   ><img
                     class="img-fluid"
-                    src="@/assets/img/lh.png"
+                    src="@/assets/img/dlh.png"
                     alt="Post Image"
-                /></a>
+                /></a> -->
               </div>
               <div class="blog-content">
                 <div class="blog-category">

@@ -89,7 +89,7 @@ defineExpose({ setValues })
                     <ErrorMessage name="sertifikat_dokumen" />
                 </div>
                 <div class="col-4">
-                    <label class="form-label">Masa Berlaku</label>
+                    <label class="form-label">Masa Berlaku Kerjasama</label>
                     <Field name="masa_berlaku" class="form-control" type="date" />
                     <ErrorMessage name="masa_berlaku" />
                 </div>

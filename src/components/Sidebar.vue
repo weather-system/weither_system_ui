@@ -87,7 +87,7 @@ onMounted(async () => {
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <a href="index.html">
-          <img src="@/assets/img/dlh2.png" class="img-fluid logo" alt="" />
+          <img src="@/assets/img/dlh2.png" class="img-fluid" alt="" style="width: 100px; height: 70px;" />
         </a>
         <a href="index.html">
           <img
@@ -147,7 +147,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
             <a
               href="javascript:void(0);"
               @click="toggleData"
@@ -206,7 +206,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
             <a
               href="javascript:void(0);"
               @click="togglePengendalian"
@@ -252,7 +252,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -268,7 +268,7 @@ onMounted(async () => {
               <ul v-if="isLogbookOpen" class="submenu d-block ms-0">
                 <li>
                   <router-link to="/logbook/produksisenyatanya">
-                    <i class="fas fa-chevron-right me-2"></i> 
+                    <i class="fas fa-chevron-right me-2"></i>
                     Produksi Senyatanya</router-link
                   >
                 </li>
@@ -317,7 +317,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
@@ -347,7 +347,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
