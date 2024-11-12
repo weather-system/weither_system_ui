@@ -6,6 +6,7 @@ import MainWrapper from '@/components/MainWrapper.vue'
 import { login, me } from '@/lib/auth.js'
 import Swal from 'sweetalert2'
 import HeaderHome from '@/components/HeaderHome.vue'
+import FooterHome from '@/components/FooterHome.vue'
 const router = useRouter()
 const $loading = useLoading()
 
@@ -155,6 +156,7 @@ const submit = async e => {
         </div>
       </div>
     </div>
+    <FooterHome/>
   </MainWrapper>
 </template>
 

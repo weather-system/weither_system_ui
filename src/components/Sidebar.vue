@@ -86,16 +86,21 @@ onMounted(async () => {
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-        <a href="index.html">
-          <img src="@/assets/img/dlh2.png" class="img-fluid" alt="" style="width: 100px; height: 70px;" />
-        </a>
-        <a href="index.html">
+        <router-link to="/MyCompany">
+          <img
+            src="@/assets/img/dlh2.png"
+            class="img-fluid logo"
+            alt=""
+            style="max-width: 80%; height: auto"
+          />
+        </router-link>
+        <router-link to="/MyCompany">
           <img
             src="@/assets/img/dlh2.png"
             class="img-fluid logo-small"
             alt=""
           />
-        </a>
+        </router-link>
       </div>
       <div class="siderbar-toggle">
         <label class="switch" id="toggle_btn">

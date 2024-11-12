@@ -27,8 +27,8 @@ import '@/assets/css/style.css'
         </div>
         <div class="main-menu-wrapper">
           <div class="menu-header">
-            <a href="index.html" class="menu-logo">
-              <img src="@/assets/img/logo.svg" class="img-fluid" alt="Logo" />
+            <a href="/" class="menu-logo small">
+              <img src="@/assets/img/dlh.jpg" class="img-fluid" alt="Logo" />
             </a>
             <a id="menu_close" class="menu-close" href="javascript:void(0);">
               <i class="fas fa-times"></i
@@ -96,6 +96,16 @@ import '@/assets/css/style.css'
             <li>
               <router-link to="/beranda/Contact">Kontak</router-link>
             </li>
+            <li class="nav-item">
+            <router-link class="nav-link header-reg" to="/RegisterCompany"
+              >Register</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link header-login" to="/Login">
+              <i class=""></i>Login
+            </router-link>
+          </li>
           </ul>
         </div>
         <ul class="nav header-navbar-rht">

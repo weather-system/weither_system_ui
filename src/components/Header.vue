@@ -39,14 +39,14 @@ const logout = async () => {
   <div class="header">
     <div class="header-left">
       <a href="index.html" class="logo">
-        <img src="@/assets/img/logo.svg" alt="Logo" width="30" height="30" />
+        <img src="@/assets/img/dlh2.png" alt="Logo" width="30" height="30" />
       </a>
       <a href="index.html" class="logo-small">
         <img
-          src="@/assets/img/logo-small.svg"
+          src="@/assets/img/dlh2.png"
           alt="Logo"
-          width="30"
-          height="30"
+          width="50"
+          height="auto"
         />
       </a>
     </div>
@@ -55,10 +55,10 @@ const logout = async () => {
     </a>
     <div class="header-split">
       <div class="page-headers">
-        <div class="search-bar">
+        <!-- <div class="search-bar">
           <span><i class="fe fe-search"></i></span>
           <input type="text" placeholder="Search" class="form-control" />
-        </div>
+        </div> -->
       </div>
       <ul class="nav user-menu">
         <!-- User Menu -->
@@ -71,7 +71,7 @@ const logout = async () => {
             <span class="user-img">
               <img
                 class="rounded-circle"
-                src="@/assets/img/user.jpg"
+                src="@/assets/img/company.png"
                 width="40"
                 alt="Admin"
               />

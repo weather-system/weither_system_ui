@@ -7,6 +7,7 @@ import { registerCompany } from '@/lib/company.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import HeaderHome from '@/components/HeaderHome.vue'
+import FooterHome from '@/components/FooterHome.vue'
 
 const $loading = useLoading()
 const router = useRouter()
@@ -780,6 +781,7 @@ const uploadPKPLHFile = async e => {
         </div>
       </div>
     </div>
+    <FooterHome/>
   </MainWrapper>
 </template>
 <style>
