@@ -75,21 +75,21 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>Jenis Limbah B3</th>
+                    <th>Pihak Ke 3</th>
                     <th>Sumber Limbah B3</th>
                     <th>Koordinat (X, Y)</th>
                     <th>Volume Limbah B3 Dalam Izin</th>
-                    <th>Satuan</th>
+                    <th>Masa Berlaku</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="data in tpsB3" :key="data.id">
-                    <td>{{ data.jenis_limbah_b3 }}</td>
+                    <td>{{ data.pihak_ke_3 }}</td>
                     <td>{{ data.sumber_limbah_b3 }}</td>
                     <td>{{ data.koordinat_x }}, {{ data.koordinat_y }}</td>
-                    <td>{{ data.volume }}</td>
-                    <td>{{ data.satuan }}</td>
+                    <td>{{ data.volume_limbah_dalam_izin }}</td>
+                    <td>{{ data.masa_berlaku }}</td>
                     <td>
                       <router-link
                         :to="data.id ? `/Data/TPSB3/Edit/${data.id}` : '/Data/TPSB3/Tambah'"

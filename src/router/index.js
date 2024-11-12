@@ -30,12 +30,13 @@ const adminRoutes = [
   '/Pengendalian/PencemaranAir/Edit',
   '/Login',
   '/Register',
-  '/RegisterCompany'
+  '/RegisterCompany',
+  '/Master/User'
 ]
 
 // Array untuk halaman utama
 const mainRoutes = [
-  '/Home',
+  '/',
   '/Compro'
 ]
 
@@ -255,9 +256,43 @@ const router = createRouter({
       name: 'DataIPALTambah',
       component: () => import('@/views/data/ipal/create.vue'),
     },
+    {
+      path: '/Master/User',
+      name: 'MasterUserView',
+      component: () => import('@/views/Master/UserView.vue'),
+    },
+    {
+      path: '/Master/User/Create',
+      name: 'MasterUserCreateView',
+      component: () => import('@/views/Master/UserCreateView.vue'),
+    },
+    {
+      path: '/Master/User/:id',
+      name: 'MasterUserEditView',
+      component: () => import('@/views/Master/UserEditView.vue'),
+    },
   ],
 })
+
 router.beforeEach(async (to, from, next) => {
+  // Bersihkan CSS sebelumnya
+  document.querySelectorAll('link[data-dynamic-css]').forEach(link => link.remove())
+
+  // Tentukan CSS berdasarkan jenis halaman
+  let cssFile = ''
+  if (adminRoutes.includes(to.path)) {
+    cssFile = await import('@/assets/css/admin.css')
+  } else if (mainRoutes.includes(to.path)) {
+    cssFile = await import('@/assets/css/style.css')
+  }
+
+  // Memuat file CSS yang ditentukan
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = cssFile.default
+  link.dataset.dynamicCss = true
+  document.head.appendChild(link)
+
   if (to.path === '/Login' || to.path === '/RegisterCompany' || to.path === '/') {
     next()
     return
@@ -283,24 +318,6 @@ router.beforeEach(async (to, from, next) => {
     next('/Login')
     return
   }
-
-  // Bersihkan CSS sebelumnya
-  document.querySelectorAll('link[data-dynamic-css]').forEach(link => link.remove())
-
-  // Tentukan CSS berdasarkan jenis halaman
-  let cssFile = ''
-  if (adminRoutes.includes(to.path)) {
-    cssFile = '/assets/admin.css'
-  } else if (mainRoutes.includes(to.path)) {
-    cssFile = '/assets/style.css'
-  }
-
-  // Memuat file CSS yang ditentukan
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = cssFile
-  link.dataset.dynamicCss = true
-  document.head.appendChild(link)
 
   next()
 })

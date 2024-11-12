@@ -137,6 +137,18 @@ const submitForm = async () => {
       }
     }
 
+    const sumberAir = formData.value.source.filter((v) => {
+      return v != 'PDAM Lainnya' && v != 'Lainnya'
+    })
+
+    if (formData.value.source.includes('PDAM Lainnya')) {
+      sumberAir.push(formData.value.pdam_lainnya)
+    }
+
+    if (formData.value.source.includes('Lainnya')) {
+      sumberAir.push(formData.value.lainnya_detail)
+    }
+
     const data = {
       ...formData.value,
       npwp: formData.value.npwp,
@@ -160,6 +172,7 @@ const submitForm = async () => {
       ipal_total: formData.value.ipal_total,
       kbli: kbli.value,
       jenisUsaha: jenisUsaha.value,
+      sumberAir: sumberAir
     }
 
     const response = await axios.post(
@@ -294,7 +307,6 @@ watch(
             <div class="row">
               <div class="col-md-12 col-lg-10 mx-auto">
                 <h3 class="mb-5">Lengkapi seluruh persyaratan pendaftaran</h3>
-                <p>{{ userStatus }} - {{ companyDetail }}</p>
 
                 <!-- Service List -->
                 <!-- <ul id="progressbar">
@@ -970,7 +982,7 @@ watch(
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="air_tanah_dalam"
+                                      value="Air Tanah Dalam"
                                       v-model="formData.source"
                                     />
                                     Air Tanah Dalam
@@ -978,7 +990,7 @@ watch(
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="air_permukaan"
+                                      value="Air Permukaan"
                                       v-model="formData.source"
                                     />
                                     Air Permukaan
@@ -986,7 +998,7 @@ watch(
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="PDAM LAINNYA"
+                                      value="PDAM Lainnya"
                                       v-model="formData.source"
                                     />
                                     PDAM Lainnya
@@ -995,12 +1007,41 @@ watch(
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="lainnya"
+                                      value="Lainnya"
                                       v-model="formData.source"
                                     />
                                     Lainnya
                                   </div>
                                 </div>
+
+                                  <!-- Input Tambahan jika Checkbox Terpilih -->
+
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-6" v-if="formData.source.includes('PDAM Lainnya')">
+                                      <div class="form-group">
+                                        <label class="col-form-label">Masukkan Nama PDAM</label>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Masukkan nama PDAM lainnya"
+                                          v-model="formData.pdam_lainnya"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-6" v-if="formData.source.includes('Lainnya')">
+                                      <div class="form-group">
+                                        <label class="col-form-label">Masukkan Detail Lainnya</label>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Masukkan detail lainnya"
+                                          v-model="formData.lainnya_detail"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
                               </div>
                             </div>
                           </div>
