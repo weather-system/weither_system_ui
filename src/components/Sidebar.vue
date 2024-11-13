@@ -242,7 +242,7 @@ onMounted(async () => {
                   </router-link>
                 </li>
                 <li>
-                  <router-link to="/pengendalian/limbah-b3">
+                  <router-link to="/pengendalian/PengelolaanLimbahB3">
                     <i class="fas fa-chevron-right me-2"></i>
                     <!-- Panah ke kanan -->
                     Pengelolaan Limbah B3

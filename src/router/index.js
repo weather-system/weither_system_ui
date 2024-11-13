@@ -291,6 +291,11 @@ const router = createRouter({
       component: () => import('@/views/pengendalian/PencemaranUdara.vue'),
     },
     {
+      path: '/Pengendalian/PengelolaanLimbahB3',
+      name: 'PengendalianPengelolaanLimbahB3',
+      component: () => import('@/views/pengendalian/PengelolaanLimbahB3.vue'),
+    },
+    {
       path: '/Data/IPAL',
       name: 'DataIPAL',
       component: () => import('@/views/data/ipal/Ipal.vue'),
