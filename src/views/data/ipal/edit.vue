@@ -43,7 +43,7 @@ const fetchIpalData = async () => {
   const loader = $loading.show()
   try {
     const response = await axios.get(
-      `http://localhost:8000/api/company_ipals/${ipalId}`,
+      `/api/company_ipals/${ipalId}`,
     )
     const data = response.data.data
     if (data) {
@@ -80,7 +80,7 @@ const removeChemical = async (detailId, index) => {
       const loader = $loading.show() // Show loader
       try {
         const response = await axios.delete(
-          `http://localhost:8000/api/ipal-details/${detailId}`,
+          `/api/ipal-details/${detailId}`,
         )
         if (response.status === 200) {
           // Remove the item from the local list (UI update)
@@ -118,7 +118,7 @@ const removeEffort = async (detailId, index) => {
       const loader = $loading.show() // Show loader
       try {
         const response = await axios.delete(
-          `http://localhost:8000/api/management_efforts/${detailId}`,
+          `/api/management_efforts/${detailId}`,
         )
         if (response.status === 200) {
           // Remove the item from the local list (UI update)
@@ -166,7 +166,7 @@ const updateIpalDetails = async detailId => {
 
       // Make API request to update the specific detail
       const response = await axios.put(
-        `http://localhost:8000/api/ipal-details/${detailId}`,
+        `/api/ipal-details/${detailId}`,
         updatedDetail,
       )
 
@@ -209,7 +209,7 @@ const updateEffort = async detailId => {
 
       // Make API request to update the specific detail
       const response = await axios.put(
-        `http://localhost:8000/api/management_efforts/${detailId}`,
+        `/api/management_efforts/${detailId}`,
         updatedDetail,
       )
 
@@ -272,7 +272,7 @@ const saveNewChemical = async () => {
     const loader = $loading.show()
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/ipal-details',
+        '/api/ipal-details',
         {
           chemicals_used: newChemical.value.chemicals_used,
           use_of_chemicals: newChemical.value.use_of_chemicals,
@@ -320,7 +320,7 @@ const saveNewEffort = async () => {
     const loader = $loading.show()
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/management_efforts',
+        '/api/management_efforts',
         {
           recycling_effort: newEffort.value.recycling_effort,
           company_ipal_id: newEffort.value.company_ipal_id,
@@ -375,7 +375,7 @@ const updateCompanyDetails = async () => {
     }
     console.log('dataaaaaa :', updatedType)
     await axios.put(
-      `http://localhost:8000/api/company_ipals/${ipalId}`,
+      `/api/company_ipals/${ipalId}`,
       updatedType,
       {
         headers: {
@@ -398,7 +398,7 @@ const fetchCompanyLicences = async () => {
   const loader = $loading.show()
   try {
     const response = await axios.get(
-      'http://localhost:8000/api/company_licence',
+      '/api/company_licence',
     )
     licenseOptions.value = response.data || []
   } catch (error) {

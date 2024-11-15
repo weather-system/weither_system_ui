@@ -176,7 +176,7 @@ const submitForm = async () => {
     }
 
     const response = await axios.post(
-      'http://localhost:8000/api/companies/details',
+      '/api/companies/details',
       data,
       {
         headers: {
@@ -188,7 +188,7 @@ const submitForm = async () => {
     const ipalPromises = formData.value.ipalTypes.map(async type => {
       if (type) {
         return axios.post(
-          'http://localhost:8000/api/company_ipals',
+          '/api/company_ipals',
           {
             company_detail_id: companyId, // Ensure you are using the correct ID here
             type,
@@ -233,7 +233,7 @@ const fetchUserStatus = async () => {
   if (!token) return
 
   try {
-    const response = await axios.get('http://localhost:8000/api/user/status', {
+    const response = await axios.get('/api/user/status', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

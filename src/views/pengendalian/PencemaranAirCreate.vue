@@ -3,6 +3,7 @@ import { ref, computed, reactive } from 'vue'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { createPencemaranAir, parameters } from '@/lib/pencemaranAir.js'
 import { uploadFile } from '@/lib/filestorage.js'
@@ -11,7 +12,7 @@ import PencemaranAirForm from '@/components/PencemaranAirForm.vue'
 
 const $loading = useLoading()
 const store = useStore()
-
+const router = useRouter()
 const initialValues = parameters.reduce((v, parameter) => {
     const key = `${parameter.field}_expr`
     return {
@@ -37,6 +38,7 @@ const submit = async payload => {
   try {
     const data = await createPencemaranAir(payload)
     console.log(data)
+    router.push('/Pengendalian/PencemaranAir')
   } catch (e) {
     console.error(e)
   } finally {
