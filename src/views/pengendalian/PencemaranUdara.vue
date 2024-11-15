@@ -1,103 +1,119 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 
-const udaraData = ref([
+const $loading = useLoading()
+
+const dataEntries = ref([
   {
     id: 1,
-    lokasi: 'Jakarta',
-    kualitas: 'Buruk',
-    parameter: 'PM2.5, NO2',
-    tanggal: '2024-10-22',
+    month: 'DES',
+    year: '2022',
+    testDate: '2022-12-08',
+    sampleType: 'Udara Ambien',
+    lab: 'BINALAB',
+    status: 'Verifikasi LH',
   },
-  {
-    id: 2,
-    lokasi: 'Bandung',
-    kualitas: 'Sedang',
-    parameter: 'CO, SO2',
-    tanggal: '2024-10-23',
-  },
+  // Add other entries as needed
 ])
+
+const selectedYear = ref('')
+const selectedMonth = ref('')
+
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    // Load actual data here as needed
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+})
 </script>
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper">
+    <div class="page-wrapper page-settings">
       <div class="content">
-        <div class="content-page-header content-page-headersplit">
-          <h5>Pengendalian Pencemaran Udara</h5>
-          <div class="list-btn">
-            <ul>
-              <li>
-                <a class="btn-filters active" href="services.html">
-                  <i class="fe fe-list"></i>
-                </a>
-              </li>
-              <li>
-                <a class="btn-filters" href="localization.html">
-                  <i class="fe fe-settings"></i>
-                </a>
-              </li>
-              <li>
-                <div class="filter-sorting">
-                  <ul>
-                    <li>
-                      <a href="javascript:void(0);" class="filter-sets">
-                        <img
-                          src="@/assets/img/icons/filter1.svg"
-                          class="me-2"
-                          alt="img"
-                        />Filter
-                      </a>
-                    </li>
-                    <li>
-                      <span>
-                        <img
-                          src="@/assets/img/icons/sort.svg"
-                          class="me-2"
-                          alt="img"
-                        />
-                      </span>
-                      <div class="review-sort">
-                        <select class="select">
-                          <option>A -> Z</option>
-                          <option>Z -> A</option>
-                        </select>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li>
-                <a class="btn btn-primary" href="add-service.html">
-                  <i class="fa fa-plus me-2"></i>Tambah Data Udara
-                </a>
-              </li>
-            </ul>
+        <div v-if="$loading.isLoading" class="loading-overlay">Loading...</div>
+
+        <!-- Align Dropdowns, Buttons, and Links on the same row -->
+        <div class="content-page-header content-page-headersplit d-flex align-items-center mb-4">
+          <div class="d-flex align-items-center gap-2">
+            <select class="form-select" v-model="selectedYear" style="width: auto;">
+              <option value="">Pilih Tahun</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+            </select>
+
+            <select class="form-select" v-model="selectedMonth" style="width: auto;">
+              <option value="">Pilih Bulan</option>
+              <option value="JAN">Januari</option>
+              <option value="FEB">Februari</option>
+              <option value="MAR">Maret</option>
+              <option value="APR">April</option>
+              <option value="MEI">Mei</option>
+              <option value="JUN">Juni</option>
+              <option value="JUL">Juli</option>
+              <option value="AUG">Agustus</option>
+              <option value="SEP">September</option>
+              <option value="OCT">Oktober</option>
+              <option value="NOV">November</option>
+              <option value="DES">Desember</option>
+            </select>
+
+            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/CreateUdaraAmbien">
+              Tambah Udara Ambien
+            </RouterLink>
+
+            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/CreateUdaraEmisi">
+              Tambah Udara Emisi
+            </RouterLink>
+
+            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/CreateFlyAsh">
+              Tambah Fly Ash, Bottom Ash, dan Sludge
+            </RouterLink>
           </div>
         </div>
 
-        <div class="table-responsive table-div">
-          <table class="table datatable">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Lokasi</th>
-                <th>Kualitas Udara</th>
-                <th>Parameter</th>
-                <th>Tanggal Pengukuran</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(data, index) in udaraData" :key="data.id">
-                <td>{{ index + 1 }}</td>
-                <td>{{ data.lokasi }}</td>
-                <td>{{ data.kualitas }}</td>
-                <td>{{ data.parameter }}</td>
-                <td>{{ data.tanggal }}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="table-responsive table-div">
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Bulan</th>
+                    <th>Tanggal Pengujian</th>
+                    <th>Jenis Contoh Uji</th>
+                    <th>Laboratorium Penguji</th>
+                    <th>Status</th>
+                    <th>Aksi/Cetak Form TTE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(entry, index) in dataEntries" :key="entry.id">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ entry.month }} {{ entry.year }}</td>
+                    <td>{{ entry.testDate }}</td>
+                    <td>{{ entry.sampleType }}</td>
+                    <td>{{ entry.lab }}</td>
+                    <td>{{ entry.status }}</td>
+                    <td class="d-flex" style="gap: 1rem">
+                      <button class="btn btn-primary">Cetak</button>
+                      <button class="btn btn-success">Edit</button>
+                      <button class="btn btn-danger">Hapus</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -105,14 +121,8 @@ const udaraData = ref([
 </template>
 
 <style scoped>
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.table th,
-.table td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd;
+.content-page-headersplit {
+  display: flex;
+  align-items: center;
 }
 </style>
