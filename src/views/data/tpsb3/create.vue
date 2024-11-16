@@ -4,19 +4,30 @@ import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
 import TPSB3Form from '@/components/TPSB3Form.vue';
 import { createTpsB3 } from '@/lib/tpsb3';
+import Swal from 'sweetalert2'
+
 
 const $loading = useLoading()
 const router = useRouter()
 
 const submit = async (data) => {
-  const loader = $loading.show()
   try {
     await createTpsB3(data)
+    await Swal.fire({
+      title: 'Success!',
+      text: 'Perizinan berhasil ditambahkan!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    })
     router.push('/Data/TPSB3')
   } catch (e) {
     console.error(e)
-  } finally {
-    loader.hide()
+    await Swal.fire({
+      title: 'Error!',
+      text: 'Gagal menambahkan perizinan.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    })
   }
 }
 </script>

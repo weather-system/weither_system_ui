@@ -5,6 +5,7 @@ import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
 import TPSB3Form from '@/components/TPSB3Form.vue';
 import { getTpsB3Detail, updateTpsB3 } from '@/lib/tpsb3';
+import Swal from 'sweetalert2'
 
 const $loading = useLoading()
 const router = useRouter()
@@ -14,23 +15,33 @@ const form = ref(null)
 
 const submit = async (data) => {
   data.items = data.items.map((v) => {
-    delete v.company_tps_b3_id
-    delete v.created_at
-    delete v.updated_at
+    delete v.company_tps_b3_id;
+    delete v.created_at;
+    delete v.updated_at;
+    return v;
+  });
 
-    return v
-  })
-
-  const loader = $loading.show()
+   // Tambahkan loader untuk submit
   try {
-    await updateTpsB3(route.params.id, data)
-    router.push('/Data/TPSB3')
+    await updateTpsB3(route.params.id, data);
+    await Swal.fire({
+      title: 'Success!',
+      text: 'Data berhasil diperbarui!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
+    router.push('/Data/TPSB3');
   } catch (e) {
-    console.error(e)
-  } finally {
-    loader.hide()
-  }
-}
+    console.error(e);
+    const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
+    await Swal.fire({
+      title: 'Error!',
+      text: `Gagal memperbarui perizinan: ${errorMessage}`,
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
+  } 
+};
 
 onMounted(async () => {
   const loader = $loading.show()
