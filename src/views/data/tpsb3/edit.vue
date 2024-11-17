@@ -36,7 +36,7 @@ const submit = async (data) => {
     const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
     await Swal.fire({
       title: 'Error!',
-      text: `Gagal memperbarui perizinan: ${errorMessage}`,
+      text: `Gagal memperbarui data: ${errorMessage}`,
       icon: 'error',
       confirmButtonText: 'OK',
     });

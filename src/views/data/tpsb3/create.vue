@@ -15,7 +15,7 @@ const submit = async (data) => {
     await createTpsB3(data)
     await Swal.fire({
       title: 'Success!',
-      text: 'Perizinan berhasil ditambahkan!',
+      text: 'Data berhasil ditambahkan!',
       icon: 'success',
       confirmButtonText: 'OK',
     })
@@ -24,7 +24,7 @@ const submit = async (data) => {
     console.error(e)
     await Swal.fire({
       title: 'Error!',
-      text: 'Gagal menambahkan perizinan.',
+      text: 'Gagal menambahkan Data.',
       icon: 'error',
       confirmButtonText: 'OK',
     })

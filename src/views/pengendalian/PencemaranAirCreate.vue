@@ -9,7 +9,7 @@ import { createPencemaranAir, parameters } from '@/lib/pencemaranAir.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import PencemaranAirForm from '@/components/PencemaranAirForm.vue'
-
+import Swal from 'sweetalert2'
 const $loading = useLoading()
 const store = useStore()
 const router = useRouter()
@@ -38,6 +38,11 @@ const submit = async payload => {
   try {
     const data = await createPencemaranAir(payload)
     console.log(data)
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Data Pencemaran Berhasil dibuat!',
+      });
     router.push('/Pengendalian/PencemaranAir')
   } catch (e) {
     console.error(e)

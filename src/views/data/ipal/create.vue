@@ -160,7 +160,7 @@ const createIpalEntry = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Failed to create IPAL entry. Please try again.',
+      text: 'Terjadi Kesalahan.',
     });
   } finally {
     loader.hide();

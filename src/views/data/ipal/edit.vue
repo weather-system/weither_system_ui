@@ -131,7 +131,7 @@ const removeEffort = async (detailId, index) => {
         console.error('Error during delete operation:', error)
         Swal.fire(
           'Error!',
-          'An error occurred while deleting the data.',
+          'Terjadi Kesalahan.',
           'error',
         )
       } finally {
