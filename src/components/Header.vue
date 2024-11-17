@@ -50,7 +50,7 @@ const logout = async () => {
         />
       </a>
     </div>
-    <a class="mobile_btn" id="mobile_btn" href="javascript:void(0);">
+    <a class="mobile_btn" id="mobile_btn1" href="javascript:void(0);">
       <i class="fas fa-align-left"></i>
     </a>
     <div class="header-split">
