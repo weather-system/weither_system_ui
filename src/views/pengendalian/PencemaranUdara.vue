@@ -4,11 +4,39 @@ import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 import axios from 'axios'
-import Swal from 'sweetalert2' // Ensure SweetAlert2 is imported
-
+import Swal from 'sweetalert2'
+import html2pdf from 'html2pdf.js'
 // Ref to store data from the API
 const pencemaranUdaraData = ref([])
+const parameter = 'Udara Ambien'
+const tanggal = '2024-11-18'
+function cetakPDF() {
+  const element = document.getElementById('pdfContent')
+  const options = {
+    margin: 10,
+    filename: 'Pencemaran_Udara.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  }
 
+  // Tampilkan elemen (untuk memastikan render)
+  element.style.display = 'block'
+
+  html2pdf()
+    .set(options)
+    .from(element)
+    .output('blob')
+    .then(pdfBlob => {
+      // Membuka PDF di tab baru
+      const pdfURL = URL.createObjectURL(pdfBlob)
+      window.open(pdfURL, '_blank')
+    })
+    .finally(() => {
+      // Sembunyikan kembali setelah proses
+      element.style.display = 'none'
+    })
+}
 // Loading indicator
 const $loading = useLoading()
 
@@ -128,12 +156,13 @@ onMounted(fetchData)
                     <td>{{ item.status }}</td>
                     <td>
                       <!-- Action buttons -->
-                      <RouterLink
-                        to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
+                      <button
                         class="btn btn-primary"
                         v-if="item.status == 'Verifikasi LH'"
-                        >Cetak</RouterLink
+                        @click="cetakPDF"
                       >
+                        Cetak
+                      </button>
                       <RouterLink
                         v-if="item.status != 'Verifikasi LH'"
                         :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
@@ -146,7 +175,7 @@ onMounted(fetchData)
                         :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
                         class="btn btn-success m-2"
                       >
-                       Edit
+                        Edit
                       </RouterLink>
                       <RouterLink
                         v-else-if="item.status != 'Verifikasi LH'"
@@ -163,21 +192,30 @@ onMounted(fetchData)
                         Hapus
                       </button>
                       <RouterLink
-                        v-if="item.jenis === 'Udara Ambien' && item.status != 'Verifikasi LH'"
+                        v-if="
+                          item.jenis === 'Udara Ambien' &&
+                          item.status != 'Verifikasi LH'
+                        "
                         :to="`/Pengendalian/PencemaranUdara/DetailAmbien/${item.id}`"
                         class="btn btn-warning m-2"
                       >
                         Detail
                       </RouterLink>
                       <RouterLink
-                        v-else-if="item.jenis === 'Udara Emisi' && item.status != 'Verifikasi LH'"
+                        v-else-if="
+                          item.jenis === 'Udara Emisi' &&
+                          item.status != 'Verifikasi LH'
+                        "
                         :to="`/Pengendalian/PencemaranUdara/DetailEmisi/${item.id}`"
                         class="btn btn-warning m-2"
                       >
                         Detail
                       </RouterLink>
                       <RouterLink
-                        v-else-if="item.jenis === 'Fly Ash, Bottom Ash, dan Sludge' && item.status != 'Verifikasi LH'"
+                        v-else-if="
+                          item.jenis === 'Fly Ash, Bottom Ash, dan Sludge' &&
+                          item.status != 'Verifikasi LH'
+                        "
                         :to="`/Pengendalian/PencemaranUdara/DetailFlyash/${item.id}`"
                         class="btn btn-warning m-2"
                       >
@@ -193,6 +231,16 @@ onMounted(fetchData)
       </div>
     </div>
   </MainWrapper>
+  <div id="pdfContent" class="pdf-template" style="display: none">
+    <div style="text-align: center; margin-bottom: 20px">
+      <h2>Kop Surat</h2>
+      <p>Jl. Contoh No. 123, Kota Contoh</p>
+      <hr />
+    </div>
+    <div>
+      <h3>Example Sertifikat</h3>
+    </div>
+  </div>
 </template>
 
 <style scoped>
