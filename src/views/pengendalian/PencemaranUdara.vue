@@ -8,8 +8,6 @@ import Swal from 'sweetalert2'
 import html2pdf from 'html2pdf.js'
 // Ref to store data from the API
 const pencemaranUdaraData = ref([])
-const parameter = 'Udara Ambien'
-const tanggal = '2024-11-18'
 function cetakPDF() {
   const element = document.getElementById('pdfContent')
   const options = {
@@ -231,15 +229,75 @@ onMounted(fetchData)
       </div>
     </div>
   </MainWrapper>
-  <div id="pdfContent" class="pdf-template" style="display: none">
-    <div style="text-align: center; margin-bottom: 20px">
-      <h2>Kop Surat</h2>
-      <p>Jl. Contoh No. 123, Kota Contoh</p>
-      <hr />
+  <div
+    id="pdfContent"
+    class="pdf-template"
+    style="display: none; padding: 20px"
+  >
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      "
+    >
+      <img
+        src="@/assets/img/cimahi.jpg"
+        alt="Logo Kota Cimahi"
+        style="width: 110px; height: auto; margin-right: 20px"
+      />
+      <div style="line-height: 1.2; text-align: center; flex-grow: 1">
+        <h5 style="margin: 0; font-weight: bold">
+          PEMERINTAH DAERAH KOTA CIMAHI
+        </h5>
+        <h4 style="margin: 0; font-weight: bold">DINAS LINGKUNGAN HIDUP</h4>
+        <p style="margin: 2px 0; font-weight: bold">
+          Jalan Rd. Demang Hardjakusumah Nomor 3, Kelurahan Cibabat,
+        </p>
+        <p style="margin: 2px 0; font-weight: bold">
+          Kecamatan Cimahi, Kota Cimahi, Provinsi Jawa Barat 40513,
+        </p>
+        <p style="margin: 2px 0; font-weight: bold">
+          Telepon / Fax: (022) 6654274
+        </p>
+        <p style="margin: 2px 0; font-weight: bold">
+          Laman www.cimahikota.go.id, Pos-el setda@cimahikota.go.id
+        </p>
+      </div>
+      <img
+        src="@/assets/img/dlh2.png"
+        alt="Logo DLH"
+        style="width: 110px; height: auto; margin-left: 20px"
+      />
     </div>
-    <div>
-      <h3>Example Sertifikat</h3>
+    <hr />
+    <div style="padding: 20px;">
+  <h5 style="text-align: center; font-weight: bold; padding-bottom: 40px;">
+    TANDA TERIMA LAPORAN ELEKTRONIK
+  </h5>
+  <ul>
+    <li><strong>Perusahaan:</strong> {{  }}</li>
+    <li><strong>ID Perusahaan:</strong> {{  }}</li>
+    <li><strong>Alamat:</strong> {{  }}</li>
+    <li><strong>Bulan:</strong> {{  }}</li>
+    <li><strong>Tanggal Cetak:</strong> {{  }}</li>
+    <li><strong>Jenis Laporan:</strong> {{  }}</li>
+  </ul>
+  <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+    <div style="width: 45%; display: flex; justify-content: flex-start; align-items: flex-end;">
+      <img src="@/assets/img/man.png" alt="QR Code" style="width: 100px; height: auto; margin-bottom: 10px;" />
     </div>
+    <div style="width: 87%; display: flex; justify-content: flex-end; align-items: flex-end;">
+      <p style="margin-bottom: 10px;">
+        Tanda Terima Elektronik (TTE) ini sah, diterbitkan secara elektronik melalui
+        Sistem Informasi Lingkungan Dinas Lingkungan Hidup Kota Cimahi sehingga
+        tidak memerlukan cap dan tanda tangan basah.
+      </p>
+    </div>
+  </div>
+</div>
+
   </div>
 </template>
 
