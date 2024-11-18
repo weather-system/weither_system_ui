@@ -3,79 +3,97 @@ import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
+import axios from 'axios'
+import Swal from 'sweetalert2' // Ensure SweetAlert2 is imported
 
+// Ref to store data from the API
+const pencemaranUdaraData = ref([])
+
+// Loading indicator
 const $loading = useLoading()
 
-const dataEntries = ref([
-  {
-    id: 1,
-    month: 'DES',
-    year: '2022',
-    testDate: '2022-12-08',
-    sampleType: 'Udara Ambien',
-    lab: 'BINALAB',
-    status: 'Verifikasi LH',
-  },
-  // Add other entries as needed
-])
+// Function to fetch data from the backend
+const getPencemaranAir = async () => {
+  try {
+    const response = await axios.get('/api/pencemaran-udaras') // Replace with your API endpoint
+    return response.data
+  } catch (error) {
+    throw new Error('Failed to fetch data from API')
+  }
+}
 
-const selectedYear = ref('')
-const selectedMonth = ref('')
-
-onMounted(async () => {
+// Fetch data on component mount
+const fetchData = async () => {
   const loader = $loading.show()
   try {
-    // Load actual data here as needed
+    pencemaranUdaraData.value = await getPencemaranAir()
   } catch (e) {
-    console.error(e)
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran udara.', 'error')
   } finally {
     loader.hide()
   }
-})
+}
+
+// Delete data function
+const deleteData = async id => {
+  const { isConfirmed } = await Swal.fire({
+    title: 'Apa kamu yakin ?',
+    text: 'Kamu tidak akan bisa mengembalikan ini!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Tidak',
+    customClass: {
+      confirmButton: 'btn btn-primary',
+      cancelButton: 'btn btn-secondary',
+    },
+    buttonsStyling: false,
+  })
+
+  if (isConfirmed) {
+    const loader = $loading.show()
+    try {
+      await axios.delete(`/api/pencemaran-udaras/${id}`)
+      await fetchData()
+      Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+    } catch (e) {
+      console.error(e)
+      Swal.fire('Error', 'Gagal menghapus data.', 'error')
+    } finally {
+      loader.hide()
+    }
+  }
+}
+
+// Fetch data when the component is mounted
+onMounted(fetchData)
 </script>
 
 <template>
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
-        <div v-if="$loading.isLoading" class="loading-overlay">Loading...</div>
-
-        <!-- Align Dropdowns, Buttons, and Links on the same row -->
-        <div class="content-page-header content-page-headersplit d-flex align-items-center mb-4">
+        <div
+          class="content-page-header content-page-headersplit d-flex align-items-center mb-4"
+        >
           <div class="d-flex align-items-center gap-2">
-            <select class="form-select" v-model="selectedYear" style="width: auto;">
-              <option value="">Pilih Tahun</option>
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-            </select>
-
-            <select class="form-select" v-model="selectedMonth" style="width: auto;">
-              <option value="">Pilih Bulan</option>
-              <option value="JAN">Januari</option>
-              <option value="FEB">Februari</option>
-              <option value="MAR">Maret</option>
-              <option value="APR">April</option>
-              <option value="MEI">Mei</option>
-              <option value="JUN">Juni</option>
-              <option value="JUL">Juli</option>
-              <option value="AUG">Agustus</option>
-              <option value="SEP">September</option>
-              <option value="OCT">Oktober</option>
-              <option value="NOV">November</option>
-              <option value="DES">Desember</option>
-            </select>
-
-            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/CreateUdaraAmbien">
+            <RouterLink
+              class="btn btn-primary"
+              to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
+            >
               Tambah Udara Ambien
             </RouterLink>
-
-            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/CreateUdaraEmisi">
+            <RouterLink
+              class="btn btn-primary"
+              to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi"
+            >
               Tambah Udara Emisi
             </RouterLink>
-
-            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/CreateFlyAsh">
+            <RouterLink
+              class="btn btn-primary"
+              to="/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge"
+            >
               Tambah Fly Ash, Bottom Ash, dan Sludge
             </RouterLink>
           </div>
@@ -88,26 +106,83 @@ onMounted(async () => {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Bulan</th>
+                    <th>Laporan Bulan</th>
                     <th>Tanggal Pengujian</th>
-                    <th>Jenis Contoh Uji</th>
+                    <th>Jenis</th>
                     <th>Laboratorium Penguji</th>
                     <th>Status</th>
-                    <th>Aksi/Cetak Form TTE</th>
+                    <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(entry, index) in dataEntries" :key="entry.id">
+                  <!-- Loop through the data and display it in the table -->
+                  <tr
+                    v-for="(item, index) in pencemaranUdaraData"
+                    :key="item.id"
+                  >
                     <td>{{ index + 1 }}</td>
-                    <td>{{ entry.month }} {{ entry.year }}</td>
-                    <td>{{ entry.testDate }}</td>
-                    <td>{{ entry.sampleType }}</td>
-                    <td>{{ entry.lab }}</td>
-                    <td>{{ entry.status }}</td>
-                    <td class="d-flex" style="gap: 1rem">
-                      <button class="btn btn-primary">Cetak</button>
-                      <button class="btn btn-success">Edit</button>
-                      <button class="btn btn-danger">Hapus</button>
+                    <td>{{ item.bulan }}</td>
+                    <td>{{ item.tanggal_uji }}</td>
+                    <td>{{ item.jenis }}</td>
+                    <td>{{ item.lab_penguji }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>
+                      <!-- Action buttons -->
+                      <RouterLink
+                        to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
+                        class="btn btn-primary"
+                        v-if="item.status == 'Verifikasi LH'"
+                        >Cetak</RouterLink
+                      >
+                      <RouterLink
+                        v-if="item.status != 'Verifikasi LH'"
+                        :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
+                        class="btn btn-success m-2"
+                      >
+                        Edit
+                      </RouterLink>
+                      <RouterLink
+                        v-else-if="item.status != 'Verifikasi LH'"
+                        :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
+                        class="btn btn-success m-2"
+                      >
+                       Edit
+                      </RouterLink>
+                      <RouterLink
+                        v-else-if="item.status != 'Verifikasi LH'"
+                        :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
+                        class="btn btn-success m-2"
+                      >
+                        Edit
+                      </RouterLink>
+                      <button
+                        class="btn btn-danger m-2"
+                        @click="deleteData(item.id)"
+                        v-if="item.status != 'Verifikasi LH'"
+                      >
+                        Hapus
+                      </button>
+                      <RouterLink
+                        v-if="item.jenis === 'Udara Ambien' && item.status != 'Verifikasi LH'"
+                        :to="`/Pengendalian/PencemaranUdara/DetailAmbien/${item.id}`"
+                        class="btn btn-warning m-2"
+                      >
+                        Detail
+                      </RouterLink>
+                      <RouterLink
+                        v-else-if="item.jenis === 'Udara Emisi' && item.status != 'Verifikasi LH'"
+                        :to="`/Pengendalian/PencemaranUdara/DetailEmisi/${item.id}`"
+                        class="btn btn-warning m-2"
+                      >
+                        Detail
+                      </RouterLink>
+                      <RouterLink
+                        v-else-if="item.jenis === 'Fly Ash, Bottom Ash, dan Sludge' && item.status != 'Verifikasi LH'"
+                        :to="`/Pengendalian/PencemaranUdara/DetailFlyash/${item.id}`"
+                        class="btn btn-warning m-2"
+                      >
+                        Detail
+                      </RouterLink>
                     </td>
                   </tr>
                 </tbody>
