@@ -21,27 +21,33 @@ const deleteData = async (id) => {
   }
 }
 
+const filterPertekSumberAir = (sumberAir, pertekSumberAir) => {
+  const temp = sumberAir.map((obj) => obj.jenis)
+  const filteredArray = pertekSumberAir.filter(v => !temp.includes(v));
+  console.log(filteredArray)
+  return filteredArray
+}
+
 onMounted(async () => {
   const loader = $loading.show()
   try {
     sumberAir.value = await getSumberAir()
     const pertekData = await getPertekData()
     if (pertekData) {
-      totalSumberAir.value = pertekData.sumber_air.length
-      const n = totalSumberAir.value - sumberAir.value.length
-      if (n > 0) {
-        for (let i = 0; i < n; i++) {
-          sumberAir.value.push({
-            jenis: pertekData.sumber_air[i],
-            nama: '-',
-            kedalaman: '-',
-            kapasitas: '-',
-            debit_dalam_izin: '-',
-            koordinat_x: '-',
-            koordinat_y: '-',
-          })
+      const filteredPertekSumberAir = filterPertekSumberAir(sumberAir.value, pertekData.sumber_air)
+      sumberAir.value = sumberAir.value.concat(filteredPertekSumberAir.map((v) => {
+        return {
+          jenis: v,
+          nama: '-',
+          kedalaman: '-',
+          kapasitas: '-',
+          debit_dalam_izin: '-',
+          koordinat_x: '-',
+          koordinat_y: '-',
         }
-      }
+      }))
+
+      totalSumberAir.value = pertekData.sumber_air.length
     }
   } catch (e) {
     console.error(e)
