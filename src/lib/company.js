@@ -50,3 +50,8 @@ export const getPertekData = async () => {
   const resp = await axios.get('/api/companies/details/getPertekData')
   return resp.data
 }
+
+export const canCreatePemantauan = async () => {
+  const resp = await axios.get('/api/companies/canCreatePemantauan')
+  return resp.data
+}

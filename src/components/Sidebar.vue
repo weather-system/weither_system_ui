@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { getUserStatus } from '@/lib/company.js'
+import { getUserStatus, canCreatePemantauan } from '@/lib/company.js'
 import '@/assets/css/admin.css'
 
 const store = useStore()
@@ -11,6 +11,7 @@ const route = useRoute()
 const $loading = useLoading()
 
 const isUserPending = ref(false)
+const canPemantauan = ref(false)
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
@@ -70,6 +71,9 @@ onMounted(async () => {
     if (data.status === 'PENDING') {
       isUserPending.value = true
     }
+
+    const canPemantauanResult = await canCreatePemantauan()
+    canPemantauan.value = canPemantauanResult.result
   } catch (e) {
     console.error(e)
   } finally {
@@ -206,7 +210,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN' && canPemantauan">
             <a
               href="javascript:void(0);"
               @click="togglePengendalian"
