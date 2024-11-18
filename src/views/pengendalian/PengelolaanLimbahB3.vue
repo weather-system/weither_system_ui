@@ -47,7 +47,7 @@ onMounted(async () => {
               <option value="2024">2024</option>
             </select>
 
-            <RouterLink class="btn btn-primary" to="/Logbook/TPSLimbahB3/Create">
+            <RouterLink class="btn btn-primary" to="/Pengendalian/PengelolaanLimbahB3Create">
               <i class="fa fa-plus me-2"></i>Tambah
             </RouterLink>
 
