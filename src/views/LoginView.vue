@@ -60,7 +60,7 @@ const submit = async e => {
       confirmButtonText: 'OK',
     }).then(() => {
       // Redirect based on user role
-      router.push(user.role === 'USER' ? '/MyCompany' : '/Companies')
+      router.push(user.role === 'USER' ? '/MyCompany' : '/Admin')
     })
   } catch (e) {
     Swal.fire({

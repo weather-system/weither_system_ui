@@ -22,7 +22,7 @@ const isTiketOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
-    return '/Companies'
+    return '/Admin'
   }
   return '/MyCompany'
 })
@@ -122,6 +122,12 @@ onMounted(async () => {
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <router-link to="/Companies" activeClass="active">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Perusahaan Pemohon</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
             <a
               href="javascript:void(0);"
               @click="toggleMaster"
@@ -138,13 +144,21 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isMasterOpen" class="submenu d-block ms-4">
+              <ul v-if="isMasterOpen" class="submenu d-block">
                 <li>
                   <router-link
                     to="/Master/User"
                     activeClass="active">
-                    <i class="fas fa-chevron-right me-2"></i>
+                    <i class="fas fa-chevron-right"></i>
                     User</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    to="/Master/Companies"
+                    activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Perusahaan</router-link
                   >
                 </li>
               </ul>
