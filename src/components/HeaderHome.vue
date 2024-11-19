@@ -1,5 +1,10 @@
 <script setup>
+import { ref } from 'vue';
 import '@/assets/css/style.css'
+const menuOpened = ref(false);
+const toggleMenu = () => {
+  menuOpened.value = !menuOpened.value;
+};
 </script>
 
 <style scoped>
@@ -11,7 +16,7 @@ import '@/assets/css/style.css'
     <div class="container">
       <nav class="navbar navbar-expand-lg header-nav">
         <div class="navbar-header">
-          <a id="mobile_btn" href="javascript:void(0);">
+          <a id="mobile_btn" href="javascript:void(0);" @click="toggleMenu">
             <span class="bar-icon">
               <span></span>
               <span></span>
@@ -96,12 +101,12 @@ import '@/assets/css/style.css'
             <li>
               <router-link to="/beranda/Contact">Kontak</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="menuOpened">
             <router-link class="nav-link header-reg" to="/RegisterCompany"
               >Register</router-link
             >
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="menuOpened">
             <router-link class="nav-link header-login" to="/Login">
               <i class=""></i>Login
             </router-link>
