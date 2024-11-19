@@ -86,10 +86,18 @@ const submit = async e => {
   }
 }
 
-// Helper function to handle redirection
 const redirectToNextPage = (user) => {
-  router.push(user.role === 'USER' ? '/MyCompany' : '/Companies')
+  if (user.role === 'USER') {
+    router.push({ path: '/MyCompany' }).then(() => {
+      router.go(0)
+    })
+  } else {
+    router.push({ path: '/Companies' }).then(() => {
+      router.go(0)
+    })
+  }
 }
+
 </script>
 
 <template>
