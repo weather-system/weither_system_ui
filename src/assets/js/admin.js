@@ -44,9 +44,16 @@
 		$('html').addClass('menu-opened');
 		return false;
 	});
-	
+	$(document).on('click', '#mobile_btn1', function() {
+		const $wrapper = $('.main-wrapper');
+		$wrapper.toggleClass('slide-nav');
+		$('.sidebar-overlay').toggleClass('opened');
+		$('html').addClass('menu-opened');
+		return false;
+	});
 	// Sidebar overlay
 	$(".sidebar-overlay").on("click", function () {
+		const $wrapper = $('.main-wrapper');
 		$wrapper.removeClass('slide-nav');
 		$(".sidebar-overlay").removeClass("opened");
 		$('html').removeClass('menu-opened');

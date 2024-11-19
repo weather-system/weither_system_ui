@@ -1097,18 +1097,15 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 .navbar-brand.logo img {
 	margin-right: 0;
-	width: 60px; /* Sesuaikan dengan ukuran yang diinginkan */
-	height: auto; /* Menjaga aspek rasio */
   }
 .dlh img {
 	margin-right: 0;
-	width: 125px; /* Sesuaikan dengan ukuran yang diinginkan */
-	height: auto; /* Menjaga aspek rasio */
+	width: 125px; 
+	height: auto;
   }
 .logo img {
-    height: auto;
-    max-width: 100%;
-    max-height: 35px;
+	width: 100px; 
+	height: auto;
 }
 .logo a {
     float: left;
@@ -1815,7 +1812,11 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 .menu-logo img {
     height: auto;
-    max-width: 180px;
+    width: 180px;
+}
+.menu-logo.small img {
+	height: auto;
+	width: 90px;
 }
 .menu-close {
     font-size: 18px;
@@ -18778,7 +18779,7 @@ fieldset {
 	margin-bottom: 30px;
 }
 .footer-logo img {
-	max-height: 35px;
+	height: 105px;
 }
 .footer .footer-menu ul li {
 	margin-bottom: 9px;

@@ -27,6 +27,7 @@
     "dlh-cimahi-frontend": "file:",
     "feather-icons": "^4.29.2",
     "firebase": "^11.0.1",
+    "html2pdf.js": "^0.10.2",
     "jenesius-vue-modal": "^1.11.9",
     "jquery": "^3.7.1",
     "moment": "^2.30.1",

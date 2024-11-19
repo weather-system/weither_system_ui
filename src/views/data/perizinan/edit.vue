@@ -44,7 +44,7 @@ const urlNIB = ref('')
 const fetchLicenceDetails = async () => {
   try {
     const response = await axios.get(
-      `http://localhost:8000/api/company_licence/${licenceId}`,
+      `/api/company_licence/${licenceId}`,
     )
     Object.assign(form.value, response.data)
   } catch (error) {
@@ -65,7 +65,7 @@ const submitForm = async () => {
     console.log('Data yang akan dikirim:', form.value)
 
     await axios.put(
-      `http://localhost:8000/api/company_licence/${licenceId}`,
+      `/api/company_licence/${licenceId}`,
       form.value, // Kirim form.value secara langsung sebagai JSON
       {
         headers: {

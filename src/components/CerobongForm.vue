@@ -108,7 +108,7 @@ defineExpose({ setValues })
                 <div class="col-4">
                     <label class="form-label">Lubang Sampling</label>
                     <Field name="lubang_sampling" class="form-control" as="select" v-model="lubangSampling">
-                        <option value="">Pilih</option>
+                        <option value="" disabled>Pilih</option>
                         <option value="Ada">Ada</option>
                         <option value="Tidak">Tidak</option>
                     </Field>
