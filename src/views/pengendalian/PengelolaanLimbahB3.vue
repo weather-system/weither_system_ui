@@ -79,7 +79,9 @@ onMounted(async () => {
                     <td><a :href="entry.url" target="_blank">{{ entry.url }}</a></td>
                     <td>{{ entry.status }}</td>
                     <td class="d-flex" style="gap: 1rem">
-                      <button class="btn btn-success">Edit</button>
+                      <RouterLink :to="{ name: 'PengendalianPengelolaanLimbahB3Edit', params: { id: entry.id } }" class="btn btn-success">
+                        Edit
+                      </RouterLink>
                       <button class="btn btn-danger">Hapus</button>
                     </td>
                   </tr>
