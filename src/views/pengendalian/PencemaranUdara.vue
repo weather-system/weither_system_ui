@@ -243,9 +243,9 @@ onMounted(fetchData)
       "
     >
       <img
-        src="@/assets/img/cimahi.jpg"
+        src="@/assets/img/cimahii.png"
         alt="Logo Kota Cimahi"
-        style="width: 110px; height: auto; margin-right: 20px"
+        style="width: 120px; height: auto; margin-right: 20px"
       />
       <div style="line-height: 1.2; text-align: center; flex-grow: 1">
         <h5 style="margin: 0; font-weight: bold">
