@@ -1,43 +1,55 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
-
-const dataEntries = ref([
-  {
-    id: 1,
-    year: '2019',
-    quarter: '1',
-    url: 'https://simpel.menlhk.go.id',
-    status: 'Ajuan Baru',
-  },
-  // Add other entries as needed
-])
-
+const dataEntries = ref([])
 const selectedYear = ref('')
+
+// Filter data berdasarkan tahun
+const filteredDataEntries = computed(() => {
+  if (!selectedYear.value) return dataEntries.value
+  return dataEntries.value.filter(entry => entry.year === selectedYear.value)
+})
+
+// Load data dari API
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    // Load actual data here as needed
+    const response = await fetch('/api/pengelolaan-limbah-b3')
+    const result = await response.json()
+    dataEntries.value = result.data
   } catch (e) {
-    console.error(e)
+    console.error('Gagal memuat data:', e)
   } finally {
     loader.hide()
   }
 })
+
+// Hapus data
+const deleteEntry = async (id) => {
+  const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?')
+  if (!confirmDelete) return
+
+  const loader = $loading.show()
+  try {
+    await fetch(`/api/pengelolaan-limbah-b3/${id}`, { method: 'DELETE' })
+    dataEntries.value = dataEntries.value.filter(entry => entry.id !== id)
+  } catch (e) {
+    console.error('Gagal menghapus data:', e)
+  } finally {
+    loader.hide()
+  }
+}
 </script>
 
 <template>
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
-        <div v-if="$loading.isLoading" class="loading-overlay">Loading...</div>
-
-        <!-- Align Dropdown, Button, and Link on the same row -->
-        <div class="content-page-header content-page-headersplit d-flex align-items-center mb-4">
+        <div class="content-page-header d-flex align-items-center mb-4">
           <div class="d-flex align-items-center gap-2">
             <select class="form-select" v-model="selectedYear" style="width: auto;">
               <option value="">Pilih Tahun</option>
@@ -50,54 +62,39 @@ onMounted(async () => {
             <RouterLink class="btn btn-primary" to="/Pengendalian/PengelolaanLimbahB3/PengelolaanLimbahB3Create">
               <i class="fa fa-plus me-2"></i>Tambah
             </RouterLink>
-
-            <a href="https://simpel.menlhk.go.id" class="btn btn-link" target="_blank">
-              https://simpel.menlhk.go.id
-            </a>
           </div>
         </div>
 
-        <div class="row mt-4">
-          <div class="col-12">
-            <div class="table-responsive table-div">
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Tahun</th>
-                    <th>Triwulan</th>
-                    <th>URL</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(entry, index) in dataEntries" :key="entry.id">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ entry.year }}</td>
-                    <td>{{ entry.quarter }}</td>
-                    <td><a :href="entry.url" target="_blank">{{ entry.url }}</a></td>
-                    <td>{{ entry.status }}</td>
-                    <td class="d-flex" style="gap: 1rem">
-                      <RouterLink :to="{ name: 'PengendalianPengelolaanLimbahB3Edit', params: { id: entry.id } }" class="btn btn-success">
-                        Edit
-                      </RouterLink>
-                      <button class="btn btn-danger">Hapus</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Tahun</th>
+                <th>Triwulan</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(entry, index) in filteredDataEntries" :key="entry.id">
+                <td>{{ index + 1 }}</td>
+                <td>{{ entry.year }}</td>
+                <td>{{ entry.quarter }}</td>
+                <td><a :href="entry.url" target="_blank">{{ entry.url }}</a></td>
+                <td>{{ entry.status }}</td>
+                <td>
+                  <RouterLink :to="{ name: 'EditPengelolaanLimbahB3', params: { id: entry.id } }" class="btn btn-success">
+                    Edit
+                  </RouterLink>
+                  <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </MainWrapper>
 </template>
-
-<style scoped>
-.content-page-headersplit {
-  display: flex;
-  align-items: center;
-}
-</style>

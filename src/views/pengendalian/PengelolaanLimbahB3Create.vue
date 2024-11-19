@@ -11,16 +11,30 @@ const tahun = ref('')
 const fileUpload = ref(null)
 const status = ref('Ajuan Baru')
 
-const handleSubmit = () => {
-  // Perform submission logic here, e.g., sending data to API
-  console.log({
-    company_detail_id: companyDetailId.value,
-    triwulan: triwulan.value,
-    tahun: tahun.value,
-    file_upload: fileUpload.value,
-    status: status.value
-  })
-  router.push('/PengelolaanLimbahB3')
+const handleSubmit = async () => {
+  const formData = new FormData()
+  formData.append('company_detail_id', companyDetailId.value)
+  formData.append('triwulan', triwulan.value)
+  formData.append('tahun', tahun.value)
+  formData.append('file_upload', fileUpload.value)
+  formData.append('status', status.value)
+
+  try {
+    const response = await fetch('/api/pengelolaan-limbah-b3', {
+      method: 'POST',
+      body: formData
+    })
+
+    if (response.ok) {
+      // Jika berhasil, arahkan pengguna ke halaman yang diinginkan
+      router.push('/PengelolaanLimbahB3')
+    } else {
+      const errorData = await response.json()
+      console.error('Gagal menyimpan data:', errorData)
+    }
+  } catch (error) {
+    console.error('Terjadi kesalahan:', error)
+  }
 }
 </script>
 
