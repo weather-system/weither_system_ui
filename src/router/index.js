@@ -32,6 +32,8 @@ const adminRoutes = [
   '/Register',
   '/RegisterCompany',
   '/Master/User',
+  '/tiket/Pengaduan',
+  '/tiket/PengaduanCreate',
   '/Admin'
 ]
 
@@ -117,6 +119,16 @@ const router = createRouter({
       path: '/beranda/ComproStructureView',
       name: 'ComproStructureView',
       component: () => import('@/views/beranda/ComproStructureView.vue'),
+    },
+    {
+      path: '/tiket/Pengaduan',
+      name: 'Pengaduan',
+      component: () => import('@/views/tiket/Pengaduan.vue'),
+    },
+    {
+      path: '/tiket/PengaduanCreate',
+      name: 'PengaduanCreate',
+      component: () => import('@/views/tiket/PengaduanCreate.vue'),
     },
     {
       path: '/Login',
