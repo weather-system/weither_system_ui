@@ -314,6 +314,17 @@ const router = createRouter({
       component: () => import('@/views/pengendalian/PengelolaanLimbahB3.vue'),
     },
     {
+      path: '/Pengendalian/PengelolaanLimbahB3/PengelolaanLimbahB3Create',
+      name: 'PengendalianPengelolaanLimbahB3Create',
+      component: () => import('@/views/pengendalian/PengelolaanLimbahB3Create.vue'),
+    },
+    {
+      path: '/Pengendalian/PengelolaanLimbahB3/Edit/:id',
+      name: 'PengendalianPengelolaanLimbahB3Edit',
+      component: () => import('@/views/pengendalian/PengelolaanLimbahB3Edit.vue'),
+      props: true,
+    },
+    {
       path: '/Data/IPAL',
       name: 'DataIPAL',
       component: () => import('@/views/data/ipal/Ipal.vue'),
