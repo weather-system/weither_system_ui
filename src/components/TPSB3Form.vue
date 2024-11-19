@@ -149,7 +149,7 @@ defineExpose({ setValues })
                             >
                               -
                             </button>
-                            <button @click="push({ jenis: '', volume: null, satuan: '' })" type="button" class="btn btn-success m-2">
+                            <button @click="push({ id: null, jenis: '', volume: null, satuan: '' })" type="button" class="btn btn-success m-2">
                               +
                             </button>
                           </td>
