@@ -4,21 +4,50 @@ import { useLoading } from 'vue-loading-overlay'
 import { getTpsB3, deleteTpsB3 } from '@/lib/tpsb3';
 import { getPertekData } from '@/lib/company.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import Swal from 'sweetalert2'
 
 const $loading = useLoading()
 
 const tpsB3 = ref([])
 const totalTpsB3 = ref(0)
-
-const deleteData = async (id) => {
+const fetchData = async () => {
   const loader = $loading.show()
   try {
+    tpsB3.value = await getTpsB3()
+  } catch (e) {
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+  } finally {
+    loader.hide()
+  }
+}
+const deleteData = async (id) => {
+  const { isConfirmed } = await Swal.fire({
+    title: 'Apa kamu yakin ?',
+    text: 'Kamu tidak akan bisa mengembalikan ini!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Tidak',
+    customClass: {
+      confirmButton: 'btn btn-primary',
+      cancelButton: 'btn btn-secondary',
+    },
+    buttonsStyling: false,
+  })
+
+  if (isConfirmed) {
+    const loader = $loading.show()
+  try {
     await deleteTpsB3(id)
+    await fetchData()
+    Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
   } catch (e) {
     console.error(e)
   } finally {
     loader.hide()
   }
+}
 }
 
 onMounted(async () => {

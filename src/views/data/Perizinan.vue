@@ -19,7 +19,7 @@ const loggedInUserId = store.state.auth.user.id // Change this to fetch the logg
 const fetchUserCompanies = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get('http://localhost:8000/api/companies') // Adjust the endpoint if needed
+    const response = await axios.get('/api/companies') // Adjust the endpoint if needed
     const companies = response.data
 
     // Filter to get user companies
@@ -44,7 +44,7 @@ const fetchUserCompanies = async () => {
 const fetchCompanyLicences = async companyId => {
   try {
     const response = await axios.get(
-      `http://localhost:8000/api/company_licence?company_id=${companyId}`,
+      `/api/company_licence?company_id=${companyId}`,
     ) // Adjust endpoint if needed
     companyLicences.value = response.data
 
@@ -92,14 +92,17 @@ const deleteLicence = async id => {
   })
 
   if (isConfirmed) {
+    const loader = $loading.show()
     try {
-      await axios.delete(`http://localhost:8000/api/company_licence/${id}`)
-      await fetchCompanyLicences(userCompanies.value[0].id) // Refresh the licenses after deletion
+      await axios.delete(`/api/company_licence/${id}`)
+      await fetchCompanyLicences(userCompanies.value[0].id)
       Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
     } catch (error) {
       console.error('Error deleting license:', error)
       Swal.fire('Error!', 'There was an error deleting the license.', 'error')
-    }
+    }finally {
+    loader.hide()
+  }
   }
 }
 </script>

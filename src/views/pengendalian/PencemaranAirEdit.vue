@@ -5,7 +5,7 @@ import { useLoading } from 'vue-loading-overlay'
 import { getPencemaranAirDetail, updatePencemaranAir } from '@/lib/pencemaranAir.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import PencemaranAirForm from '@/components/PencemaranAirForm.vue'
-
+import Swal from 'sweetalert2'
 const route = useRoute()
 const router = useRouter()
 const $loading = useLoading()
@@ -28,14 +28,24 @@ watch(() => route.query.id, async (latest, _) => {
 }, { immediate: true })
 
 const submit = async (data) => {
-  const loader = $loading.show()
   try {
     await updatePencemaranAir(route.query.id, data)
     router.push('/Pengendalian/PencemaranAir')
+    await Swal.fire({
+      title: 'Success!',
+      text: 'Data berhasil diperbarui!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
   } catch (e) {
     console.error(e)
-  } finally {
-    loader.hide()
+    const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
+    await Swal.fire({
+      title: 'Error!',
+      text: `Gagal memperbarui perizinan: ${errorMessage}`,
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
   }
 }
 </script>

@@ -5,7 +5,7 @@ import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
 import SumberAirForm from '@/components/SumberAirForm.vue';
 import { getSumberAirDetail, updateSumberAir } from '@/lib/sumberAir';
-
+import Swal from 'sweetalert2';
 const $loading = useLoading()
 const router = useRouter()
 const route = useRoute()
@@ -16,9 +16,21 @@ const submit = async (data) => {
   const loader = $loading.show()
   try {
     await updateSumberAir(route.params.id, data)
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Data Berhasil diperbarui!',
+      });
     router.push('/Data/SumberAir')
   } catch (e) {
     console.error(e)
+    const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
+    await Swal.fire({
+      title: 'Error!',
+      text: `Gagal memperbarui data: ${errorMessage}`,
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
   } finally {
     loader.hide()
   }

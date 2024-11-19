@@ -45,7 +45,7 @@ const isOutletChecked = ref(false);
 const fetchCompanyLicences = async () => {
   const loader = $loading.show();
   try {
-    const response = await axios.get('http://localhost:8000/api/company_licence');
+    const response = await axios.get('/api/company_licence');
     licenseOptions.value = response.data || [];
   } catch (error) {
     console.error('Error fetching company licenses:', error);
@@ -57,7 +57,7 @@ const fetchCompanyLicences = async () => {
 const fetchCompanyDetailsID = async () => {
   const loader = $loading.show();
   try {
-    const response = await axios.get('http://localhost:8000/api/company_detail');
+    const response = await axios.get('/api/company_detail');
     console.log("API Response:", response.data);
     
     if (response.data && Array.isArray(response.data) && response.data.length > 0) {
@@ -102,7 +102,7 @@ const createIpalEntry = async () => {
       recycling_effort: recycle.recycling_effort,
     }));
 
-    const response = await axios.post('http://localhost:8000/api/company_ipals', formData.value, {
+    const response = await axios.post('/api/company_ipals', formData.value, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -119,7 +119,7 @@ const createIpalEntry = async () => {
         };
 
         try {
-          const detailResponse = await axios.post('http://localhost:8000/api/ipal-details', detailData);
+          const detailResponse = await axios.post('/api/ipal-details', detailData);
           console.log('IPAL detail added:', detailResponse.data);
         } catch (detailError) {
           console.error('Error adding IPAL detail:', detailError);
@@ -131,13 +131,13 @@ const createIpalEntry = async () => {
           ...effort,
         };
         // try {
-        //   const effortResponse = await axios.post('http://localhost:8000/api/management_efforts', effortData, {headers});
+        //   const effortResponse = await axios.post('/api/management_efforts', effortData, {headers});
         //   console.log('Upaya Pengelolaan berhasil:', effortResponse.data);
         // } catch (detailError) {
         //   console.error('Upaya Pengelolaan gagal:', detailError);
         // }
         try {
-          const effortResponse = await axios.post('http://localhost:8000/api/management_efforts', effortData, {
+          const effortResponse = await axios.post('/api/management_efforts', effortData, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
           });
           console.log('Management effort added:', effortResponse.data);
@@ -160,7 +160,7 @@ const createIpalEntry = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Failed to create IPAL entry. Please try again.',
+      text: 'Terjadi Kesalahan.',
     });
   } finally {
     loader.hide();

@@ -106,11 +106,11 @@ import '@/assets/css/style.css'
               <h2>Featured Categories</h2>
               <p>What do you need to find?</p>
             </div>
-            <div class="col-md-6 text-md-end aos" data-aos="fade-up">
-              <a href="categories.html" class="btn btn-primary btn-view"
+            <!-- <div class="col-md-6 text-md-end" data-aos="fade-up">
+              <a href="/" class="btn btn-primary btn-view"
                 >View All<i class="feather-arrow-right-circle"></i
               ></a>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="row">
