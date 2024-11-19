@@ -31,7 +31,8 @@ const adminRoutes = [
   '/Login',
   '/Register',
   '/RegisterCompany',
-  '/Master/User'
+  '/Master/User',
+  '/Admin'
 ]
 
 // Array untuk halaman utama
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/Admin',
+      name: 'AdminView',
+      component: () => import('@/views/AdminView.vue'),
     },
     {
       path: '/LandingPage',
@@ -359,6 +365,21 @@ const router = createRouter({
       path: '/Pengendalian/PencemaranUdara/Edit/:id',
       name: 'PencemaranUdaraEdit',
       component: () => import('@/views/pengendalian/pencemaranudara/editpencemaranudara.vue'),
+    },
+    {
+      path: '/Master/Companies',
+      name: 'MasterCompaniesView',
+      component: () => import('@/views/Master/CompaniesView.vue'),
+    },
+    {
+      path: '/Master/Companies/Create',
+      name: 'MasterCompaniesCreateView',
+      component: () => import('@/views/Master/CompaniesCreateView.vue'),
+    },
+    {
+      path: '/Master/Companies/:id',
+      name: 'MasterCompaniesEditView',
+      component: () => import('@/views/Master/CompaniesEditView.vue'),
     },
   ],
 })

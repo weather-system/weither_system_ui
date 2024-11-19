@@ -92,7 +92,7 @@ const redirectToNextPage = (user) => {
       router.go(0)
     })
   } else {
-    router.push({ path: '/Companies' }).then(() => {
+    router.push({ path: '/Admin' }).then(() => {
       router.go(0)
     })
   }
