@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { uploadFile } from '@/lib/filestorage.js'
+import * as yup from 'yup'
+import { createPengelolaanLimbahB3, parameters } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
-
 const router = useRouter()
 
 const companyDetailId = ref('')

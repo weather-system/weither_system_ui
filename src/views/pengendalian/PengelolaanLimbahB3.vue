@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
+import { getPengelolaanLimbahB3, deletePengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
