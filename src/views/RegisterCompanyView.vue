@@ -448,6 +448,7 @@ const uploadPKPLHFile = async e => {
                       placeholder="example@company.com"
                     />
                   </div>
+                  <div class ="row">
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Password</label>
                     <div class="pass-group position-relative">
@@ -511,6 +512,7 @@ const uploadPKPLHFile = async e => {
                       </div>
                     </div>
                   </div>
+                </div>
                   <div class="col-12 text-center mt-4">
                     <button
                       type="submit"
@@ -688,7 +690,7 @@ const uploadPKPLHFile = async e => {
                       placeholder="Username"
                     />
                   </div>
-                  <div class="col-md-6" style="margin-top: 20px">
+                  <div class="col-md-12" style="margin-top: 20px">
                     <label class="form-label">Email Perusahaan</label>
                     <input
                       name="company_email"
