@@ -18,7 +18,7 @@ const fetchCompanyDetailId = async () => {
   const userId = '1';
 
   try {
-    const response = await fetch(`/api/company_details/${userId}`);
+    const response = await fetch(`http://localhost:8080/api/company_details/${userId}`);
     if (response.ok) {
       const data = await response.json();
       companyDetailId.value = data.company_detail_id;
@@ -38,25 +38,16 @@ onMounted(() => {
 
 const handleSubmit = async () => {
   const formData = new FormData()
-  formData.append('company_detail_id', companyDetailId.value)
+  // formData.append('company_detail_id', companyDetailId.value)
   formData.append('triwulan', triwulan.value)
   formData.append('tahun', tahun.value)
   formData.append('file_upload', fileUpload.value)
   formData.append('status', status.value)
 
   try {
-    const response = await fetch('/api/pengelolaan-limbah-b3', {
-      method: 'POST',
-      body: formData
-    })
+    const response = await createPengelolaanLimbahB3(formData)
 
-    if (response.ok) {
-      // Jika berhasil, arahkan pengguna ke halaman yang diinginkan
-      router.push('/PengelolaanLimbahB3')
-    } else {
-      const errorData = await response.json()
-      console.error('Gagal menyimpan data:', errorData)
-    }
+    // router.push('/PengelolaanLimbahB3')
   } catch (error) {
     console.error('Terjadi kesalahan:', error)
   }

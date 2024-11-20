@@ -18,9 +18,9 @@ const filteredDataEntries = computed(() => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    const response = await fetch('/api/pengelolaan-limbah-b3')
-    const result = await response.json()
-    dataEntries.value = result.data
+    const response = await getPengelolaanLimbahB3()
+    dataEntries.value = response
+    console.log(dataEntries.value)
   } catch (e) {
     console.error('Gagal memuat data:', e)
   } finally {
@@ -68,7 +68,6 @@ const deleteEntry = async (id) => {
           <table class="table">
             <thead>
               <tr>
-                <th>No</th>
                 <th>Tahun</th>
                 <th>Triwulan</th>
                 <th>URL</th>
@@ -77,17 +76,16 @@ const deleteEntry = async (id) => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(entry, index) in filteredDataEntries" :key="entry.id">
-                <td>{{ index + 1 }}</td>
-                <td>{{ entry.year }}</td>
-                <td>{{ entry.quarter }}</td>
-                <td><a :href="entry.url" target="_blank">{{ entry.url }}</a></td>
+              <tr v-for="entry in dataEntries" :key="entry.id">
+                <td>{{ entry.tahun }}</td>
+                <td>{{ entry.triwulan }}</td>
+                <td><a :href="entry.file_upload" target="_blank">{{ entry.file_upload }}</a></td>
                 <td>{{ entry.status }}</td>
                 <td>
-                  <RouterLink :to="{ name: 'EditPengelolaanLimbahB3', params: { id: entry.id } }" class="btn btn-success">
+                  <!-- <RouterLink :to="{ name: 'EditPengelolaanLimbahB3', params: { id: entry.id } }" class="btn btn-success">
                     Edit
-                  </RouterLink>
-                  <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  </RouterLink> -->
+                   <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
                 </td>
               </tr>
             </tbody>
