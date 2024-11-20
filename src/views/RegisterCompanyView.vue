@@ -88,6 +88,11 @@ const submit = async e => {
   formData.append('kelurahan', selectedKelurahan.value)
   formData.append('businessmen', registrationType.value)
   formData.append('document_type', selectedDocumentType.value)
+
+  if (registrationType.value == 'company') {
+    formData.append('username', formData.get('leader_name'))
+  }
+
   const formDataObj = Object.fromEntries(formData)
   formDataObj['status'] = 'PENDING'
   console.log('Data to be sent to backend:', {
@@ -285,7 +290,7 @@ const uploadPKPLHFile = async e => {
                     />
                   </div>
                   <div class="col-md-6" style="margin-top: 20px">
-                    <label class="form-label">Nama PJ Dokling</label>
+                    <label class="form-label">Penanggung Jawab Dokumen Lingkungan</label>
                     <input
                       name="pj_dokling_name"
                       type="text"
@@ -363,7 +368,7 @@ const uploadPKPLHFile = async e => {
                       />
                     </div>
                     <div class="col-md-6">
-                      <label class="form-label">Upload File NIB</label>
+                      <label class="form-label">Upload File NIB (PDF)</label>
                       <input
                         name="photo_nib"
                         type="file"
@@ -425,7 +430,7 @@ const uploadPKPLHFile = async e => {
                       </option>
                     </select>
                   </div>
-                  <div class="col-md-6" style="margin-top: 20px">
+                  <!-- <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Username</label>
                     <input
                       name="username"
@@ -433,7 +438,7 @@ const uploadPKPLHFile = async e => {
                       class="form-control"
                       placeholder="Username"
                     />
-                  </div>
+                  </div> -->
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Email Perusahaan</label>
                     <input
