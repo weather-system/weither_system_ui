@@ -142,6 +142,7 @@ defineExpose({ setValues })
             <Field name="stage" class="form-control" />
             <ErrorMessage name="stage" />
           </div>
+
           <div class="col-md-5">
             <label class="form-label">Jenis Bahan Bakar</label>
             <Field name="jenis_bahan_bakar" class="form-control" as="select">
