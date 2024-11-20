@@ -41,7 +41,7 @@ const fetchUserCompanies = async () => {
 // Fetch company details based on companyId
 const fetchCompanyDetails = async (companyId) => {
   try {
-    const response = await axios.get(`http://localhost:8000/api/company_details/${companyId}`);
+    const response = await axios.get(`/api/company_details/${companyId}`);
     companyDetails.value = response.data;
 
     console.log(`Fetched Company Details for ID ${companyId}:`, companyDetails.value);

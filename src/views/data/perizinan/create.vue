@@ -55,7 +55,7 @@ const uploadNIB = async e => {
 
 const submitForm = async () => {
   try {
-    await axios.post('http://localhost:8000/api/company_licence', form.value)
+    await axios.post('/api/company_licence', form.value)
     await Swal.fire({
       title: 'Success!',
       text: 'Perizinan berhasil ditambahkan!',

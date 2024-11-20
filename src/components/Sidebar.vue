@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { getUserStatus } from '@/lib/company.js'
+import { getUserStatus, canCreatePemantauan } from '@/lib/company.js'
 import '@/assets/css/admin.css'
 
 const store = useStore()
@@ -11,6 +11,7 @@ const route = useRoute()
 const $loading = useLoading()
 
 const isUserPending = ref(false)
+const canPemantauan = ref(false)
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
@@ -21,7 +22,7 @@ const isTiketOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
-    return '/Companies'
+    return '/Admin'
   }
   return '/MyCompany'
 })
@@ -70,6 +71,9 @@ onMounted(async () => {
     if (data.status === 'PENDING') {
       isUserPending.value = true
     }
+
+    const canPemantauanResult = await canCreatePemantauan()
+    canPemantauan.value = canPemantauanResult.result
   } catch (e) {
     console.error(e)
   } finally {
@@ -86,16 +90,21 @@ onMounted(async () => {
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-        <a href="index.html">
-          <img src="@/assets/img/dlh2.png" class="img-fluid" alt="" style="width: 100px; height: 70px;" />
-        </a>
-        <a href="index.html">
+        <router-link to="/MyCompany">
+          <img
+            src="@/assets/img/dlh2.png"
+            class="img-fluid logo"
+            alt=""
+            style="max-width: 80%; height: auto"
+          />
+        </router-link>
+        <router-link to="/MyCompany">
           <img
             src="@/assets/img/dlh2.png"
             class="img-fluid logo-small"
             alt=""
           />
-        </a>
+        </router-link>
       </div>
       <div class="siderbar-toggle">
         <label class="switch" id="toggle_btn">
@@ -118,6 +127,12 @@ onMounted(async () => {
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <router-link to="/Companies" activeClass="active">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Perusahaan Pemohon</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
             <a
               href="javascript:void(0);"
               @click="toggleMaster"
@@ -134,13 +149,21 @@ onMounted(async () => {
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isMasterOpen" class="submenu d-block ms-4">
+              <ul v-if="isMasterOpen" class="submenu d-block">
                 <li>
                   <router-link
                     to="/Master/User"
                     activeClass="active">
-                    <i class="fas fa-chevron-right me-2"></i>
+                    <i class="fas fa-chevron-right"></i>
                     User</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    to="/Master/Companies"
+                    activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Perusahaan</router-link
                   >
                 </li>
               </ul>
@@ -206,7 +229,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN' && canPemantauan">
             <a
               href="javascript:void(0);"
               @click="togglePengendalian"

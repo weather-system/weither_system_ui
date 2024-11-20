@@ -4,20 +4,48 @@ import { useLoading } from 'vue-loading-overlay'
 import { getCerobong, deleteCerobong } from '@/lib/cerobong.js'
 import { getPertekData } from '@/lib/company.js'
 import MainWrapper from '@/components/MainWrapper.vue'
-
+import Swal from 'sweetalert2'
 const $loading = useLoading()
 
 const cerobong = ref([])
 const totalCerobong = ref(0)
-
-const deleteData = async (id) => {
+const fetchData = async () => {
   const loader = $loading.show()
   try {
-    await deleteCerobong(id)
+    cerobong.value = await getCerobong()
   } catch (e) {
-    console.error(e)
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
   } finally {
     loader.hide()
+  }
+}
+const deleteData = async id => {
+  const { isConfirmed } = await Swal.fire({
+    title: 'Apa kamu yakin ?',
+    text: 'Kamu tidak akan bisa mengembalikan ini!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Tidak',
+    customClass: {
+      confirmButton: 'btn btn-primary',
+      cancelButton: 'btn btn-secondary',
+    },
+    buttonsStyling: false,
+  })
+
+  if (isConfirmed) {
+    const loader = $loading.show()
+    try {
+      await deleteCerobong(id)
+      await fetchData()
+      Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
   }
 }
 
@@ -31,16 +59,18 @@ onMounted(async () => {
 
       const n = pertekData.cerobong_total - cerobong.value.length
       if (n > 0) {
-        cerobong.value = cerobong.value.concat(Array(n).fill({
-          jenis_boiler: '-',
-          jumlah_boiler: '-',
-          tinggi_cerobong: '-',
-          diameter_cerbong: '-',
-          kapasitas_boiler: '-',
-          merk_boiler: '-',
-          pengendalian_emisi_cerobong: '-',
-          lubang_sampling: '-'
-        }))
+        cerobong.value = cerobong.value.concat(
+          Array(n).fill({
+            jenis_boiler: '-',
+            jumlah_boiler: '-',
+            tinggi_cerobong: '-',
+            diameter_cerbong: '-',
+            kapasitas_boiler: '-',
+            merk_boiler: '-',
+            pengendalian_emisi_cerobong: '-',
+            lubang_sampling: '-',
+          }),
+        )
       }
     }
   } catch (e) {
@@ -88,13 +118,21 @@ onMounted(async () => {
                 <tbody>
                   <tr v-for="data in cerobong" :key="data.id">
                     <td>{{ data.jenis_boiler }} ({{ data.jumlah_boiler }})</td>
-                    <td>T: {{ data.tinggi_cerobong }} D: {{ data.diameter_cerbong }} Kap: {{ data.kapasitas_boiler }}</td>
+                    <td>
+                      T: {{ data.tinggi_cerobong }} D:
+                      {{ data.diameter_cerbong }} Kap:
+                      {{ data.kapasitas_boiler }}
+                    </td>
                     <td>{{ data.merk_boiler }}</td>
                     <td>{{ data.pengendalian_emisi_cerobong }}</td>
                     <td>{{ data.lubang_sampling }}</td>
                     <td>
                       <router-link
-                        :to="data.id ? `/Data/Cerobong/Edit/${data.id}` : '/Data/Cerobong/Tambah'"
+                        :to="
+                          data.id
+                            ? `/Data/Cerobong/Edit/${data.id}`
+                            : '/Data/Cerobong/Tambah'
+                        "
                         class="btn btn-primary"
                         >Edit</router-link
                       >

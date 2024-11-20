@@ -1,16 +1,18 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import { registerCompany } from '@/lib/company.js'
+import { registerCompany, updateCompany } from '@/lib/company.js'
 import { uploadFile } from '@/lib/filestorage.js'
-import MainWrapper from '@/components/MainWrapper.vue'
-import HeaderHome from '@/components/HeaderHome.vue'
-import FooterHome from '@/components/FooterHome.vue'
+
+const props = defineProps(['isAdmin', 'isEdit', 'company'])
+const emit = defineEmits(['created'])
 
 const $loading = useLoading()
 const router = useRouter()
+
+const company = ref({})
 
 const registrationType = ref(null)
 const password = ref('')
@@ -88,11 +90,6 @@ const submit = async e => {
   formData.append('kelurahan', selectedKelurahan.value)
   formData.append('businessmen', registrationType.value)
   formData.append('document_type', selectedDocumentType.value)
-
-  if (registrationType.value == 'company') {
-    formData.append('username', formData.get('leader_name'))
-  }
-
   const formDataObj = Object.fromEntries(formData)
   formDataObj['status'] = 'PENDING'
   console.log('Data to be sent to backend:', {
@@ -103,7 +100,16 @@ const submit = async e => {
   })
   const loader = $loading.show()
   try {
-    const data = await registerCompany({ ...formDataObj, photo_nib: urlNIB.value, photo_pkplh: urlPKPLH.value, photo_skklh: urlSKKLH.value })
+    let data = null
+    if (props.isAdmin && props.isEdit) {
+      data = await updateCompany(company.value.id, {
+        ...company.value,
+        ...formDataObj,
+        photo_nib: urlNIB.value, photo_pkplh: urlPKPLH.value, photo_skklh: urlSKKLH.value
+      })
+    } else {
+      data = await registerCompany({ ...formDataObj, photo_nib: urlNIB.value, photo_pkplh: urlPKPLH.value, photo_skklh: urlSKKLH.value })
+    }
 
     // SweetAlert success message
     Swal.fire({
@@ -112,7 +118,13 @@ const submit = async e => {
       icon: 'success',
       confirmButtonText: 'OK',
     }).then(() => {
-      router.push('/Login')
+      if (!props.isAdmin) {
+        router.push('/Login')
+      } else {
+        if (!props.isEdit) {
+          emit('created', data)
+        }
+      }
     })
   } catch (e) {
     console.error(e)
@@ -173,35 +185,31 @@ const uploadPKPLHFile = async e => {
   }
   console.log(urlPKPLH.value)
 }
+
+onMounted(() => {
+  if (props.isAdmin && props.isEdit) {
+    registrationType.value = props.company.businessmen
+    selectedDocumentType.value = props.company.document_type
+    selectedKecamatan.value = props.company.kecamatan
+    selectedKelurahan.value = props.company.kelurahan
+    company.value = props.company
+  }
+})
 </script>
 
 <template>
-  <HeaderHome />
-  <MainWrapper :header="false" :sidebar="false">
-    <div
-      class="login-pages d-flex align-items-center justify-content-center min-vh-100"
-    >
-      <div class="container">
-        <div class="row justify-content-center">
-          <!-- <div class="login-logo">
-            <img
-              src="@/assets/img/dlh.jpg"
-              alt="img"
-              style="width: 200px; height: auto"
-            />
-          </div> -->
-
-          <!-- Form Card -->
-          <div class="col-lg-12">
+  <div class="col-lg-12">
             <div class="card shadow-lg p-5">
               <div class="login-contenthead mb-3">
                 <h5
+                  v-if="!props.isAdmin"
                   class="mb-1 text-center"
                   style="font-family: 'Poppins', sans-serif; font-weight: 600"
                 >
                   Registrasi
                 </h5>
                 <p
+                  v-if="!props.isAdmin"
                   class="text-center"
                   style="
                     font-family: 'Poppins', sans-serif;
@@ -274,6 +282,7 @@ const uploadPKPLHFile = async e => {
                   <div class="col-md-12" style="margin-top: 20px">
                     <label class="form-label">Nama Perusahaan</label>
                     <input
+                      v-model="company.name"
                       name="name"
                       type="text"
                       class="form-control"
@@ -283,6 +292,7 @@ const uploadPKPLHFile = async e => {
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Nama Pimpinan</label>
                     <input
+                      v-model="company.leader_name"
                       name="leader_name"
                       type="text"
                       class="form-control"
@@ -290,8 +300,9 @@ const uploadPKPLHFile = async e => {
                     />
                   </div>
                   <div class="col-md-6" style="margin-top: 20px">
-                    <label class="form-label">Penanggung Jawab Dokumen Lingkungan</label>
+                    <label class="form-label">Nama PJ Dokling</label>
                     <input
+                      v-model="company.pj_dokling_name"
                       name="pj_dokling_name"
                       type="text"
                       class="form-control"
@@ -317,6 +328,7 @@ const uploadPKPLHFile = async e => {
                         >Nomor Persetujuan Lingkungan SKKLH</label
                       >
                       <input
+                        v-model="company.no_skklh"
                         name="no_skklh"
                         type="text"
                         class="form-control"
@@ -341,6 +353,7 @@ const uploadPKPLHFile = async e => {
                         >Nomor Persetujuan Lingkungan PKPLH</label
                       >
                       <input
+                        v-model="company.pkplh_number"
                         name="pkplh_number"
                         type="text"
                         class="form-control"
@@ -361,6 +374,7 @@ const uploadPKPLHFile = async e => {
                     <div class="col-md-6">
                       <label class="form-label">NIB</label>
                       <input
+                        v-model="company.nib"
                         name="nib"
                         type="text"
                         class="form-control"
@@ -368,7 +382,7 @@ const uploadPKPLHFile = async e => {
                       />
                     </div>
                     <div class="col-md-6">
-                      <label class="form-label">Upload File NIB (PDF)</label>
+                      <label class="form-label">Upload File NIB</label>
                       <input
                         name="photo_nib"
                         type="file"
@@ -381,6 +395,7 @@ const uploadPKPLHFile = async e => {
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Jenis Kegiatan</label>
                     <input
+                      v-model="company.activity_type"
                       name="activity_type"
                       type="text"
                       class="form-control"
@@ -390,6 +405,7 @@ const uploadPKPLHFile = async e => {
                   <div class="col-md-12" style="margin-top: 20px">
                     <label class="form-label">Alamat</label>
                     <input
+                      v-model="company.address"
                       name="address"
                       type="text"
                       class="form-control"
@@ -430,26 +446,27 @@ const uploadPKPLHFile = async e => {
                       </option>
                     </select>
                   </div>
-                  <!-- <div class="col-md-6" style="margin-top: 20px">
+                  <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Username</label>
                     <input
+                      v-model="company.username"
                       name="username"
                       type="text"
                       class="form-control"
                       placeholder="Username"
                     />
-                  </div> -->
+                  </div>
                   <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Email Perusahaan</label>
                     <input
+                      v-model="company.company_email"
                       name="company_email"
                       type="email"
                       class="form-control"
                       placeholder="example@company.com"
                     />
                   </div>
-                  <div class ="row">
-                  <div class="col-md-6" style="margin-top: 20px">
+                  <div v-if="!props.isEdit" class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Password</label>
                     <div class="pass-group position-relative">
                       <input
@@ -472,7 +489,7 @@ const uploadPKPLHFile = async e => {
                       ></span>
                     </div>
                   </div>
-                  <div class="col-md-6 mb-4" style="margin-top: 20px">
+                  <div v-if="!props.isEdit" class="col-md-6 mb-4" style="margin-top: 20px">
                     <label class="form-label">Confirm Password</label>
                     <div class="pass-group position-relative">
                       <input
@@ -512,15 +529,14 @@ const uploadPKPLHFile = async e => {
                       </div>
                     </div>
                   </div>
-                </div>
                   <div class="col-12 text-center mt-4">
                     <button
                       type="submit"
                       class="btn btn-block"
-                      :class="isPasswordMatch ? 'btn-primary' : 'gray-button'"
-                      :disabled="!isPasswordMatch"
+                      :class="props.isEdit || isPasswordMatch ? 'btn-primary' : 'gray-button'"
+                      :disabled="!props.isEdit && !isPasswordMatch"
                     >
-                      Daftar
+                    {{ props.isEdit ? 'Edit' : 'Daftar' }}
                     </button>
                   </div>
                 </div>
@@ -690,7 +706,7 @@ const uploadPKPLHFile = async e => {
                       placeholder="Username"
                     />
                   </div>
-                  <div class="col-md-12" style="margin-top: 20px">
+                  <div class="col-md-6" style="margin-top: 20px">
                     <label class="form-label">Email Perusahaan</label>
                     <input
                       name="company_email"
@@ -769,13 +785,13 @@ const uploadPKPLHFile = async e => {
                       :class="isPasswordMatch ? 'btn-primary' : 'gray-button'"
                       :disabled="!isPasswordMatch"
                     >
-                      Daftar
+                      {{ props.isEdit ? 'Edit' : 'Daftar' }}
                     </button>
                   </div>
                 </div>
               </form>
 
-              <div class="login-footer mt-3 text-left">
+              <div v-if="!props.isAdmin" class="login-footer mt-3 text-left">
                 <span
                   >Sudah punya akun?
                   <RouterLink to="/Login" class="signup-link"
@@ -785,16 +801,4 @@ const uploadPKPLHFile = async e => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <FooterHome/>
-  </MainWrapper>
 </template>
-<style>
-.gray-button {
-  background-color: black;
-  color: black;
-  cursor: not-allowed;
-}
-</style>
