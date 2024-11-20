@@ -34,7 +34,8 @@ const adminRoutes = [
   '/Master/User',
   '/tiket/Pengaduan',
   '/tiket/PengaduanCreate',
-  '/Admin'
+  '/Admin',
+  '/Data/PKKPR'
 ]
 
 // Array untuk halaman utama
@@ -231,6 +232,11 @@ const router = createRouter({
       path: '/Data/Company',
       name: 'DataCompany',
       component: () => import('@/views/data/Company.vue'),
+    },
+    {
+      path: '/Data/PKKPR',
+      name: 'DataPKKPR',
+      component: () => import('@/views/data/PKKPR.vue'),
     },
     {
       path: '/Data/Ipal/:company_detail_id',

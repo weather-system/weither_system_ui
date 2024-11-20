@@ -177,7 +177,7 @@ onMounted(async () => {
               :class="{ active: route.path.startsWith('/Data') }"
             >
               <i class="fas fa-book-bookmark"></i>
-              <span>Data</span>
+              <span>Persyaratan Dasar</span>
               <i
                 class="fe"
                 :class="{
@@ -196,6 +196,52 @@ onMounted(async () => {
                   >
                 </li> -->
                 <li>
+                  <router-link to="" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Pers. Lingkungan</router-link
+                  >
+                  <transition name="slide-fade">
+                  <ul v-if="isDataOpen" class="submenu d-block ms-3">
+                    <li>
+                      <router-link
+                        to="/Data/Ipal"
+                        activeClass="active">
+                        <i class="fas fa-chevron-right"></i>
+                        Pertek IPAL</router-link
+                      >
+                    </li>
+                    <li>
+                      <router-link
+                        to="/Data/Cerobong"
+                        activeClass="active">
+                        <i class="fas fa-chevron-right"></i>
+                        Pertek Emisi</router-link
+                      >
+                    </li>
+                    <li>
+                      <router-link
+                        to="/Data/TPSB3"
+                        activeClass="active">
+                        <i class="fas fa-chevron-right"></i>
+                        Rintek LB3</router-link
+                      >
+                    </li>
+                  </ul>
+            </transition>
+                </li>
+                <li>
+                  <router-link to="/Data/PKKPR" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    PKKPR</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Data/PKKPR" activeClass="active">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    PBG</router-link
+                  >
+                </li>
+                <!-- <li>
                   <router-link to="/Data/Perizinan" activeClass="active">
                     <i class="fas fa-chevron-right me-2"></i>
                     Perizinan</router-link
@@ -224,7 +270,7 @@ onMounted(async () => {
                     <i class="fas fa-chevron-right me-2"></i>
                     Sumber Air</router-link
                   >
-                </li>
+                </li> -->
               </ul>
             </transition>
           </li>
