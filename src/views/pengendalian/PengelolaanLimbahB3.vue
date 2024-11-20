@@ -8,13 +8,12 @@ const $loading = useLoading()
 const dataEntries = ref([])
 const selectedYear = ref('')
 
-// Filter data berdasarkan tahun
 const filteredDataEntries = computed(() => {
   if (!selectedYear.value) return dataEntries.value
   return dataEntries.value.filter(entry => entry.year === selectedYear.value)
 })
 
-// Load data dari API
+
 onMounted(async () => {
   const loader = $loading.show()
   try {
@@ -28,7 +27,6 @@ onMounted(async () => {
   }
 })
 
-// Hapus data
 const deleteEntry = async (id) => {
   const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?')
   if (!confirmDelete) return

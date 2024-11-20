@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainWrapper from '@/components/MainWrapper.vue'
 
@@ -10,6 +10,29 @@ const triwulan = ref('')
 const tahun = ref('')
 const fileUpload = ref(null)
 const status = ref('Ajuan Baru')
+
+
+const fetchCompanyDetailId = async () => {
+  const userId = '1';
+
+  try {
+    const response = await fetch(`/api/company_details/${userId}`);
+    if (response.ok) {
+      const data = await response.json();
+      companyDetailId.value = data.company_detail_id;
+    } else {
+      console.error('Gagal memuat company detail ID');
+    }
+  } catch (error) {
+    console.error('Terjadi kesalahan saat memuat company detail ID:', error);
+  }
+}
+
+
+onMounted(() => {
+  fetchCompanyDetailId()
+})
+
 
 const handleSubmit = async () => {
   const formData = new FormData()
@@ -46,7 +69,13 @@ const handleSubmit = async () => {
         <form @submit.prevent="handleSubmit">
           <div class="mb-3">
             <label for="companyDetailId">Company Detail ID</label>
-            <input type="text" id="companyDetailId" v-model="companyDetailId" class="form-control" />
+            <input
+              type="text"
+              id="companyDetailId"
+              v-model="companyDetailId"
+              class="form-control"
+              readonly
+            />
           </div>
 
           <div class="mb-3">
@@ -73,7 +102,12 @@ const handleSubmit = async () => {
 
           <div class="mb-3">
             <label for="fileUpload">File Upload</label>
-            <input type="file" id="fileUpload" @change="(e) => fileUpload.value = e.target.files[0]" class="form-control" />
+            <input
+              type="file"
+              id="fileUpload"
+              @change="(e) => fileUpload.value = e.target.files[0]"
+              class="form-control"
+            />
           </div>
 
           <button type="submit" class="btn btn-primary">Submit</button>
