@@ -39,7 +39,7 @@ const submit = async (data) => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    const data = await getCerobongDetail(route.params.id) 
+    const data = await getCerobongDetail(route.params.id)
     form.value.setValues(data)
   } catch (e) {
     console.error(e)
@@ -51,7 +51,7 @@ onMounted(async () => {
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper page-settings">
+    <!-- <div class="page-wrapper page-settings"> -->
       <div class="content">
         <div class="content-page-header mb-2">
           <h3>Edit Cerobong</h3>
@@ -59,6 +59,6 @@ onMounted(async () => {
 
         <CerobongForm ref="form" @submit="submit" />
       </div>
-    </div>
+    <!-- </div> -->
   </MainWrapper>
 </template>

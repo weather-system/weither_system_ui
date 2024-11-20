@@ -90,16 +90,16 @@ onMounted(async () => {
             <h3>Data Cerobong</h3>
             <p>Anda memasukan jumlah cerobong sebanyak {{ totalCerobong }}</p>
           </div>
-          <div class="list-btn">
+          <!-- <div class="list-btn">
             <ul>
               <li>
                 <router-link class="btn btn-primary" to="/Data/Cerobong/Tambah">
-                  <!-- Change route as necessary -->
+                   Change route as necessary
                   <i class="fa fa-plus me-2"></i>Tambah Cerobong
                 </router-link>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
         <div class="row">
           <div class="col-12">
