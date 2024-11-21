@@ -6,6 +6,7 @@ import MainWrapper from '@/components/MainWrapper.vue'
 import { login, me } from '@/lib/auth.js'
 import Swal from 'sweetalert2'
 import HeaderHome from '@/components/HeaderHome.vue'
+import FooterHome from '@/components/FooterHome.vue'
 const router = useRouter()
 const $loading = useLoading()
 
@@ -28,7 +29,6 @@ const refreshCaptcha = () => {
   captcha.value = generateCaptcha()
 }
 
-// Handle form submission
 const submit = async e => {
   const formData = new FormData(e.target)
   const enteredCaptcha = formData.get('captcha')
@@ -53,15 +53,26 @@ const submit = async e => {
       password: formData.get('password'),
     })
     const user = await me()
+
+    // SweetAlert with timer and manual redirect
+    let redirectTimer
     Swal.fire({
       title: 'Login Berhasil!',
-      text: `Selamat datang, ${user.name || 'pengguna'}!`,
+      text: `Selamat datang, ${user.name}!`,
       icon: 'success',
       confirmButtonText: 'OK',
-    }).then(() => {
-      // Redirect based on user role
-      router.push(user.role === 'USER' ? '/MyCompany' : '/Companies')
+      timer: 3000, // 3 seconds
+      timerProgressBar: true,
+      willClose: () => {
+        clearTimeout(redirectTimer) // Clear the timer if Swal is closed manually
+        redirectToNextPage(user)
+      },
     })
+
+    // Automatically redirect after 3 seconds
+    redirectTimer = setTimeout(() => {
+      redirectToNextPage(user)
+    }, 3000)
   } catch (e) {
     Swal.fire({
       title: 'Login Gagal!',
@@ -74,6 +85,19 @@ const submit = async e => {
     loader.hide()
   }
 }
+
+const redirectToNextPage = (user) => {
+  if (user.role === 'USER') {
+    router.push({ path: '/MyCompany' }).then(() => {
+      router.go(0)
+    })
+  } else {
+    router.push({ path: '/Admin' }).then(() => {
+      router.go(0)
+    })
+  }
+}
+
 </script>
 
 <template>
@@ -155,6 +179,7 @@ const submit = async e => {
         </div>
       </div>
     </div>
+    <FooterHome/>
   </MainWrapper>
 </template>
 

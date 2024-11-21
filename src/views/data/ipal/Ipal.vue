@@ -16,7 +16,7 @@ const loggedInUserId = 3 // Change this to fetch the logged-in user's ID dynamic
 const fetchIpals = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get('http://localhost:8000/api/data_company_ipals') // Adjust endpoint if needed
+    const response = await axios.get('/api/data_company_ipals') // Adjust endpoint if needed
     ipals.value = response.data
     console.log('Fetched IPALs:', ipals.value)
   } catch (error) {
@@ -43,14 +43,17 @@ const deleteIpal = async id => {
   })
 
   if (isConfirmed) {
+    const loader = $loading.show()
     try {
-      await axios.delete(`http://localhost:8000/api/ipals/${id}`) // Adjust endpoint for deleting IPALs
+      await axios.delete(`/api/ipals/${id}`) // Adjust endpoint for deleting IPALs
       await fetchIpals() // Refresh the IPALs after deletion
       Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
     } catch (error) {
       console.error('Error deleting IPAL:', error)
       Swal.fire('Error!', 'There was an error deleting the IPAL.', 'error')
-    }
+    }finally {
+    loader.hide()
+  }
   }
 }
 

@@ -33,7 +33,8 @@ const adminRoutes = [
   '/RegisterCompany',
   '/Master/User',
   '/tiket/Pengaduan',
-  '/tiket/PengaduanCreate'
+  '/tiket/PengaduanCreate',
+  '/Admin'
 ]
 
 // Array untuk halaman utama
@@ -59,6 +60,11 @@ const router = createRouter({
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/Admin',
+      name: 'AdminView',
+      component: () => import('@/views/AdminView.vue'),
     },
     {
       path: '/LandingPage',
@@ -314,6 +320,11 @@ const router = createRouter({
       component: () => import('@/views/pengendalian/PencemaranUdara.vue'),
     },
     {
+      path: '/Pengendalian/PengelolaanLimbahB3',
+      name: 'PengendalianPengelolaanLimbahB3',
+      component: () => import('@/views/pengendalian/PengelolaanLimbahB3.vue'),
+    },
+    {
       path: '/Data/IPAL',
       name: 'DataIPAL',
       component: () => import('@/views/data/ipal/Ipal.vue'),
@@ -342,6 +353,56 @@ const router = createRouter({
       path: '/Master/User/:id',
       name: 'MasterUserEditView',
       component: () => import('@/views/Master/UserEditView.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/TambahUdaraAmbien',
+      name: 'TambahUdaraAmbien',
+      component: () => import('@/views/pengendalian/pencemaranudara/pencemaranudaraambien.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/TambahUdaraEmisi',
+      name: 'TambahUdaraEmisi',
+      component: () => import('@/views/pengendalian/pencemaranudara/pencemaranudaraemisi.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge',
+      name: 'TambahFlyAshBottomAshDanSludge',
+      component: () => import('@/views/pengendalian/pencemaranudara/pencemaranudaraflyash.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/DetailFlyash/:id',
+      name: 'PencemaranUdaraDetailFlyash',
+      component: () => import('@/views/pengendalian/pencemaranudara/detail/flyash.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/DetailAmbien/:id',
+      name: 'PencemaranUdaraDetailAmbien',
+      component: () => import('@/views/pengendalian/pencemaranudara/detail/ambien.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/DetailEmisi/:id',
+      name: 'PencemaranUdaraDetailEmisi',
+      component: () => import('@/views/pengendalian/pencemaranudara/detail/emisi.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/Edit/:id',
+      name: 'PencemaranUdaraEdit',
+      component: () => import('@/views/pengendalian/pencemaranudara/editpencemaranudara.vue'),
+    },
+    {
+      path: '/Master/Companies',
+      name: 'MasterCompaniesView',
+      component: () => import('@/views/Master/CompaniesView.vue'),
+    },
+    {
+      path: '/Master/Companies/Create',
+      name: 'MasterCompaniesCreateView',
+      component: () => import('@/views/Master/CompaniesCreateView.vue'),
+    },
+    {
+      path: '/Master/Companies/:id',
+      name: 'MasterCompaniesEditView',
+      component: () => import('@/views/Master/CompaniesEditView.vue'),
     },
   ],
 })

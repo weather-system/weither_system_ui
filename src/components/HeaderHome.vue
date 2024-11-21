@@ -1,5 +1,10 @@
 <script setup>
+import { ref } from 'vue';
 import '@/assets/css/style.css'
+const menuOpened = ref(false);
+const toggleMenu = () => {
+  menuOpened.value = !menuOpened.value;
+};
 </script>
 
 <style scoped>
@@ -11,7 +16,7 @@ import '@/assets/css/style.css'
     <div class="container">
       <nav class="navbar navbar-expand-lg header-nav">
         <div class="navbar-header">
-          <a id="mobile_btn" href="javascript:void(0);">
+          <a id="mobile_btn" href="javascript:void(0);" @click="toggleMenu">
             <span class="bar-icon">
               <span></span>
               <span></span>
@@ -27,8 +32,8 @@ import '@/assets/css/style.css'
         </div>
         <div class="main-menu-wrapper">
           <div class="menu-header">
-            <a href="index.html" class="menu-logo">
-              <img src="@/assets/img/logo.svg" class="img-fluid" alt="Logo" />
+            <a href="/" class="menu-logo small">
+              <img src="@/assets/img/dlh.jpg" class="img-fluid" alt="Logo" />
             </a>
             <a id="menu_close" class="menu-close" href="javascript:void(0);">
               <i class="fas fa-times"></i
@@ -96,6 +101,16 @@ import '@/assets/css/style.css'
             <li>
               <router-link to="/beranda/Contact">Kontak</router-link>
             </li>
+            <li class="nav-item" v-if="menuOpened">
+            <router-link class="nav-link header-reg" to="/RegisterCompany"
+              >Register</router-link
+            >
+          </li>
+          <li class="nav-item" v-if="menuOpened">
+            <router-link class="nav-link header-login" to="/Login">
+              <i class=""></i>Login
+            </router-link>
+          </li>
           </ul>
         </div>
         <ul class="nav header-navbar-rht">
