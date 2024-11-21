@@ -103,7 +103,10 @@ const handleSubmit = async () => {
             />
           </div>
 
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="d-flex gap-2">
+            <button type="button" @click="router.go(-1)" class="btn btn-secondary">Kembali</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
         </form>
       </div>
     </div>

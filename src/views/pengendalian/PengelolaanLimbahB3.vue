@@ -82,10 +82,12 @@ const deleteEntry = async (id) => {
                 <td><a :href="entry.file_upload" target="_blank">{{ entry.file_upload }}</a></td>
                 <td>{{ entry.status }}</td>
                 <td>
-                  <!-- <RouterLink :to="{ name: 'EditPengelolaanLimbahB3', params: { id: entry.id } }" class="btn btn-success">
-                    Edit
-                  </RouterLink> -->
-                   <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  <div class="d-flex gap-2">
+                    <RouterLink :to="{ name: 'PengendalianPengelolaanLimbahB3Edit', params: { id: entry.id } }" class="btn btn-success">
+                      Edit
+                    </RouterLink>
+                    <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  </div>
                 </td>
               </tr>
             </tbody>

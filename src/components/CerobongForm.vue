@@ -178,7 +178,7 @@ defineExpose({ setValues });
         </div>
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group">e
+            <div class="form-group">
               <label class="col-form-label">Tangga Cerobong/Stage</label>
               <Field name="stage" class="form-control">
               </Field>
