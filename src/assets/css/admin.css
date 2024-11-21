@@ -8228,6 +8228,14 @@ a.table-name:hover span {
 .price-head {
   border-bottom: 1px solid #efefef;
   padding-bottom: 15px;
+  text-align: center; /* Rata tengah horizontal */
+  display: flex; /* Aktifkan flexbox */
+  align-items: center; /* Rata tengah vertikal */
+  justify-content: center; /* Rata tengah horizontal */
+}
+.message-reply {
+  background-color: #fff8b3 !important;
+  border: 1px solid #e6c200 !important;
 }
 .price-head h6 {
   font-weight: 500;

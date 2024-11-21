@@ -368,7 +368,7 @@ onMounted(async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/tiket/pengaduan-baru">
+                  <router-link to="/tiket/pengaduanbaru">
                     <i class="fas fa-chevron-right me-2"></i>
                     Pengaduan</router-link
                   >

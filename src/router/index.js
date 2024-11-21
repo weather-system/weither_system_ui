@@ -48,7 +48,8 @@ const mainRoutes = [
   '/beranda/ArtikelView',
   '/beranda/PengumumanView',
   '/beranda/DownloadView',
-  '/beranda/AgendaView'
+  '/beranda/AgendaView',
+  '/tiket/PengaduanBaru'
 ]
 
 const router = createRouter({
@@ -123,6 +124,16 @@ const router = createRouter({
       path: '/tiket/PengaduanCreate',
       name: 'PengaduanCreate',
       component: () => import('@/views/tiket/PengaduanCreate.vue'),
+    },
+    {
+      path: '/tiket/PengaduanBaru',
+      name: 'PengaduanBaru',
+      component: () => import('@/views/tiket/PengaduanBaru.vue'),
+    },
+    {
+      path: '/tiket/PengaduanDetail/:id',
+      name: 'PengaduanDetail',
+      component: () => import('@/views/tiket/PengaduanDetail.vue'),
     },
     {
       path: '/Login',
