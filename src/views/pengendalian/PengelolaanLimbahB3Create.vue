@@ -1,44 +1,39 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { uploadFile } from '@/lib/filestorage.js'
-import * as yup from 'yup'
-import { createPengelolaanLimbahB3, parameters } from '@/lib/pengelolaanLimbahB3.js'
+import Swal from 'sweetalert2'
+import { createPengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
-const router = useRouter()
 
+const router = useRouter()
 const companyDetailId = ref('')
 const triwulan = ref('')
 const tahun = ref('')
 const fileUpload = ref(null)
 const status = ref('Ajuan Baru')
 
-
 const fetchCompanyDetailId = async () => {
-  const userId = '1';
+  const userId = '1'
 
   try {
-    const response = await fetch(`http://localhost:8080/api/company_details/${userId}`);
+    const response = await fetch(`http://localhost:8080/api/company_details/${userId}`)
     if (response.ok) {
-      const data = await response.json();
-      companyDetailId.value = data.company_detail_id;
+      const data = await response.json()
+      companyDetailId.value = data.company_detail_id
     } else {
-      console.error('Gagal memuat company detail ID');
+      console.error('Gagal memuat company detail ID')
     }
   } catch (error) {
-    console.error('Terjadi kesalahan saat memuat company detail ID:', error);
+    console.error('Terjadi kesalahan saat memuat company detail ID:', error)
   }
 }
-
 
 onMounted(() => {
   fetchCompanyDetailId()
 })
 
-
 const handleSubmit = async () => {
   const formData = new FormData()
-  // formData.append('company_detail_id', companyDetailId.value)
   formData.append('triwulan', triwulan.value)
   formData.append('tahun', tahun.value)
   formData.append('file_upload', fileUpload.value)
@@ -47,8 +42,21 @@ const handleSubmit = async () => {
   try {
     const response = await createPengelolaanLimbahB3(formData)
 
-    // router.push('/PengelolaanLimbahB3')
+    if (response.status === 200) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: 'Data pengelolaan limbah B3 berhasil disubmit!',
+      }).then(() => {
+        router.push('/PengelolaanLimbahB3')
+      })
+    }
   } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Terjadi Kesalahan',
+      text: 'Data gagal disubmit. Coba lagi.',
+    })
     console.error('Terjadi kesalahan:', error)
   }
 }
