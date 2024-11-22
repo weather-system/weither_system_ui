@@ -42,7 +42,7 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
-          <h5>Data Pemantauan Udara Ambien - {{ data?.company.name }}</h5>
+          <h5>Data Pemantauan Udara Emisi - {{ data?.company.name }}</h5>
         </div>
 
         <div v-if="data">
@@ -104,8 +104,7 @@ onMounted(async () => {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Parameter Udara Ambien</th>
-                    <th>Kelompok</th>
+                    <th>Parameter Udara Emisi</th>
                     <th>Ekspresi</th>
                     <th>Hasil Pengujian</th>
                     <th>Satuan</th>
@@ -115,9 +114,8 @@ onMounted(async () => {
                   <tr v-for="(detail, index) in data.details" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ detail.parameter_udara }}</td>
-                    <td>{{ detail.kelompok }}</td>
-                    <td>{{ detail.ekspresi1 || '-' }}</td>
-                    <td>{{ detail.hasil_pengujian1 || '-' }}</td>
+                    <td>{{ detail.ekspresi1 }}</td>
+                    <td>{{ detail.hasil_pengujian1 }}</td>
                     <td>{{ detail.satuan }}</td>
                   </tr>
                 </tbody>
@@ -134,3 +132,4 @@ onMounted(async () => {
     </div>
   </MainWrapper>
 </template>
+

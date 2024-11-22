@@ -90,6 +90,16 @@ const router = createRouter({
       component: () => import('@/views/Verifikator/PemantauanUdaraAmbienDetail.vue'),
     },
     {
+      path: '/Verifikator/PemantauanUdaraEmisi',
+      name: 'VerifikatorPemantauanUdaraEmisi',
+      component: () => import('@/views/Verifikator/PemantauanUdaraEmisi.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraEmisi/:id',
+      name: 'VerifikatorPemantauanUdaraEmisiDetail',
+      component: () => import('@/views/Verifikator/PemantauanUdaraEmisiDetail.vue'),
+    },
+    {
       path: '/LandingPage',
       name: 'LandingPage',
       component: () => import('@/views/LandingPage.vue'),
