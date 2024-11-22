@@ -34,14 +34,13 @@ const submit = async (data) => {
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper page-settings">
+    <!-- <div class="page-wrapper page-settings"> -->
       <div class="content">
         <div class="content-page-header mb-2">
           <h3>Tambah Cerobong</h3>
         </div>
-
         <CerobongForm @submit="submit" />
       </div>
-    </div>
+    <!-- </div> -->
   </MainWrapper>
 </template>

@@ -16,13 +16,17 @@ onMounted(async () => {
   const id = route.params.id
   try {
     const response = await fetch(`/api/pengelolaan-limbah-b3/${id}`)
-    const data = await response.json()
-    companyDetailId.value = data.company_detail_id
-    triwulan.value = data.triwulan
-    tahun.value = data.tahun
-    status.value = data.status
+    if (response.ok) {
+      const data = await response.json()
+      companyDetailId.value = data.company_detail_id
+      triwulan.value = data.triwulan
+      tahun.value = data.tahun
+      status.value = data.status
+    } else {
+      console.error('Gagal memuat data')
+    }
   } catch (error) {
-    console.error('Gagal memuat data:', error)
+    console.error('Terjadi kesalahan:', error)
   }
 })
 
@@ -52,37 +56,59 @@ const handleUpdate = async () => {
 
 <template>
   <MainWrapper>
-    <div class="content">
-      <h3>Edit Pengelolaan Limbah B3</h3>
-      <form @submit.prevent="handleUpdate">
-        <div class="mb-3">
-          <label for="companyDetailId">Company Detail ID</label>
-          <input id="companyDetailId" v-model="companyDetailId" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label for="triwulan">Triwulan</label>
-          <select id="triwulan" v-model="triwulan" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="tahun">Tahun</label>
-          <select id="tahun" v-model="tahun" class="form-select">
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="fileUpload">File Upload</label>
-          <input type="file" id="fileUpload" @change="e => fileUpload.value = e.target.files[0]" class="form-control" />
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-      </form>
+    <div class="page-wrapper page-settings">
+      <div class="content">
+        <h3>Edit Pengelolaan Limbah B3</h3>
+        <form @submit.prevent="handleUpdate">
+          <div class="mb-3">
+            <label for="companyDetailId">Company Detail ID</label>
+            <input
+              type="text"
+              id="companyDetailId"
+              v-model="companyDetailId"
+              class="form-control"
+              readonly
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="triwulan">Triwulan</label>
+            <select id="triwulan" v-model="triwulan" class="form-select">
+              <option value="">Pilih Triwulan</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="tahun">Tahun</label>
+            <select id="tahun" v-model="tahun" class="form-select">
+              <option value="">Pilih Tahun</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="fileUpload">File Upload</label>
+            <input
+              type="file"
+              id="fileUpload"
+              @change="(e) => fileUpload.value = e.target.files[0]"
+              class="form-control"
+            />
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="button" @click="router.go(-1)" class="btn btn-secondary">Kembali</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </form>
+      </div>
     </div>
   </MainWrapper>
 </template>
