@@ -80,6 +80,11 @@ const router = createRouter({
       component: () => import('@/views/Verifikator/PemantauanAir.vue'),
     },
     {
+      path: '/Verifikator/PemantauanAir/:id',
+      name: 'VerifikatorPemantauanAirDetail',
+      component: () => import('@/views/Verifikator/PemantauanAirDetail.vue'),
+    },
+    {
       path: '/Verifikator/PemantauanUdaraAmbien',
       name: 'VerifikatorPemantauanUdaraAmbien',
       component: () => import('@/views/Verifikator/PemantauanUdaraAmbien.vue'),

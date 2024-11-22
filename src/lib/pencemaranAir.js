@@ -87,3 +87,18 @@ export const deletePencemaranAir = async (id) => {
   const resp = await axios.delete(`/api/pencemaranAir/${id}`)
   return resp.data
 }
+
+export const getPencemaranAirVerifikator = async (jenis) => {
+  const resp = await axios.get('/api/pencemaran-airs/verifikator', {
+    params: {
+      jenis
+    }
+  })
+  return resp.data
+}
+
+export const verifikasiPencemaranAir = async (id, data) => {
+  const resp = await axios.put(`/api/pencemaran-airs/verifikator/${id}`, data)
+  return resp.data
+}
+
