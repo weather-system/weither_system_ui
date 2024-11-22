@@ -34,7 +34,8 @@ const adminRoutes = [
   '/Master/User',
   '/tiket/Pengaduan',
   '/tiket/PengaduanCreate',
-  '/Admin'
+  '/Admin',
+  '/Data/PKKPR'
 ]
 
 // Array untuk halaman utama
@@ -244,6 +245,11 @@ const router = createRouter({
       component: () => import('@/views/data/Company.vue'),
     },
     {
+      path: '/Data/PKKPR',
+      name: 'DataPKKPR',
+      component: () => import('@/views/data/PKKPR.vue'),
+    },
+    {
       path: '/Data/Ipal/:company_detail_id',
       name: 'DataIpal',
       component: () => import('@/views/data/ipal/Ipal.vue'),
@@ -323,6 +329,17 @@ const router = createRouter({
       path: '/Pengendalian/PengelolaanLimbahB3',
       name: 'PengendalianPengelolaanLimbahB3',
       component: () => import('@/views/pengendalian/PengelolaanLimbahB3.vue'),
+    },
+    {
+      path: '/Pengendalian/PengelolaanLimbahB3/PengelolaanLimbahB3Create',
+      name: 'PengendalianPengelolaanLimbahB3Create',
+      component: () => import('@/views/pengendalian/PengelolaanLimbahB3Create.vue'),
+    },
+    {
+      path: '/Pengendalian/PengelolaanLimbahB3/Edit/:id',
+      name: 'PengendalianPengelolaanLimbahB3Edit',
+      component: () => import('@/views/pengendalian/PengelolaanLimbahB3Edit.vue'),
+      props: true,
     },
     {
       path: '/Data/IPAL',
