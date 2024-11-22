@@ -53,7 +53,7 @@ onMounted(async () => {
                   >Pelaku Usaha :</label
                 >
                 <!-- Company Signup -->
-                <div class="col-md-6" v-if="company.businessmen === 'company'">
+                <div class="col d-flex justify-content-center align-items-center" v-if="company.businessmen === 'company'">
                   <div class="choose-signup flex-fill">
                     <h6>Perusahaan</h6>
                     <div class="choose-img">
