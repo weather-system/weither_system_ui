@@ -5,7 +5,7 @@ import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
-import { createPencemaranAir, parameters } from '@/lib/pencemaranAir.js'
+import { createPencemaranAir } from '@/lib/pencemaranAir.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import PencemaranAirForm from '@/components/PencemaranAirForm.vue'
@@ -13,13 +13,6 @@ import Swal from 'sweetalert2'
 const $loading = useLoading()
 const store = useStore()
 const router = useRouter()
-const initialValues = parameters.reduce((v, parameter) => {
-    const key = `${parameter.field}_expr`
-    return {
-      ...v,
-      [key]: '=',
-    }
-  }, {})
 
 const document = reactive({})
 
@@ -37,13 +30,12 @@ const submit = async payload => {
 
   try {
     const data = await createPencemaranAir(payload)
-    console.log(data)
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Data Pencemaran Berhasil dibuat!',
       });
-    router.push('/Pengendalian/PencemaranAir')
+    // router.push('/Pengendalian/PencemaranAir')
   } catch (e) {
     console.error(e)
   } finally {
@@ -67,7 +59,7 @@ const submit = async payload => {
           </div>
         </div>
 
-        <PencemaranAirForm @submit="submit" :initial-values="initialValues" @uploaded-document="uploadedDocument" />
+        <PencemaranAirForm @submit="submit" @uploaded-document="uploadedDocument" />
       </div>
     </div>
   </MainWrapper>
