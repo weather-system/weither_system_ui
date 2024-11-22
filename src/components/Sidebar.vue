@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { getUserStatus, canCreatePemantauan } from '@/lib/company.js'
 import '@/assets/css/admin.css'
@@ -9,6 +9,7 @@ import '@/assets/css/admin.css'
 const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
+const router = useRouter()
 
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
@@ -43,6 +44,12 @@ const toggleMaster = () => {
 const togglePerDas = () => {
   console.log('Data clicked')
   isperdasOpen.value = !isperdasOpen.value
+  router.push({
+    path: '/Profile',
+    query: {
+      sidebar: 'perscompany',
+    },
+  })
 }
 
 const toggleLogbook = () => {
@@ -197,8 +204,8 @@ onMounted(async () => {
                   >
                 </li> -->
                 <li>
-                  <a
-                    href="javascript:void(0);"
+                  <router-link
+                    to="/Data"
                     @click="togglePerDas"
                     :class="{ active: route.path.startsWith('/Data') }"
                   >
@@ -211,7 +218,7 @@ onMounted(async () => {
                         'fe-chevron-up': isperdasOpen,
                       }"
                     ></i>
-                  </a>
+                  </router-link>
                   <transition name="slide-fade">
                     <ul
                       v-if="isDataOpen && isperdasOpen"
