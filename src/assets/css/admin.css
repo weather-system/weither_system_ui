@@ -2292,7 +2292,22 @@ html.menu-opened body {
   width: 270px;
   z-index: 1001;
   border-radius: 0 15px 0 0;
+  overflow-y: auto; 
+  overflow-x: hidden;
 }
+.sidebar::-webkit-scrollbar {
+  width: 1px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
+
 .sidebar.opened {
   -webkit-transition: all 0.4s ease;
   -moz-transition: all 0.4s ease;

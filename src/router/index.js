@@ -362,14 +362,189 @@ const router = createRouter({
       component: () => import('@/views/Master/UserView.vue'),
     },
     {
+      path: '/Master/Monitoring',
+      name: 'MonitoringSwapantauView',
+      component: () => import('@/views/Master/MonitoringSwapantau.vue'),
+    },
+    {
       path: '/Master/User/Create',
       name: 'MasterUserCreateView',
       component: () => import('@/views/Master/UserCreateView.vue'),
     },
     {
+      path: '/Master/Operator/Agenda',
+      name: 'OperatorAgendaView',
+      component: () => import('@/views/Master/Operator/OperatorAgenda.vue'),
+    },
+    {
+      path: '/Master/Operator/Artikel',
+      name: 'OperatorArtikelView',
+      component: () => import('@/views/Master/Operator/OperatorArtikel.vue'),
+    },
+    {
+      path: '/Master/Operator/Berita',
+      name: 'OperatorBeritaView',
+      component: () => import('@/views/Master/Operator/OperatorBerita.vue'),
+    },
+    {
+      path: '/Master/Operator/Halaman',
+      name: 'OperatorHalamanView',
+      component: () => import('@/views/Master/Operator/OperatorHalaman.vue'),
+    },
+    {
+      path: '/Master/Operator/Pengumuman',
+      name: 'OperatorPengumumanView',
+      component: () => import('@/views/Master/Operator/OperatorPengumuman.vue'),
+    },
+    {
+      path: '/Master/Operator/Kategori',
+      name: 'OperatorKategoriView',
+      component: () => import('@/views/Master/Operator/OperatorKategori.vue'),
+    },
+    {
+      path: '/Master/Operator/Status',
+      name: 'OperatorStatusView',
+      component: () => import('@/views/Master/Operator/OperatorStatus.vue'),
+    },
+    {
+      path: '/Master/Operator/Prioritas',
+      name: 'OperatorPrioritasView',
+      component: () => import('@/views/Master/Operator/OperatorPrioritas.vue'),
+    },
+    {
+      path: '/Master/Operator/EBook',
+      name: 'OperatorEBookView',
+      component: () => import('@/views/Master/Operator/OperatorEBook.vue'),
+    },
+    {
+      path: '/Master/Operator/Video',
+      name: 'OperatorVideoView',
+      component: () => import('@/views/Master/Operator/OperatorVideo.vue'),
+    },
+    {
+      path: '/Master/Operator/Download',
+      name: 'OperatorDownloadView',
+      component: () => import('@/views/Master/Operator/OperatorDownload.vue'),
+    },
+    {
+      path: '/Master/Operator/Link',
+      name: 'OperatorLinkView',
+      component: () => import('@/views/Master/Operator/OperatorLink.vue'),
+    },
+    {
+      path: '/Master/Operator/Sosmed',
+      name: 'OperatorSosmedView',
+      component: () => import('@/views/Master/Operator/OperatorSosmed.vue'),
+    },
+    {
+      path: '/Master/Operator/Slide',
+      name: 'OperatorSlideView',
+      component: () => import('@/views/Master/Operator/OperatorSlide.vue'),
+    },
+    {
+      path: '/Master/Operator/Banner',
+      name: 'OperatorBannerView',
+      component: () => import('@/views/Master/Operator/OperatorBanner.vue'),
+    },
+    {
+      path: '/Master/Operator/Tiket',
+      name: 'OperatorTiketView',
+      component: () => import('@/views/Master/Operator/OperatorTiket.vue'),
+    },
+    {
+      path: '/Master/Operator/Galeri',
+      name: 'OperatorGaleriView',
+      component: () => import('@/views/Master/Operator/OperatorGaleri.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/pal',
+      name: 'palView',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiIPAL.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/IPAL2',
+      name: 'IPAL2View',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiIPAL2.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/lb',
+      name: 'lbView',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiLB3.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/PenggunaanB3',
+      name: 'PenggunaanB3View',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiPenggunaanB3.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/PengolaB3',
+      name: 'PengolaB3View',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiPengolaB3.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/Senyatanya',
+      name: 'SenyatanyaView',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiSenyatanya.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/TPSB3',
+      name: 'TPSB3View',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiTPSB3.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/DebitAir',
+      name: 'DebitAirView',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiDebitAir.vue'),
+    },
+    {
+      path: '/Master/Verifikasi/DebitIPAL',
+      name: 'DebitIPALView',
+      component: () => import('@/views/Master/Verifikasi/VerifikasiDebitIPAL.vue'),
+    },
+    {
+      path: '/Master/Swapantau/Bulanan',
+      name: 'BulananView',
+      component: () => import('@/views/Master/Verifikasi/SwapantauBulanan.vue'),
+    },
+    {
+      path: '/Master/Swapantau/B3',
+      name: 'B3View',
+      component: () => import('@/views/Master/Verifikasi/SwapantauLB3.vue'),
+    },
+    {
+      path: '/Master/Swapantau/PPA',
+      name: 'PPAView',
+      component: () => import('@/views/Master/Verifikasi/SwapantauPPA.vue'),
+    },
+    {
+      path: '/Master/Swapantau/PPU',
+      name: 'PPUView',
+      component: () => import('@/views/Master/Verifikasi/SwapantauPPU.vue'),
+    },
+    {
+      path: '/Master/Monitoring/IPAL',
+      name: 'IPALView',
+      component: () => import('@/views/Master/Verifikasi/MonitoringIPAL.vue'),
+    },
+    {
+      path: '/Master/Monitoring/LB3',
+      name: 'LB3View',
+      component: () => import('@/views/Master/Verifikasi/MonitoringLB3.vue'),
+    },
+    {
       path: '/Master/User/:id',
       name: 'MasterUserEditView',
       component: () => import('@/views/Master/UserEditView.vue'),
+    },
+    {
+      path: '/Master/Ipal',
+      name: 'MasterIpalView',
+      component: () => import('@/views/Master/MasterIpal.vue'),
+    },
+    {
+      path: '/Master/IpalCreate',
+      name: 'MasterIpalCreateView',
+      component: () => import('@/views/Master/MasterIpalCreate.vue'),
     },
     {
       path: '/Pengendalian/PencemaranUdara/TambahUdaraAmbien',
