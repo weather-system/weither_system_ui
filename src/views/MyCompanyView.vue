@@ -1578,10 +1578,10 @@ watch(
                                   <div class="form-check me-3">
                                     <input
                                       type="checkbox"
-                                      value="PDAM Lainnya"
+                                      value="PDAM"
                                       v-model="formData.source"
                                     />
-                                    PDAM Lainnya
+                                    PDAM
                                   </div>
 
                                   <div class="form-check me-3">

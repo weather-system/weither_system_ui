@@ -20,6 +20,23 @@ const showPassword2 = ref(false)
 const urlNIB = ref('')
 const urlSKKLH = ref('')
 const urlPKPLH = ref('')
+const besaranInvestasi = ref('')
+
+const besaranInvestasiText = computed(() => {
+  if (besaranInvestasi.value == 'Mikro') {
+    return 'Modal usaha maksimal 1.000.000.000'
+  }
+  if (besaranInvestasi.value == 'Kecil') {
+    return 'Modal usaha antara 1.000.000.000 - 5.000.000.000'
+  }
+  if (besaranInvestasi.value == 'Menengah') {
+    return 'Modal usaha antara 5.000.000.000 - 10.000.000.000'
+  }
+  if (besaranInvestasi.value == 'Besar') {
+    return 'Modal usaha lebih dari 10.000.000.000'
+  }
+  return ''
+})
 
 const kecamatanData = [
   {
@@ -379,13 +396,15 @@ const uploadPKPLHFile = async e => {
                     </div>
                   </div>
                   <div class="col-md-6" style="margin-top: 20px">
-                    <label class="form-label">Jenis Kegiatan</label>
-                    <input
-                      name="activity_type"
-                      type="text"
-                      class="form-control"
-                      placeholder="Permen 5/2014"
-                    />
+                    <label class="form-label">Besaran Investasi</label>
+                    <select name="activity_type" class="form-control" v-model="besaranInvestasi">
+                      <option value="">Pilih</option>
+                      <option value="Mikro">Mikro</option>
+                      <option value="Kecil">Kecil</option>
+                      <option value="Menengah">Menengah</option>
+                      <option value="Besar">Besar</option>
+                    </select>
+                    <small class="form-text text-muted">{{ besaranInvestasiText }}</small>
                   </div>
                   <div class="col-md-12" style="margin-top: 20px">
                     <label class="form-label">Alamat</label>
@@ -630,13 +649,15 @@ const uploadPKPLHFile = async e => {
                     </div>
                   </div>
                   <div class="col-md-6" style="margin-top: 20px">
-                    <label class="form-label">Jenis Kegiatan</label>
-                    <input
-                      name="activity_type"
-                      type="text"
-                      class="form-control"
-                      placeholder="Permen 5/2014"
-                    />
+                    <label class="form-label">Besaran Investasi</label>
+                    <select name="activity_type" class="form-control" v-model="besaranInvestasi">
+                      <option value="">Pilih</option>
+                      <option value="Mikro">Mikro</option>
+                      <option value="Kecil">Kecil</option>
+                      <option value="Menengah">Menengah</option>
+                      <option value="Besar">Besar</option>
+                    </select>
+                    <small class="form-text text-muted">{{ besaranInvestasiText }}</small>
                   </div>
                   <div class="col-md-12" style="margin-top: 20px">
                     <label class="form-label">Alamat</label>
