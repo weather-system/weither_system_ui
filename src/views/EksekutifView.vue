@@ -1,11 +1,10 @@
 <script setup>
+import MainWrapper from '@/components/MainWrapper.vue'
 import { onMounted, ref } from "vue";
-import Sidebar from "@/components/Sidebar.vue";
 import { logout as authLogout } from '@/lib/auth.js';
-import Chart from "chart.js/auto"; // Pastikan Chart.js diimpor
+import Chart from "chart.js/auto";
+const userRole = "EKSEKUTIF";
 
-const userStatus = "DITERIMA";
-const companyDetail = true;
 const masterData = [
   { companyName: "Perusahaan A", businessType: "Manufaktur", status: "Aktif" },
   { companyName: "Perusahaan B", businessType: "Pertanian", status: "Non-Aktif" },
@@ -13,48 +12,45 @@ const masterData = [
 const sebaranTPSB3 = ["-6.200, 106.800", "-6.300, 106.700"];
 const sebaranCerobong = ["-6.400, 106.900", "-6.500, 107.000"];
 const sebaranIPAL = ["-6.600, 107.100", "-6.700, 107.200"];
-const luasanRTHPrivat = 15.5; // Dalam persen
+const luasanRTHPrivat = 15.5;
 
 const logout = async () => {
   try {
     await authLogout();
     alert('Logout berhasil');
-    window.location.href = "/login"; // Redirect ke halaman login
+    window.location.href = "/login";
   } catch (error) {
     console.error('Logout gagal:', error);
   }
 };
 
-// Fungsi untuk menggambar grafik
 onMounted(() => {
-  // Grafik Sebaran Titik
   const sebaranChartCtx = document.getElementById("sebaranChart").getContext("2d");
   new Chart(sebaranChartCtx, {
-    type: "pie", // Jenis grafik pie
+    type: "pie",
     data: {
-      labels: ['TPS B3', 'Cerobong', 'IPAL'], // Label grafik
+      labels: ['TPS B3', 'Cerobong', 'IPAL'],
       datasets: [
         {
           label: "Sebaran Titik",
-          data: [sebaranTPSB3.length, sebaranCerobong.length, sebaranIPAL.length], // Jumlah titik
-          backgroundColor: ["#FF5733", "#33FF57", "#3357FF"], // Warna untuk setiap segmen
-          borderColor: ["#FFFFFF", "#FFFFFF", "#FFFFFF"], // Warna border
+          data: [sebaranTPSB3.length, sebaranCerobong.length, sebaranIPAL.length],
+          backgroundColor: ["#FF5733", "#33FF57", "#3357FF"],
+          borderColor: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
           borderWidth: 1
         }
       ]
     }
   });
 
-  // Grafik Luasan RTH Privat
   const luasanChartCtx = document.getElementById("luasanChart").getContext("2d");
   new Chart(luasanChartCtx, {
-    type: "doughnut", // Jenis grafik doughnut
+    type: "doughnut",
     data: {
       labels: ["RTH Privat", "Sisa Luas"],
       datasets: [
         {
           label: "Luasan RTH Privat",
-          data: [luasanRTHPrivat, 100 - luasanRTHPrivat], // Data persentase
+          data: [luasanRTHPrivat, 100 - luasanRTHPrivat],
           backgroundColor: ["#2D9CDB", "#E0E0E0"],
           borderColor: ["#FFFFFF", "#FFFFFF"],
           borderWidth: 1
@@ -68,10 +64,8 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- Dashboard Eksekutif -->
-    <div v-if="userStatus === 'DITERIMA' && companyDetail">
+    <div v-if="userRole === 'EKSEKUTIF'">
       <MainWrapper>
-        <Sidebar />
         <div class="page-wrapper">
           <div class="content">
             <div class="container">
@@ -138,7 +132,7 @@ onMounted(() => {
                         <h5>Grafik Sebaran Titik</h5>
                       </div>
                       <div class="card-body">
-                        <canvas id="sebaranChart"></canvas> <!-- ID sesuai dengan yang dipakai di JS -->
+                        <canvas id="sebaranChart"></canvas>
                       </div>
                     </div>
                   </div>
@@ -150,7 +144,7 @@ onMounted(() => {
                         <h5>Persentase Luasan RTH Privat</h5>
                       </div>
                       <div class="card-body text-center">
-                        <canvas id="luasanChart"></canvas> <!-- ID sesuai dengan yang dipakai di JS -->
+                        <canvas id="luasanChart"></canvas>
                       </div>
                     </div>
                   </div>

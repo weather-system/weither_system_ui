@@ -10,12 +10,14 @@ const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
 const router = useRouter()
+const userRole = ref('EKSEKUTIF');
 
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
+const isEksekutifOpen = ref(false)
 const isperdasOpen = ref(false)
 const isMasterOpen = ref(false)
 const isLogbookOpen = ref(false)
@@ -39,6 +41,11 @@ const togglePengendalian = () => {
 const toggleData = () => {
   console.log('Data clicked') // Debugging log
   isDataOpen.value = !isDataOpen.value
+}
+
+const toggleEksekutif = () => {
+  console.log('Eksekutif clicked') // Debugging log
+  isEksekutifOpen.value = !isEksekutifOpen.value
 }
 
 const toggleMaster = () => {
@@ -493,16 +500,16 @@ onMounted(async () => {
           </li>
 
           <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
-            <a href="javascript:void(0);" @click="toggleData">
+            <a href="javascript:void(0);" @click="toggleEksekutif">
               <i class="fas fa-map-marker-alt"></i>
               <span>Sebaran Titik</span>
               <i
                 class="fe"
-                :class="{ 'fe-chevron-down': !isDataOpen, 'fe-chevron-up': isDataOpen }"
+                :class="{ 'fe-chevron-down': !isEksekutifOpen, 'fe-chevron-up': isEksekutifOpen }"
               ></i>
             </a>
             <transition name="slide-fade">
-              <ul v-if="isDataOpen" class="submenu d-block">
+              <ul v-if="isEksekutifOpen" class="submenu d-block">
                 <li>
                   <router-link to="/Eksekutif/TPSB3" activeClass="active">
                     <i class="fas fa-map-pin"></i>
