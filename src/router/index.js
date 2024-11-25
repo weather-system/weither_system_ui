@@ -410,6 +410,12 @@ const router = createRouter({
       name: 'MasterCompaniesEditView',
       component: () => import('@/views/Master/CompaniesEditView.vue'),
     },
+    {
+      path: '/Eksekutif',
+      name: 'EksekutifView',
+      component: () => import('@/views/EksekutifView.vue'),
+    },
+
   ],
 })
 

@@ -24,10 +24,13 @@ const isTiketOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
-    return '/Admin'
+    return '/Admin';
+  } else if (store.state.auth.user.role == 'EKSEKUTIF') {
+    return '/Eksekutif';
   }
-  return '/MyCompany'
-})
+  return '/MyCompany';
+});
+
 
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
@@ -464,6 +467,65 @@ onMounted(async () => {
                     <i class="fas fa-chevron-right me-2"></i>
                     Pengaduan</router-link
                   >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
+            <a href="javascript:void(0);" @click="toggleMaster">
+              <i class="fas fa-database"></i>
+              <span>Master Data</span>
+              <i
+                class="fe"
+                :class="{ 'fe-chevron-down': !isMasterOpen, 'fe-chevron-up': isMasterOpen }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isMasterOpen" class="submenu d-block">
+                <li>
+                  <router-link to="/Eksekutif/MasterData" activeClass="active">
+                    <i class="fas fa-table"></i>
+                    Rekap Tabel Master Data
+                  </router-link>
+                </li>
+              </ul>
+            </transition>
+          </li>
+
+          <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
+            <a href="javascript:void(0);" @click="toggleData">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Sebaran Titik</span>
+              <i
+                class="fe"
+                :class="{ 'fe-chevron-down': !isDataOpen, 'fe-chevron-up': isDataOpen }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isDataOpen" class="submenu d-block">
+                <li>
+                  <router-link to="/Eksekutif/TPSB3" activeClass="active">
+                    <i class="fas fa-map-pin"></i>
+                    Titik TPS B3
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/Eksekutif/Cerobong" activeClass="active">
+                    <i class="fas fa-smog"></i>
+                    Titik Cerobong
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/Eksekutif/PenaatanIPAL" activeClass="active">
+                    <i class="fas fa-water"></i>
+                    Titik Penaatan IPAL
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/Eksekutif/RTH" activeClass="active">
+                    <i class="fas fa-tree"></i>
+                    Luasan RTH Privat
+                  </router-link>
                 </li>
               </ul>
             </transition>
