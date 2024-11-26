@@ -1,9 +1,10 @@
 import axios from 'axios'
 
-export const getPencemaranUdaraVerifikator = async (jenis) => {
+export const getPencemaranUdaraVerifikator = async (jenis, params) => {
   const resp = await axios.get('/api/pencemaran-udaras/verifikator', {
     params: {
-      jenis
+      jenis,
+      ...params
     }
   })
   return resp.data
