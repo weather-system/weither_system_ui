@@ -87,8 +87,7 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
           <div>
-            <h3>Data Cerobong</h3>
-            <p>Anda memasukan jumlah cerobong sebanyak {{ totalCerobong }}</p>
+            <h3>Data Pertek Emisi</h3>
           </div>
           <!-- <div class="list-btn">
             <ul>

@@ -39,8 +39,8 @@ defineExpose({ setValues });
         <div class="content">
           <div class="row">
             <div class="col-lg-10 mx-auto">
-              <div class="content-page-header mb-2">
-                <h3>Edit Persetujuan Teknis Boiler</h3>
+              <div class="content-page-header mb-3">
+                <h3>Data Pertek Emisi</h3>
               </div>
               <div class="row">
                 <div class="col-md-6">
@@ -116,14 +116,14 @@ defineExpose({ setValues });
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="col-form-label">Koordinat X</label>
+                    <label class="col-form-label">Longitude</label>
                     <Field name="koordinat_x" class="form-control" type="number" />
                     <ErrorMessage name="koordinat_x" />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="col-form-label">Koordinat Y</label>
+                    <label class="col-form-label">Latitude</label>
                     <Field name="koordinat_y" class="form-control" type="text" />
                     <ErrorMessage name="koordinat_y" />
                   </div>

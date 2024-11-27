@@ -20,27 +20,22 @@ const submit = async (data) => {
     delete v.updated_at;
     return v;
   });
-
-   // Tambahkan loader untuk submit
+  const loader = $loading.show()
   try {
     await updateTpsB3(route.params.id, data);
-    await Swal.fire({
-      title: 'Success!',
-      text: 'Data berhasil diperbarui!',
-      icon: 'success',
-      confirmButtonText: 'OK',
-    });
+    Swal.fire('Success!', 'Data Berhasil Diperbarui.', 'success')
     router.push('/Data/TPSB3');
   } catch (e) {
     console.error(e);
     const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
-    await Swal.fire({
-      title: 'Error!',
-      text: `Gagal memperbarui data: ${errorMessage}`,
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-  } 
+    Swal.fire(
+          'Error!',
+          '${errorMessage}',
+          'error',
+        )
+  } finally {
+    loader.hide()
+  }
 };
 
 onMounted(async () => {
@@ -61,7 +56,7 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header mb-2">
-          <h3>Edit TPS B3</h3>
+          <h3>Rincian Teknis LB3</h3>
         </div>
 
         <TPSB3Form ref="form" @submit="submit" />
