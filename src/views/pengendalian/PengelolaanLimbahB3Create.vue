@@ -1,38 +1,62 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
+import { createPengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const router = useRouter()
-
 const companyDetailId = ref('')
 const triwulan = ref('')
 const tahun = ref('')
 const fileUpload = ref(null)
 const status = ref('Ajuan Baru')
 
+const fetchCompanyDetailId = async () => {
+  const userId = '1'
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/company_details/${userId}`)
+    if (response.ok) {
+      const data = await response.json()
+      companyDetailId.value = data.company_detail_id
+    } else {
+      console.error('Gagal memuat company detail ID')
+    }
+  } catch (error) {
+    console.error('Terjadi kesalahan saat memuat company detail ID:', error)
+  }
+}
+
+onMounted(() => {
+  fetchCompanyDetailId()
+})
+
 const handleSubmit = async () => {
   const formData = new FormData()
-  formData.append('company_detail_id', companyDetailId.value)
   formData.append('triwulan', triwulan.value)
   formData.append('tahun', tahun.value)
   formData.append('file_upload', fileUpload.value)
   formData.append('status', status.value)
 
   try {
-    const response = await fetch('/api/pengelolaan-limbah-b3', {
-      method: 'POST',
-      body: formData
-    })
+    const response = await createPengelolaanLimbahB3(formData)
 
-    if (response.ok) {
-      // Jika berhasil, arahkan pengguna ke halaman yang diinginkan
-      router.push('/PengelolaanLimbahB3')
-    } else {
-      const errorData = await response.json()
-      console.error('Gagal menyimpan data:', errorData)
+    if (response.status === 200) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: 'Data pengelolaan limbah B3 berhasil disubmit!',
+      }).then(() => {
+        router.push('/PengelolaanLimbahB3')
+      })
     }
   } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Terjadi Kesalahan',
+      text: 'Data gagal disubmit. Coba lagi.',
+    })
     console.error('Terjadi kesalahan:', error)
   }
 }
@@ -46,7 +70,13 @@ const handleSubmit = async () => {
         <form @submit.prevent="handleSubmit">
           <div class="mb-3">
             <label for="companyDetailId">Company Detail ID</label>
-            <input type="text" id="companyDetailId" v-model="companyDetailId" class="form-control" />
+            <input
+              type="text"
+              id="companyDetailId"
+              v-model="companyDetailId"
+              class="form-control"
+              readonly
+            />
           </div>
 
           <div class="mb-3">
@@ -73,10 +103,18 @@ const handleSubmit = async () => {
 
           <div class="mb-3">
             <label for="fileUpload">File Upload</label>
-            <input type="file" id="fileUpload" @change="(e) => fileUpload.value = e.target.files[0]" class="form-control" />
+            <input
+              type="file"
+              id="fileUpload"
+              @change="(e) => fileUpload.value = e.target.files[0]"
+              class="form-control"
+            />
           </div>
 
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="d-flex gap-2">
+            <button type="button" @click="router.go(-1)" class="btn btn-secondary">Kembali</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
         </form>
       </div>
     </div>

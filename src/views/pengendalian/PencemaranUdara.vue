@@ -116,12 +116,12 @@ onMounted(fetchData)
             >
               Tambah Udara Emisi
             </RouterLink>
-            <RouterLink
+            <!-- <RouterLink
               class="btn btn-primary"
               to="/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge"
             >
               Tambah Fly Ash, Bottom Ash, dan Sludge
-            </RouterLink>
+            </RouterLink> -->
           </div>
         </div>
 

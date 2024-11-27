@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -10,7 +10,6 @@ const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
 const router = useRouter()
-
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
 
@@ -85,13 +84,23 @@ const togglePerDas = () => {
   console.log('Data clicked')
   isperdasOpen.value = !isperdasOpen.value
   router.push({
-    path: '/Profile',
+    path: '/Data/PersLing',
     query: {
-      sidebar: 'perscompany',
-    },
-  })
+      sidebar: 'perscompany'
+    }
+  });
 }
-
+watch(() => route.query.sidebar, (latest,_) =>{
+  if (latest=='perscompany'){
+    isDataOpen.value=true
+    isperdasOpen.value=true
+  }
+  else {
+    isperdasOpen.value=false
+  }
+}, {
+  immediate: true
+})
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
   isDataOpen.value = false
@@ -725,10 +734,10 @@ onMounted(async () => {
                   >
                 </li> -->
                 <li>
-                  <router-link
-                    to="/Data"
+                  <a
                     @click="togglePerDas"
-                    :class="{ active: route.path.startsWith('/Data') }"
+                    :class="{ active: route.path.startsWith('/Data/Persling') }"
+                    style="cursor:pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
                     <span>Pers. Lingkungan</span>
@@ -739,7 +748,7 @@ onMounted(async () => {
                         'fe-chevron-up': isperdasOpen,
                       }"
                     ></i>
-                  </router-link>
+                    </a>
                   <transition name="slide-fade">
                     <ul
                       v-if="isDataOpen && isperdasOpen"

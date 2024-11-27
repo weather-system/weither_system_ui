@@ -35,7 +35,8 @@ const adminRoutes = [
   '/tiket/Pengaduan',
   '/tiket/PengaduanCreate',
   '/Admin',
-  '/Data/PKKPR'
+  '/Data/PKKPR',
+  '/Data/PersLing'
 ]
 
 // Array untuk halaman utama
@@ -595,6 +596,11 @@ const router = createRouter({
       path: '/Master/Companies/:id',
       name: 'MasterCompaniesEditView',
       component: () => import('@/views/Master/CompaniesEditView.vue'),
+    },
+    {
+      path: '/Data/PersLing',
+      name: 'PersetujuanLingkunganView',
+      component: () => import('@/views/data/persling.vue'),
     },
   ],
 })

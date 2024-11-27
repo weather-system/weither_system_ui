@@ -2,25 +2,25 @@
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
+import { getPengelolaanLimbahB3, deletePengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 const dataEntries = ref([])
 const selectedYear = ref('')
 
-// Filter data berdasarkan tahun
 const filteredDataEntries = computed(() => {
   if (!selectedYear.value) return dataEntries.value
   return dataEntries.value.filter(entry => entry.year === selectedYear.value)
 })
 
-// Load data dari API
+
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    const response = await fetch('/api/pengelolaan-limbah-b3')
-    const result = await response.json()
-    dataEntries.value = result.data
+    const response = await getPengelolaanLimbahB3()
+    dataEntries.value = response
+    console.log(dataEntries.value)
   } catch (e) {
     console.error('Gagal memuat data:', e)
   } finally {
@@ -28,7 +28,6 @@ onMounted(async () => {
   }
 })
 
-// Hapus data
 const deleteEntry = async (id) => {
   const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?')
   if (!confirmDelete) return
@@ -69,7 +68,6 @@ const deleteEntry = async (id) => {
           <table class="table">
             <thead>
               <tr>
-                <th>No</th>
                 <th>Tahun</th>
                 <th>Triwulan</th>
                 <th>URL</th>
@@ -78,17 +76,18 @@ const deleteEntry = async (id) => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(entry, index) in filteredDataEntries" :key="entry.id">
-                <td>{{ index + 1 }}</td>
-                <td>{{ entry.year }}</td>
-                <td>{{ entry.quarter }}</td>
-                <td><a :href="entry.url" target="_blank">{{ entry.url }}</a></td>
+              <tr v-for="entry in dataEntries" :key="entry.id">
+                <td>{{ entry.tahun }}</td>
+                <td>{{ entry.triwulan }}</td>
+                <td><a :href="entry.file_upload" target="_blank">{{ entry.file_upload }}</a></td>
                 <td>{{ entry.status }}</td>
                 <td>
-                  <RouterLink :to="{ name: 'EditPengelolaanLimbahB3', params: { id: entry.id } }" class="btn btn-success">
-                    Edit
-                  </RouterLink>
-                  <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  <div class="d-flex gap-2">
+                    <RouterLink :to="{ name: 'PengendalianPengelolaanLimbahB3Edit', params: { id: entry.id } }" class="btn btn-success">
+                      Edit
+                    </RouterLink>
+                    <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  </div>
                 </td>
               </tr>
             </tbody>

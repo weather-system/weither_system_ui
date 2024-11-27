@@ -87,19 +87,18 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
           <div>
-            <h3>Data Cerobong</h3>
-            <p>Anda memasukan jumlah cerobong sebanyak {{ totalCerobong }}</p>
+            <h3>Data Pertek Emisi</h3>
           </div>
-          <div class="list-btn">
+          <!-- <div class="list-btn">
             <ul>
               <li>
                 <router-link class="btn btn-primary" to="/Data/Cerobong/Tambah">
-                  <!-- Change route as necessary -->
+                   Change route as necessary
                   <i class="fa fa-plus me-2"></i>Tambah Cerobong
                 </router-link>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
         <div class="row">
           <div class="col-12">

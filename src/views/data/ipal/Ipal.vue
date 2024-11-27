@@ -71,13 +71,13 @@ onMounted(() => {
         <div class="content-page-header content-page-headersplit mb-2">
           <h3>Persetujuan Teknis IPAL</h3>
           <div class="list-btn">
-            <ul>
+            <!-- <ul>
               <li>
                 <router-link class="btn btn-primary" to="IPAL/Tambah">
                   <i class="fa fa-plus me-2"></i>Tambah IPAL
                 </router-link>
               </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
         <div class="row">
