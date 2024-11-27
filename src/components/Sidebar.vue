@@ -478,7 +478,7 @@ onMounted(async () => {
             </transition>
           </li>
           <li>
-            <router-link to="/Master/Monitoring" activeClass="active">
+            <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
