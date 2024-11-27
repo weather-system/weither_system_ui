@@ -18,9 +18,19 @@ const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
 const isperdasOpen = ref(false)
 const isMasterOpen = ref(false)
+const isOperatorOpen = ref(false)
+const isKontenOpen = ref(false)
+const isReferensiOpen = ref(false)
+const isFiturOpen = ref(false)
+const isTiketzOpen = ref(false)
+const isLearningOpen = ref(false)
 const isLogbookOpen = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
+const isVerifikasiOpen = ref(false)
+const isSwapantauOpen = ref(false)
+const isMonitoringOpen = ref(false)
+const isVerifikasiLogOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
@@ -40,6 +50,36 @@ const toggleData = () => {
 
 const toggleMaster = () => {
   isMasterOpen.value = !isMasterOpen.value
+}
+const toggleOperator = () => {
+  isOperatorOpen.value = !isOperatorOpen.value
+}
+const toggleKonten = () => {
+  isKontenOpen.value = !isKontenOpen.value
+}
+const toggleReferensi = () => {
+  isReferensiOpen.value = !isReferensiOpen.value
+}
+const toggleLearning = () => {
+  isLearningOpen.value = !isLearningOpen.value
+}
+const toggleFitur = () => {
+  isFiturOpen.value = !isFiturOpen.value
+}
+const toggleTiketz = () => {
+  isTiketzOpen.value = !isTiketzOpen.value
+}
+const toggleVerifikasi = () => {
+  isVerifikasiOpen.value = !isVerifikasiOpen.value
+}
+const toggleSwapantau = () => {
+  isSwapantauOpen.value = !isSwapantauOpen.value
+}
+const toggleMonitoring = () => {
+  isMonitoringOpen.value = !isMonitoringOpen.value
+}
+const toggleVerifikasiLog = () => {
+  isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value
 }
 const togglePerDas = () => {
   console.log('Data clicked')
@@ -140,7 +180,7 @@ onMounted(async () => {
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
             <router-link to="/Companies" activeClass="active">
-              <i class="fas fa-book-bookmark"></i>
+              <i class="fas fa-user-tie"></i>
               <span>Perusahaan Pemohon</span>
             </router-link>
           </li>
@@ -151,7 +191,7 @@ onMounted(async () => {
               :class="{ active: route.path.startsWith('/Master') }"
             >
               <i class="fas fa-book-bookmark"></i>
-              <span>Master</span>
+              <span>Data Master</span>
               <i
                 class="fe"
                 :class="{
@@ -172,6 +212,487 @@ onMounted(async () => {
                   <router-link to="/Master/Companies" activeClass="active">
                     <i class="fas fa-chevron-right"></i>
                     Perusahaan</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Perusahaan DPMPTSP</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Izin DPMPTSP</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Ipal" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Izin Ipal</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
+            <a
+              href="javascript:void(0);"
+              @click="toggleVerifikasi"
+              :class="{ active: route.path.startsWith('/Master/Operator') }"
+            >
+              <i class="fas fa-check"></i>
+              <span>Verifikasi</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isVerifikasiOpen,
+                  'fe-chevron-up': isVerifikasiOpen,
+                }"
+              ></i>
+            </a>
+
+            <!-- Transisi Submenu -->
+            <transition name="slide-fade">
+              <ul v-if="isVerifikasiOpen" class="submenu d-block">
+                <!-- Swapantau -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleSwapantau">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Swapantau</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isSwapantauOpen,
+                        'fe-chevron-up': isSwapantauOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isSwapantauOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/Bulanan"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Bulanan
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/PPA"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Swapantau PPA
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/PPU"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Swapantau PPU
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/B3"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Swapantau LB3
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- VerifikasiLog -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleVerifikasiLog">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Verifikasi Logbook</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isVerifikasiLogOpen,
+                        'fe-chevron-up': isVerifikasiLogOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isVerifikasiLogOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/pal"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> IPAL
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/lb"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Limbah B3
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/Senyatanya"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Produksi
+                          Senyatanya
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/DebitIPAL"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Debit Outlet IPAL
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/DebitAir"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Debit Pemakaian
+                          Air
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/IPAL2"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> IPAL
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/PenggunaanB3"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Penggunaan B3
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/TPSB3"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> TPS LB3
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Verifikasi/PengolaB3"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Pengelolaan LB3
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- Monitoring Logbook -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleMonitoring">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Monitoring Logbook</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isMonitoringOpen,
+                        'fe-chevron-up': isMonitoringOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isMonitoringOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Monitoring/IPAL"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> IPAL
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Monitoring/LB3"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Limbah B3
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li>
+            <router-link to="/Master/Monitoring" activeClass="active">
+              <i class="fas fa-eye"></i>
+              <span>Monitoring Swapantau</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
+            <a
+              href="javascript:void(0);"
+              @click="toggleOperator"
+              :class="{ active: route.path.startsWith('/Master/Operator') }"
+            >
+              <i class="fas fa-user-cog"></i>
+              <span>Website Operator</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isOperatorOpen,
+                  'fe-chevron-up': isOperatorOpen,
+                }"
+              ></i>
+            </a>
+
+            <!-- Transisi Submenu -->
+            <transition name="slide-fade">
+              <ul v-if="isOperatorOpen" class="submenu d-block">
+                <!-- Konten -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleKonten">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Konten</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isKontenOpen,
+                        'fe-chevron-up': isKontenOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isKontenOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Berita"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Berita
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Artikel"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Artikel
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Agenda"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Agenda
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Pengumuman"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Pengumuman
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Halaman"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Halaman
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- Referensi Tiket -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleReferensi">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Referensi Tiket</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isReferensiOpen,
+                        'fe-chevron-up': isReferensiOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isReferensiOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Kategori"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Kategori Tiket
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Status"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Status Tiket
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Prioritas"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Prioritas Tiket
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- E Learning -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleLearning">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>E-Learning</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isLearningOpen,
+                        'fe-chevron-up': isLearningOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isLearningOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Operator/EBook"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> E-Book
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Video"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Video
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- Fitur -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleFitur">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Fitur</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isFiturOpen,
+                        'fe-chevron-up': isFiturOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isFiturOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Download"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Download
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Link"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Link Terkait
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Sosmed"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Link Sosmed
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Slide"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Slide
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Banner"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Banner
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- Tiket -->
+                <li>
+                  <a href="javascript:void(0);" @click="toggleTiketz">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Tiket</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isTiketzOpen,
+                        'fe-chevron-up': isTiketzOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isTiketzOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Operator/Tiket"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Daftar Tiket
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+
+                <!-- Galeri -->
+                <li>
+                  <router-link
+                    to="/Master/Operator/Galeri"
+                    activeClass="active"
+                  >
+                    <i class="fas fa-chevron-right me-2"></i>
+                    Galeri</router-link
                   >
                 </li>
               </ul>
@@ -460,7 +981,7 @@ onMounted(async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/tiket/pengaduan-baru">
+                  <router-link to="/tiket/pengaduanbaru">
                     <i class="fas fa-chevron-right me-2"></i>
                     Pengaduan</router-link
                   >

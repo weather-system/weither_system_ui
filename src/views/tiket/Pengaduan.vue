@@ -106,7 +106,7 @@ const formatSupportTicket = (ticketType) => {
                     <td>{{ complaint.status }}</td>
                     <td>
                       <router-link
-                        :to="`/tiket/${complaint.id}`"
+                        :to="`/tiket/PengaduanDetail/${complaint.id}`"
                         class="btn btn-primary"
                       >
                         Detail
