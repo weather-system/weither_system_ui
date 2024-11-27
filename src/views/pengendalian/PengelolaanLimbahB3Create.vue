@@ -12,6 +12,7 @@ const tahun = ref('')
 const fileUpload = ref(null)
 const status = ref('Ajuan Baru')
 
+// Fetch the company detail ID
 const fetchCompanyDetailId = async () => {
   const userId = '1'
 
@@ -21,10 +22,10 @@ const fetchCompanyDetailId = async () => {
       const data = await response.json()
       companyDetailId.value = data.company_detail_id
     } else {
-      console.error('Gagal memuat company detail ID')
+      console.error('Failed to fetch company detail ID')
     }
   } catch (error) {
-    console.error('Terjadi kesalahan saat memuat company detail ID:', error)
+    console.error('Error fetching company detail ID:', error)
   }
 }
 
@@ -32,32 +33,43 @@ onMounted(() => {
   fetchCompanyDetailId()
 })
 
+// Handle form submission
 const handleSubmit = async () => {
   const formData = new FormData()
+  formData.append('company_detail_id', companyDetailId.value)
   formData.append('triwulan', triwulan.value)
   formData.append('tahun', tahun.value)
-  formData.append('file_upload', fileUpload.value)
+  if (fileUpload.value) {
+    formData.append('file_upload', fileUpload.value)
+  }
   formData.append('status', status.value)
 
   try {
     const response = await createPengelolaanLimbahB3(formData)
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       Swal.fire({
         icon: 'success',
-        title: 'Berhasil',
-        text: 'Data pengelolaan limbah B3 berhasil disubmit!',
+        title: 'Success',
+        text: 'Data successfully submitted!',
       }).then(() => {
         router.push('/PengelolaanLimbahB3')
+      })
+    } else {
+      const errorData = await response.json()
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorData.message || 'Data submission failed. Please try again.',
       })
     }
   } catch (error) {
     Swal.fire({
       icon: 'error',
-      title: 'Terjadi Kesalahan',
-      text: 'Data gagal disubmit. Coba lagi.',
+      title: 'Error',
+      text: 'An error occurred while submitting the data. Please try again.',
     })
-    console.error('Terjadi kesalahan:', error)
+    console.error('Submission error:', error)
   }
 }
 </script>
@@ -106,7 +118,7 @@ const handleSubmit = async () => {
             <input
               type="file"
               id="fileUpload"
-              @change="(e) => fileUpload.value = e.target.files[0]"
+              @change="(e) => (fileUpload.value = e.target.files[0])"
               class="form-control"
             />
           </div>

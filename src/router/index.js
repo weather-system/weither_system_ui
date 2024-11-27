@@ -598,6 +598,11 @@ const router = createRouter({
       component: () => import('@/views/Master/CompaniesEditView.vue'),
     },
     {
+      path: '/Eksekutif',
+      name: 'EksekutifView',
+      component: () => import('@/views/EksekutifView.vue'),
+    },
+    {
       path: '/Data/PersLing',
       name: 'PersetujuanLingkunganView',
       component: () => import('@/views/data/persling.vue'),
