@@ -1,10 +1,20 @@
 <script setup>
 import { ref } from 'vue';
+import { useLoading } from 'vue-loading-overlay'
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
+import { uploadFile } from '@/lib/filestorage.js'
+
+const $loading = useLoading()
 
 const form = ref(null);
 const lubangSampling = ref('');
+
+const initialData = {
+  satuan_tinggi_cerobong: 'm',
+  satuan_diameter_cerobong: 'm',
+  satuan_kedalaman_lubang_sampling: 'm2'
+}
 
 const schema = yup.object({
   jenis_boiler: yup.string().required(),
@@ -24,6 +34,18 @@ const schema = yup.object({
   jenis_bahan_bakar: yup.string().required(),
 });
 
+const uploadFileWrapped = async (e) => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    return url
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+
 const setValues = (data) => {
   form.value.setValues(data);
 };
@@ -33,7 +55,7 @@ defineExpose({ setValues });
 
 <template>
 
-  <Form ref="form" :validation-schema="schema">
+  <Form ref="form" :validation-schema="schema" :initial-values="initialData">
     <MainWrapper>
       <div class="page-wrapper page-settings">
         <div class="content">
@@ -43,6 +65,22 @@ defineExpose({ setValues });
                 <h3>Data Pertek Emisi</h3>
               </div>
               <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">No. Pertek Emisi</label>
+                    <Field name="no_pertek_emisi" class="form-control" />
+                    <ErrorMessage name="no_pertek_emisi" />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">File Pertek Emisi</label>
+                    <Field name="file_pertek_emisi" v-slot="{ field, handleChange }">
+                      <input @change="async ($event) => handleChange(await uploadFileWrapped($event))" type="file" class="form-control" />
+                    </Field>
+                    <ErrorMessage name="file_pertek_emisi" />
+                  </div>
+                </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Jenis Boiler</label>
@@ -60,52 +98,52 @@ defineExpose({ setValues });
               </div>
 
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12">
                   <div class="form-group">
                     <label class="col-form-label">Merk Boiler</label>
                     <Field name="merk_boiler" class="form-control" />
                     <ErrorMessage name="merk_boiler" />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Tinggi Cerobong</label>
                     <Field name="tinggi_cerobong" class="form-control" type="number" />
                     <ErrorMessage name="tinggi_cerobong" />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Satuan Tinggi Cerobong</label>
-                    <Field name="satuan_tinggi_cerobong" class="form-control" />
+                    <Field name="satuan_tinggi_cerobong" class="form-control" disabled />
                     <ErrorMessage name="satuan_tinggi_cerobong" />
                   </div>
                 </div>
               </div>
 
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Diameter Cerobong</label>
                     <Field name="diameter_cerbong" class="form-control" type="number" />
                     <ErrorMessage name="diameter_cerbong" />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Satuan Diameter Cerobong</label>
-                    <Field name="satuan_diameter_cerobong" class="form-control" />
+                    <Field name="satuan_diameter_cerobong" class="form-control" disabled />
                     <ErrorMessage name="satuan_diameter_cerobong" />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Kapasitas Boiler</label>
                     <Field name="kapasitas_boiler" class="form-control" type="number" />
                     <ErrorMessage name="kapasitas_boiler" />
                   </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Satuan Kapasitas Boiler</label>
                     <Field name="satuan_kapasitas_boiler" class="form-control" type="text" />
@@ -171,7 +209,7 @@ defineExpose({ setValues });
           <div class="col-md-6">
             <div class="form-group">
               <label class="col-form-label">Satuan Kedalaman Lubang Sampling</label>
-              <Field name="satuan_kedalaman_lubang_sampling" class="form-control" />
+              <Field name="satuan_kedalaman_lubang_sampling" class="form-control" disabled />
               <ErrorMessage name="satuan_kedalaman_lubang_sampling" />
             </div>
           </div>
