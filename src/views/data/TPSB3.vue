@@ -84,16 +84,14 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
           <div>
-            <h3>Data TPS B3</h3>
-            <p>Anda memasukan jumlah TPS B3 sebanyak {{ totalTpsB3 }}</p>
+            <h3>Data Rintek LB3</h3>
           </div>
           <div class="list-btn">
             <ul>
               <li>
-                <router-link class="btn btn-primary" to="/Data/TPSB3/Tambah">
-                  <!-- Change route as necessary -->
+                <!-- <router-link class="btn btn-primary" to="/Data/TPSB3/Tambah">
                   <i class="fa fa-plus me-2"></i>Tambah TPS B3
-                </router-link>
+                </router-link> -->
               </li>
             </ul>
           </div>
