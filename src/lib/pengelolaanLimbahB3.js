@@ -23,6 +23,7 @@ export const parameters = [
   },
 ]
 
+
 export const createPengelolaanLimbahB3 = async data => {
   const resp = await axios.post('/api/pengelolaan-limbah-b3', data)
   return resp.data
