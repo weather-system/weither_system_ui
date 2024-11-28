@@ -154,28 +154,33 @@ defineExpose({ setValues })
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Tinggi Cerobong</label>
+                    <div class="form-duration">
                     <Field
                       name="tinggi_cerobong"
                       class="form-control"
                       type="number"
-                    />
+                    /><span class="mins">m</span>
+                  </div>
                     <ErrorMessage name="tinggi_cerobong" />
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Diameter Cerobong</label>
+                    <div class = "form-duration">
                     <Field
                       name="diameter_cerbong"
                       class="form-control"
                       type="number"
                     />
+                    <span class="mins">m</span>
+                  </div>
                     <ErrorMessage name="diameter_cerbong" />
                   </div>
                 </div>
+              </div>
+
+              <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Kapasitas Boiler</label>
@@ -277,16 +282,18 @@ defineExpose({ setValues })
                     <label class="col-form-label"
                       >Kedalaman Lubang Sampling</label
                     >
+                    <div class="form-duration">
                     <Field
                       name="kedalaman_lubang_sampling"
                       class="form-control"
                       type="number"
                     />
+                    <span class="mins">m2</span>
+                  </div>
                     <ErrorMessage name="kedalaman_lubang_sampling" />
                   </div>
                 </div>
-              </div>
-              <div class="row">
+                
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="col-form-label">Tangga Cerobong/Stage</label>
