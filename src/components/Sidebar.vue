@@ -477,7 +477,7 @@ onMounted(async () => {
               </ul>
             </transition>
           </li>
-          <li>
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
             <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
