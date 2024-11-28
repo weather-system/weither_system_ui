@@ -439,6 +439,18 @@ const uploadNIB = async e => {
     loader.hide()
   }
 }
+
+const uploadFileIzinPerusahaan = async e => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    formData.value.file_izin_perusahaan = url
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
 </script>
 
 <template>
@@ -451,7 +463,7 @@ const uploadNIB = async e => {
               <h3>Edit Persetujuan Teknis IPAL</h3>
             </div>
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-12">
                 <div class="form-group">
                   <label class="col-form-label">Jenis IPAL</label>
                   <select class="form-control" v-model="formData.type" required>
@@ -462,7 +474,7 @@ const uploadNIB = async e => {
                   </select>
                 </div>
               </div>
-              <div class="col-md-8">
+              <!-- <div class="col-md-8">
                 <div class="form-group">
                   <label class="col-form-label">Izin Perusahaan</label>
                   <select
@@ -480,9 +492,42 @@ const uploadNIB = async e => {
                     </option>
                   </select>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">No. Izin Perusahaan</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="formData.no_izin_perusahaan"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">File Izin Perusahaan</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    @change="uploadFileIzinPerusahaan"
+                  />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">Acuan Baku Mutu</label>
+                  <select
+                    class="form-control"
+                    v-model="formData.acuan_baku_mutu"
+                  >
+                    <option value="Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah">Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah</option>
+                    <option value="Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah Domestik">Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah Domestik</option>
+                    <option value="Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah">Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah</option>
+                  </select>
+                </div>
+              </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-form-label">Longitude</label>
@@ -903,19 +948,25 @@ const uploadNIB = async e => {
               </div>
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="form-group">
                   <label class="col-form-label"
                     >Badan Air yang Menerima Limbah Cair</label
                   >
-                  <input
-                    type="text"
+                  <select
                     class="form-control"
                     v-model="formData.water_bodies_receiving_liquid_waste"
-                  />
+                  >
+                    <option value="Cihaur">Cihaur</option>
+                    <option value="Cibereum">Cibereum</option>
+                    <option value="Cisangkan">Cisangkan</option>
+                    <option value="Cimahi">Cimahi</option>
+                    <option value="Sungai Cilember">Sungai Cilember</option>
+                    <option value="Pemanfaatan">Pemanfaatan</option>
+                  </select>
                 </div>
               </div>
-              <div class="col-md-6">
+              <!-- <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-form-label"
                     >Tempat Penampungan Lumpur IPAL</label
@@ -926,7 +977,7 @@ const uploadNIB = async e => {
                     v-model="formData.ipal_sludge_storage_site"
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="row">
               <div class="col-md-3">
@@ -942,11 +993,13 @@ const uploadNIB = async e => {
               <div class="col-md-3">
                 <div class="form-group">
                   <label class="col-form-label">Satuan Jumlah Lumpur</label>
-                  <input
-                    type="text"
+                  <select
                     class="form-control"
                     v-model="formData.unit_in_amount_of_mud_sludge"
-                  />
+                  >
+                    <option value="Ton">Ton</option>
+                    <option value="Kg">Kg</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -954,11 +1007,14 @@ const uploadNIB = async e => {
               <label class="col-form-label"
                 >Penanganan Lumpur Selanjutnya</label
               >
-              <input
+              <select
                 type="text"
                 class="form-control"
                 v-model="formData.further_sludge_handling"
-              />
+              >
+                <option value="Diserahkan pada pihak ketiga">Diserahkan pada pihak ketiga</option>
+                <option value="Dilakukan pengolahan lumpur">Dilakukan pengolahan lumpur</option>
+              </select>
             </div>
 
             <div class="row">

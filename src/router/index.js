@@ -36,7 +36,8 @@ const adminRoutes = [
   '/tiket/PengaduanCreate',
   '/Admin',
   '/Data/PKKPR',
-  '/Data/PersLing'
+  '/Data/PersLing',
+  '/Pengawas',
 ]
 
 // Array untuk halaman utama
@@ -67,6 +68,41 @@ const router = createRouter({
       path: '/Admin',
       name: 'AdminView',
       component: () => import('@/views/AdminView.vue'),
+    },
+    {
+      path: '/Pengawas',
+      name: 'PengawasView',
+      component: () => import('@/views/PengawasView.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanAir',
+      name: 'VerifikatorPemantauanAir',
+      component: () => import('@/views/Verifikator/PemantauanAir.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanAir/:id',
+      name: 'VerifikatorPemantauanAirDetail',
+      component: () => import('@/views/Verifikator/PemantauanAirDetail.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraAmbien',
+      name: 'VerifikatorPemantauanUdaraAmbien',
+      component: () => import('@/views/Verifikator/PemantauanUdaraAmbien.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraAmbien/:id',
+      name: 'VerifikatorPemantauanUdaraAmbienDetail',
+      component: () => import('@/views/Verifikator/PemantauanUdaraAmbienDetail.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraEmisi',
+      name: 'VerifikatorPemantauanUdaraEmisi',
+      component: () => import('@/views/Verifikator/PemantauanUdaraEmisi.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraEmisi/:id',
+      name: 'VerifikatorPemantauanUdaraEmisiDetail',
+      component: () => import('@/views/Verifikator/PemantauanUdaraEmisiDetail.vue'),
     },
     {
       path: '/LandingPage',

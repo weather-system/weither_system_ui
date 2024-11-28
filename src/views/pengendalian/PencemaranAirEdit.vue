@@ -28,6 +28,12 @@ watch(() => route.query.id, async (latest, _) => {
 }, { immediate: true })
 
 const submit = async (data) => {
+  data.details = data.details.map((v) => {
+    delete v.created_at
+    delete v.updated_at
+    return v
+  })
+
   try {
     await updatePencemaranAir(route.query.id, data)
     router.push('/Pengendalian/PencemaranAir')

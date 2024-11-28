@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import { Form, Field, ErrorMessage } from 'vee-validate'
+import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
 import { uploadFile } from '@/lib/filestorage.js'
@@ -13,6 +13,71 @@ const $loading = useLoading()
 const form = ref(null)
 const files = reactive({})
 
+const initialData = {
+  details: [
+    {
+      parameter: 'Temperatur Udara Sekitar',
+      satuan: 'C',
+      ekspresi: '='
+    },
+    {
+      parameter: 'BOD',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'COD',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'TSS',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'Fenol Total',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'Krom Total',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'Amonia Total',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'Sulfida',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'Minyak dan Lemak',
+      satuan: 'mg/L',
+      ekspresi: '='
+    },
+    {
+      parameter: 'Warna',
+      satuan: 'Pt-Co',
+      ekspresi: '='
+    },
+    {
+      parameter: 'pH',
+      satuan: null,
+      ekspresi: '='
+    },
+    {
+      parameter: 'Temperatur Air',
+      satuan: 'K',
+      ekspresi: '='
+    }
+  ],
+};
+
 const schema = yup.object({
   month: yup.string().required(),
   year: yup.string().required(),
@@ -20,32 +85,38 @@ const schema = yup.object({
   produksi_ton_bulan: yup.number().required(),
   lab_penguji: yup.string().required(),
   tgl_pengambilan_contoh: yup.string().required(),
+  details: yup.array().of(yup.object({
+    parameter: yup.string().required(),
+    ekspresi: yup.string().required(),
+    hasil_pengukuran: yup.number().required(),
+    satuan: yup.string().nullable()
+  }))
   // file_hasil_pemeriksaan_lab: yup.number().required(),
   // file_dokumentasi_sampling: yup.number().required(),
-  temp_udara: yup.number().required(),
-  temp_udara_expr: yup.string().required(),
-  bod: yup.number().required(),
-  bod_expr: yup.string().required(),
-  cod: yup.number().required(),
-  cod_expr: yup.string().required(),
-  tss: yup.number().required(),
-  tss_expr: yup.string().required(),
-  fenol_total: yup.number().required(),
-  fenol_total_expr: yup.string().required(),
-  krom_total: yup.number().required(),
-  krom_total_expr: yup.string().required(),
-  amonia_total: yup.number().required(),
-  amonia_total_expr: yup.string().required(),
-  sulfida: yup.number().required(),
-  sulfida_expr: yup.string().required(),
-  minyak_dan_lemak: yup.number().required(),
-  minyak_dan_lemak_expr: yup.string().required(),
-  warna: yup.number().required(),
-  warna_expr: yup.string().required(),
-  ph: yup.number().required(),
-  ph_expr: yup.string().required(),
-  temp_air: yup.number().required(),
-  temp_air_expr: yup.string().required(),
+  // temp_udara: yup.number().required(),
+  // temp_udara_expr: yup.string().required(),
+  // bod: yup.number().required(),
+  // bod_expr: yup.string().required(),
+  // cod: yup.number().required(),
+  // cod_expr: yup.string().required(),
+  // tss: yup.number().required(),
+  // tss_expr: yup.string().required(),
+  // fenol_total: yup.number().required(),
+  // fenol_total_expr: yup.string().required(),
+  // krom_total: yup.number().required(),
+  // krom_total_expr: yup.string().required(),
+  // amonia_total: yup.number().required(),
+  // amonia_total_expr: yup.string().required(),
+  // sulfida: yup.number().required(),
+  // sulfida_expr: yup.string().required(),
+  // minyak_dan_lemak: yup.number().required(),
+  // minyak_dan_lemak_expr: yup.string().required(),
+  // warna: yup.number().required(),
+  // warna_expr: yup.string().required(),
+  // ph: yup.number().required(),
+  // ph_expr: yup.string().required(),
+  // temp_air: yup.number().required(),
+  // temp_air_expr: yup.string().required(),
 })
 
 const parameters = ref([
@@ -127,6 +198,10 @@ const setValues = (data) => {
   form.value.setValues(data)
 }
 
+const onInvalidSubmit = (data) => {
+  console.log('errro', data)
+}
+
 defineExpose({ setValues })
 </script>
 
@@ -134,7 +209,8 @@ defineExpose({ setValues })
     <Form
         ref="form"
           :validation-schema="schema"
-          :initial-values="props.initialValues"
+          :initial-values="initialData"
+          @invalid-submit="onInvalidSubmit"
         >
           <div class="row">
             <div class="col-4">
@@ -216,35 +292,38 @@ defineExpose({ setValues })
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="parameter in parameters" :key="parameter.name">
-                      <td>{{ parameter.name }}</td>
-                      <td>
-                        <Field
-                          :name="`${parameter.field}_expr`"
-                          class="form-select"
-                          as="select"
-                        >
-                          <option value="=">=</option>
-                          <option value=">">></option>
-                        </Field>
-                        <ErrorMessage :name="`${parameter.field}_expr`" />
-                      </td>
-                      <td>
-                        <div
-                          class="d-flex align-items-center"
-                          style="gap: 1rem"
-                        >
-                          <div class="col-4">
-                            <Field
-                              :name="parameter.field"
-                              class="form-control"
-                            />
-                            <ErrorMessage :name="parameter.field" />
+                    <FieldArray name="details" v-slot="{ fields }">
+                      <tr v-for="(field, i) in fields" :key="field.key">
+                        <td>{{ field.value.parameter }}</td>
+                        <td>
+                          <Field
+                            :name="`details[${i}].ekspresi`"
+                            class="form-select"
+                            as="select"
+                          >
+                            <option value="=">=</option>
+                            <option value=">">></option>
+                            <option value="<"><</option>
+                          </Field>
+                          <ErrorMessage :name="`details[${i}].ekspresi`" />
+                        </td>
+                        <td>
+                          <div
+                            class="d-flex align-items-center"
+                            style="gap: 1rem"
+                          >
+                            <div class="col-4">
+                              <Field
+                                :name="`details[${i}].hasil_pengukuran`"
+                                class="form-control"
+                              />
+                              <ErrorMessage :name="`details[${i}].hasil_pengukuran`" />
+                            </div>
+                            <p class="m-0">{{ field.value.satuan }}</p>
                           </div>
-                          <p class="m-0">{{ parameter.satuan }}</p>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                    </FieldArray>
                   </tbody>
                 </table>
               </div>

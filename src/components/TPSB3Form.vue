@@ -11,6 +11,7 @@ const $loading = useLoading()
 const form = ref(null)
 
 const initialValues = {
+  volume_limbah_dalam_izin: 0,
   items: [{ jenis: '', volume: null, satuan: '' }],
 }
 const deletetpsb3item = async id => {
@@ -72,6 +73,18 @@ const uploadDoc = async (e, callback) => {
   }
 }
 
+const uploadFileWrapped = async (e) => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    return url
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+
 const setValues = data => {
   form.value.setValues(data)
 }
@@ -84,6 +97,22 @@ defineExpose({ setValues })
     <div class="row">
       <div class="col-12 mt-2">
         <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="col-form-label">No. Rintek</label>
+              <Field name="no_rintek" class="form-control" />
+              <ErrorMessage name="no_rintek" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="col-form-label">File Rintek</label>
+              <Field name="file_rintek" v-slot="{ field, handleChange }">
+                <input @change="async ($event) => handleChange(await uploadFileWrapped($event))" type="file" class="form-control" />
+              </Field>
+              <ErrorMessage name="file_rintek" />
+            </div>
+          </div>
           <div class="col-md-6">
             <div class="form-group">
               <label class="col-form-label">Sumber Limbah B3</label>
@@ -109,7 +138,7 @@ defineExpose({ setValues })
           </div>
         </div>
         <div class="col-md-6">
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="col-form-label">Volume Limbah B3 Dalam Izin</label>
             <Field
               name="volume_limbah_dalam_izin"
@@ -117,7 +146,7 @@ defineExpose({ setValues })
               type="number"
             />
             <ErrorMessage name="volume_limbah_dalam_izin" />
-          </div>
+          </div> -->
         </div>
         <div class="col-md-6">
           <div class="form-group">
@@ -170,9 +199,9 @@ defineExpose({ setValues })
                 <td colspan="4" class="text-center">Data Tidak Ada</td>
                 <td>
                   <button
-                    @click="async()=> { 
+                    @click="async()=> {
                       if (field.value.id){
-                        await deletetpsb3item(field.value.id) 
+                        await deletetpsb3item(field.value.id)
                       }
                         remove(idx)
                     }"
@@ -220,9 +249,9 @@ defineExpose({ setValues })
                 </td>
                 <td>
                   <button
-                    @click="async()=> { 
+                    @click="async()=> {
                       if (field.value.id){
-                        await deletetpsb3item(field.value.id) 
+                        await deletetpsb3item(field.value.id)
                       }
                         remove(idx)
                     }"

@@ -40,10 +40,11 @@ const dashboardRoute = computed(() => {
     return '/Admin';
   } else if (store.state.auth.user.role == 'EKSEKUTIF') {
     return '/Eksekutif';
+  } else if (store.state.auth.user.role == 'PENGAWAS') {
+    return '/Pengawas'
   }
   return '/MyCompany';
 });
-
 
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
@@ -198,6 +199,24 @@ onMounted(async () => {
             <router-link :to="dashboardRoute" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PemantauanAir" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pem. Air</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PemantauanUdaraAmbien" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pem. Udara Ambien</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PemantauanUdaraEmisi" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pem. Udara Emisi</span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
@@ -459,7 +478,7 @@ onMounted(async () => {
             </transition>
           </li>
           <li>
-            <router-link to="/Master/Monitoring" activeClass="active">
+            <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
@@ -721,7 +740,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a
               href="javascript:void(0);"
               @click="toggleData"
@@ -886,7 +905,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -952,7 +971,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
@@ -982,7 +1001,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
