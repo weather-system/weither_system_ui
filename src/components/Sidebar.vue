@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -10,12 +10,15 @@ const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
 const router = useRouter()
+const userRole = ref('EKSEKUTIF');
 
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
+const isEksekutifOpen = ref(false)
+
 const isperdasOpen = ref(false)
 const isMasterOpen = ref(false)
 const isOperatorOpen = ref(false)
@@ -36,10 +39,14 @@ const isPPUOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
-    return '/Admin'
+    return '/Admin';
+  } else if (store.state.auth.user.role == 'EKSEKUTIF') {
+    return '/Eksekutif';
+  } else if (store.state.auth.user.role == 'PENGAWAS') {
+    return '/Pengawas'
   }
-  return '/MyCompany'
-})
+  return '/MyCompany';
+});
 
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
@@ -50,9 +57,15 @@ const toggleData = () => {
   isDataOpen.value = !isDataOpen.value
 }
 
+const toggleEksekutif = () => {
+  console.log('Eksekutif clicked') // Debugging log
+  isEksekutifOpen.value = !isEksekutifOpen.value
+}
+
 const toggleMaster = () => {
   isMasterOpen.value = !isMasterOpen.value
 }
+
 const toggleOperator = () => {
   isOperatorOpen.value = !isOperatorOpen.value
 }
@@ -93,13 +106,23 @@ const togglePerDas = () => {
   console.log('Data clicked')
   isperdasOpen.value = !isperdasOpen.value
   router.push({
-    path: '/Profile',
+    path: '/Data/PersLing',
     query: {
-      sidebar: 'perscompany',
-    },
-  })
+      sidebar: 'perscompany'
+    }
+  });
 }
-
+watch(() => route.query.sidebar, (latest,_) =>{
+  if (latest=='perscompany'){
+    isDataOpen.value=true
+    isperdasOpen.value=true
+  }
+  else {
+    isperdasOpen.value=false
+  }
+}, {
+  immediate: true
+})
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
   isDataOpen.value = false
@@ -184,6 +207,24 @@ onMounted(async () => {
             <router-link :to="dashboardRoute" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PemantauanAir" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pem. Air</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PemantauanUdaraAmbien" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pem. Udara Ambien</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PemantauanUdaraEmisi" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pem. Udara Emisi</span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
@@ -442,8 +483,8 @@ onMounted(async () => {
               </ul>
             </transition>
           </li>
-          <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <router-link to="/Master/Monitoring" activeClass="active">
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
+            <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
@@ -801,6 +842,7 @@ onMounted(async () => {
               </ul>
             </transition>
           </li>
+
           <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
             <a
               href="javascript:void(0);"
@@ -827,10 +869,10 @@ onMounted(async () => {
                   >
                 </li> -->
                 <li>
-                  <router-link
-                    to="/Data"
+                  <a
                     @click="togglePerDas"
-                    :class="{ active: route.path.startsWith('/Data') }"
+                    :class="{ active: route.path.startsWith('/Data/Persling') }"
+                    style="cursor:pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
                     <span>Pers. Lingkungan</span>
@@ -841,7 +883,7 @@ onMounted(async () => {
                         'fe-chevron-up': isperdasOpen,
                       }"
                     ></i>
-                  </router-link>
+                  </a>
                   <transition name="slide-fade">
                     <ul
                       v-if="isDataOpen && isperdasOpen"
@@ -966,7 +1008,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -1032,7 +1074,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
@@ -1062,7 +1104,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
@@ -1087,6 +1129,65 @@ onMounted(async () => {
                     <i class="fas fa-chevron-right me-2"></i>
                     Pengaduan</router-link
                   >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
+            <a href="javascript:void(0);" @click="toggleMaster">
+              <i class="fas fa-database"></i>
+              <span>Master Data</span>
+              <i
+                class="fe"
+                :class="{ 'fe-chevron-down': !isMasterOpen, 'fe-chevron-up': isMasterOpen }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isMasterOpen" class="submenu d-block">
+                <li>
+                  <router-link to="/Eksekutif/MasterData" activeClass="active">
+                    <i class="fas fa-table"></i>
+                    Rekap Tabel Master Data
+                  </router-link>
+                </li>
+              </ul>
+            </transition>
+          </li>
+
+          <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
+            <a href="javascript:void(0);" @click="toggleEksekutif">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Sebaran Titik</span>
+              <i
+                class="fe"
+                :class="{ 'fe-chevron-down': !isEksekutifOpen, 'fe-chevron-up': isEksekutifOpen }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isEksekutifOpen" class="submenu d-block">
+                <li>
+                  <router-link to="/Eksekutif/TPSB3" activeClass="active">
+                    <i class="fas fa-map-pin"></i>
+                    Titik TPS B3
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/Eksekutif/Cerobong" activeClass="active">
+                    <i class="fas fa-smog"></i>
+                    Titik Cerobong
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/Eksekutif/PenaatanIPAL" activeClass="active">
+                    <i class="fas fa-water"></i>
+                    Titik Penaatan IPAL
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/Eksekutif/RTH" activeClass="active">
+                    <i class="fas fa-tree"></i>
+                    Luasan RTH Privat
+                  </router-link>
                 </li>
               </ul>
             </transition>

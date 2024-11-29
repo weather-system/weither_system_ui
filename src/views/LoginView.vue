@@ -91,12 +91,21 @@ const redirectToNextPage = (user) => {
     router.push({ path: '/MyCompany' }).then(() => {
       router.go(0)
     })
-  } else {
+  } else if (user.role === 'ADMIN') {
     router.push({ path: '/Admin' }).then(() => {
+      router.go(0)
+    })
+  } else if (user.role === 'PENGAWAS') {
+    router.push({ path: '/Pengawas' }).then(() => {
+      router.go(0)
+    })
+  } else if (user.role === 'EKSEKUTIF') {
+    router.push({ path: '/Eksekutif' }).then(() => {
       router.go(0)
     })
   }
 }
+
 
 </script>
 

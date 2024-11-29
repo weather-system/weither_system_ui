@@ -2,25 +2,27 @@
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
+import Swal from 'sweetalert2'
+import { getPengelolaanLimbahB3, deletePengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 const dataEntries = ref([])
 const selectedYear = ref('')
 
-// Filter data berdasarkan tahun
 const filteredDataEntries = computed(() => {
-  if (!selectedYear.value) return dataEntries.value
-  return dataEntries.value.filter(entry => entry.year === selectedYear.value)
-})
+  if (!selectedYear.value) return dataEntries.value;
+  return dataEntries.value.filter(entry => entry.tahun === selectedYear.value);
+});
 
-// Load data dari API
+
+
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    const response = await fetch('/api/pengelolaan-limbah-b3')
-    const result = await response.json()
-    dataEntries.value = result.data
+    const response = await getPengelolaanLimbahB3()
+    dataEntries.value = response
+    console.log(dataEntries.value)
   } catch (e) {
     console.error('Gagal memuat data:', e)
   } finally {
@@ -28,21 +30,31 @@ onMounted(async () => {
   }
 })
 
-// Hapus data
 const deleteEntry = async (id) => {
-  const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?')
-  if (!confirmDelete) return
+  const confirmDelete = await Swal.fire({
+    title: 'Hapus Data?',
+    text: 'Apakah Anda yakin ingin menghapus data ini?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Hapus!',
+    cancelButtonText: 'Batal',
+  });
 
-  const loader = $loading.show()
+  if (!confirmDelete.isConfirmed) return;
+
+  const loader = $loading.show();
   try {
-    await fetch(`/api/pengelolaan-limbah-b3/${id}`, { method: 'DELETE' })
-    dataEntries.value = dataEntries.value.filter(entry => entry.id !== id)
-  } catch (e) {
-    console.error('Gagal menghapus data:', e)
+    await deletePengelolaanLimbahB3(id);
+    dataEntries.value = dataEntries.value.filter(entry => entry.id !== id);
+    Swal.fire('Berhasil!', 'Data berhasil dihapus.', 'success');
+  } catch (error) {
+    Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+    console.error('Delete error:', error);
   } finally {
-    loader.hide()
+    loader.hide();
   }
-}
+};
+
 </script>
 
 <template>
@@ -69,7 +81,6 @@ const deleteEntry = async (id) => {
           <table class="table">
             <thead>
               <tr>
-                <th>No</th>
                 <th>Tahun</th>
                 <th>Triwulan</th>
                 <th>URL</th>
@@ -78,17 +89,24 @@ const deleteEntry = async (id) => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(entry, index) in filteredDataEntries" :key="entry.id">
-                <td>{{ index + 1 }}</td>
-                <td>{{ entry.year }}</td>
-                <td>{{ entry.quarter }}</td>
-                <td><a :href="entry.url" target="_blank">{{ entry.url }}</a></td>
+              <tr v-if="filteredDataEntries.length === 0">
+                <td colspan="5" class="text-center">Tidak ada data tersedia</td>
+              </tr>
+              <tr v-for="entry in filteredDataEntries" :key="entry.id">
+                <td>{{ entry.tahun }}</td>
+                <td>{{ entry.triwulan }}</td>
+                <td><a :href="entry.file_upload" target="_blank">{{ entry.file_upload }}</a></td>
                 <td>{{ entry.status }}</td>
                 <td>
-                  <RouterLink :to="{ name: 'EditPengelolaanLimbahB3', params: { id: entry.id } }" class="btn btn-success">
-                    Edit
-                  </RouterLink>
-                  <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  <div class="d-flex gap-2">
+                    <RouterLink
+                      :to="{ name: 'PengendalianPengelolaanLimbahB3Edit', params: { id: entry.id } }"
+                      class="btn btn-success"
+                    >
+                      Edit
+                    </RouterLink>
+                    <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                  </div>
                 </td>
               </tr>
             </tbody>

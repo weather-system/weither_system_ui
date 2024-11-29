@@ -35,7 +35,9 @@ const adminRoutes = [
   '/tiket/Pengaduan',
   '/tiket/PengaduanCreate',
   '/Admin',
-  '/Data/PKKPR'
+  '/Data/PKKPR',
+  '/Data/PersLing',
+  '/Pengawas',
 ]
 
 // Array untuk halaman utama
@@ -66,6 +68,41 @@ const router = createRouter({
       path: '/Admin',
       name: 'AdminView',
       component: () => import('@/views/AdminView.vue'),
+    },
+    {
+      path: '/Pengawas',
+      name: 'PengawasView',
+      component: () => import('@/views/PengawasView.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanAir',
+      name: 'VerifikatorPemantauanAir',
+      component: () => import('@/views/Verifikator/PemantauanAir.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanAir/:id',
+      name: 'VerifikatorPemantauanAirDetail',
+      component: () => import('@/views/Verifikator/PemantauanAirDetail.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraAmbien',
+      name: 'VerifikatorPemantauanUdaraAmbien',
+      component: () => import('@/views/Verifikator/PemantauanUdaraAmbien.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraAmbien/:id',
+      name: 'VerifikatorPemantauanUdaraAmbienDetail',
+      component: () => import('@/views/Verifikator/PemantauanUdaraAmbienDetail.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraEmisi',
+      name: 'VerifikatorPemantauanUdaraEmisi',
+      component: () => import('@/views/Verifikator/PemantauanUdaraEmisi.vue'),
+    },
+    {
+      path: '/Verifikator/PemantauanUdaraEmisi/:id',
+      name: 'VerifikatorPemantauanUdaraEmisiDetail',
+      component: () => import('@/views/Verifikator/PemantauanUdaraEmisiDetail.vue'),
     },
     {
       path: '/LandingPage',
@@ -600,6 +637,16 @@ const router = createRouter({
       path: '/Master/CompaniesView/:id',
       name: 'MasterCompaniesEditView',
       component: () => import('@/views/Master/CompaniesDetailView.vue'),
+    },
+    {
+      path: '/Eksekutif',
+      name: 'EksekutifView',
+      component: () => import('@/views/EksekutifView.vue'),
+    },
+    {
+      path: '/Data/PersLing',
+      name: 'PersetujuanLingkunganView',
+      component: () => import('@/views/data/persling.vue'),
     },
   ],
 })
