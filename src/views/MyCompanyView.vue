@@ -200,8 +200,16 @@ const submitForm = async () => {
       if (ipalPromises.length > 0) {
         await Promise.all(ipalPromises) // Tunggu hingga semua IPAL disimpan
       }
-
-      Swal.fire('Success', 'Data berhasil disimpan.', 'success')
+      Swal.fire({
+      title: 'Success',
+      text: 'Data berhasil disimpan.',
+      icon: 'success',
+      confirmButtonText: 'Oke',
+    }).then(() => {
+      router.push({ path: '/MyCompany' }).then(() => {
+        router.go(0)
+      })
+    })
     } catch (error) {
       Swal.fire(
         'Error',
@@ -214,6 +222,34 @@ const submitForm = async () => {
     }
   }
 }
+const formatNpwp = () => {
+  let npwp = formData.value.npwp.replace(/\D/g, '');
+  npwp = npwp.slice(0, 15);
+  
+  let formattedNpwp = '';
+
+  for (let i = 0; i < npwp.length; i++) {
+    formattedNpwp += npwp[i];
+    if (i === 1 || i === 4 || i === 7 || i === 11) formattedNpwp += '.'; 
+    if (i === 8) formattedNpwp += '-'; 
+  }
+
+  formData.value.npwp = formattedNpwp; 
+};
+const formatNpwpD = () => {
+  let npwp = formData.value.local_npwp.replace(/\D/g, '');
+  npwp = npwp.slice(0, 15);
+  
+  let formattedNpwpD = '';
+
+  for (let i = 0; i < npwp.length; i++) {
+    formattedNpwpD += npwp[i];
+    if (i === 1 || i === 4 || i === 7 || i === 11) formattedNpwpD += '.'; 
+    if (i === 8) formattedNpwpD += '-'; 
+  }
+
+  formData.value.local_npwp = formattedNpwpD; 
+};
 
 const kodekbli = ref('')
 const kodeJudul = ref('')
@@ -446,6 +482,7 @@ watch(
                                 class="form-control"
                                 placeholder="Masukan Nomer NPWP Daerah"
                                 v-model="formData.local_npwp"
+                                @input="formatNpwpD"
                               />
                             </div>
                           </div>
@@ -1006,6 +1043,7 @@ watch(
                                 class="form-control"
                                 placeholder="Masukan Nomer NPWP Daerah"
                                 v-model="formData.local_npwp"
+                                @input="formatNpwpD"
                               />
                             </div>
                           </div>
