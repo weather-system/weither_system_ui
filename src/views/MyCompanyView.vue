@@ -340,8 +340,7 @@ watch(
             <div class="row">
               <h1>Selamat datang</h1>
               <p>
-                Silahkan lanjutkan mengisi data Perizinan, IPAL, Cerobong, TPS
-                B3, dan Sumber Air
+                Silahkan lanjutkan mengisi data Persetujuan Lingkungan
               </p>
             </div>
           </div>
