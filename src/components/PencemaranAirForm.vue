@@ -72,7 +72,7 @@ const initialData = {
     },
     {
       parameter: 'Temperatur Air',
-      satuan: 'K',
+      satuan: 'C',
       ekspresi: '='
     }
   ],
@@ -218,6 +218,7 @@ defineExpose({ setValues })
               <Field name="month" class="form-select" as="select">
                 <option value="">Pilih</option>
                 <option value="Januari">Januari</option>
+                <option value="Februari">Februari</option>
               </Field>
               <ErrorMessage name="month" />
             </div>

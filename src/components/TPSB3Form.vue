@@ -123,14 +123,14 @@ defineExpose({ setValues })
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label class="col-form-label">Longitude</label>
+                <label class="col-form-label">Longitude TPS LB3</label>
                 <Field name="koordinat_x" class="form-control" />
                 <ErrorMessage name="koordinat_x" />
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label class="col-form-label">Latitude</label>
+                <label class="col-form-label">Latitude TPS LB3</label>
                 <Field name="koordinat_y" class="form-control" />
                 <ErrorMessage name="koordinat_y" />
               </div>
@@ -158,7 +158,7 @@ defineExpose({ setValues })
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="col-form-label">Sertifikat Dokumen</label>
+              <label class="col-form-label">Sertifikat Dokumen Kerjasama</label>
               <Field name="sertifikat_dokumen" v-slot="{ handleChange }">
                 <input
                   type="file"
