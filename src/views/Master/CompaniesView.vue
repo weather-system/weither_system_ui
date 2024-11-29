@@ -10,7 +10,7 @@ const $loading = useLoading()
 
 const companies = ref([])
 
-const deleteData = async (id) => {
+const deleteData = async id => {
   const loader = $loading.show()
   try {
     await deleteCompany(id)
@@ -35,7 +35,7 @@ onMounted(async () => {
 </script>
 
 <template>
-<MainWrapper>
+  <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
@@ -43,13 +43,14 @@ onMounted(async () => {
           <div class="list-btn">
             <ul>
               <li>
-                <RouterLink class="btn btn-primary" to="/Master/Companies/Create"
+                <RouterLink
+                  class="btn btn-primary"
+                  to="/Master/Companies/Create"
                   ><i class="fa fa-plus me-2"></i>Tambah Perusahaan
                 </RouterLink>
               </li>
             </ul>
           </div>
-
         </div>
         <div class="row">
           <div class="col-12">
@@ -71,23 +72,108 @@ onMounted(async () => {
                       <p class="m-0">{{ data.company_email }}</p>
                     </td>
                     <td>
-                      <ul style="list-style-type: disc;">
-                        <li v-for="j in data.company_detail?.jenis_usaha" :key="j.id">{{ j.nama }}</li>
+                      <ul style="list-style-type: disc">
+                        <li
+                          v-for="j in data.company_detail?.jenis_usaha"
+                          :key="j.id"
+                        >
+                          {{ j.nama }}
+                        </li>
                       </ul>
                     </td>
-                    <td>{{ data.address }} {{ data.kelurahan }} {{ data.kecamatan }}</td>
                     <td>
-                      <router-link
-                        :to="`/Master/Companies/${data.id}`"
-                        class="btn btn-primary"
-                        >Edit</router-link
-                      >
-                      <button
-                        @click="deleteData(data.id)"
-                        class="btn btn-danger m-2"
-                      >
-                        Delete
-                      </button>
+                      {{ data.address }} {{ data.kelurahan }}
+                      {{ data.kecamatan }}
+                    </td>
+                    <td>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-secondary dropdown-toggle"
+                          type="button"
+                          id="dropdownMenuButton"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          Aksi
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Detail
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Perizinan
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Data IPAL
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Data Cerobong
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Data TPS B3
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Sumber Air Baku
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Cetak
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="`/Master/Companies/${data.id}`"
+                              class="dropdown-item"
+                            >
+                              Edit
+                            </router-link>
+                          </li>
+                          <li>
+                            <button
+                              @click="deleteData(data.id)"
+                              class="dropdown-item text-danger"
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                 </tbody>

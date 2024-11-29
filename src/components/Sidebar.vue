@@ -36,6 +36,8 @@ const isVerifikasiOpen = ref(false)
 const isSwapantauOpen = ref(false)
 const isMonitoringOpen = ref(false)
 const isVerifikasiLogOpen = ref(false)
+const isReferensiMasterOpen = ref(false)
+const isPPUOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
@@ -95,6 +97,12 @@ const toggleMonitoring = () => {
 }
 const toggleVerifikasiLog = () => {
   isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value
+}
+const toggleReferensiMaster = () => {
+  isReferensiMasterOpen.value = !isReferensiMasterOpen.value
+}
+const togglePPU = () => {
+  isPPUOpen.value = !isPPUOpen.value
 }
 const togglePerDas = () => {
   console.log('Data clicked')
@@ -249,7 +257,6 @@ const fetchUserStatus = async () => {
             <a
               href="javascript:void(0);"
               @click="toggleMaster"
-              :class="{ active: route.path.startsWith('/Master') }"
             >
               <i class="fas fa-book-bookmark"></i>
               <span>Data Master</span>
@@ -300,7 +307,6 @@ const fetchUserStatus = async () => {
             <a
               href="javascript:void(0);"
               @click="toggleVerifikasi"
-              :class="{ active: route.path.startsWith('/Master/Operator') }"
             >
               <i class="fas fa-check"></i>
               <span>Verifikasi</span>
@@ -502,6 +508,103 @@ const fetchUserStatus = async () => {
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a
+              href="javascript:void(0);"
+              @click="toggleReferensiMaster"
+            >
+              <i class="fas fa-book"></i>
+              <span>Referensi</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isReferensiMasterOpen,
+                  'fe-chevron-up': isReferensiMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isReferensiMasterOpen" class="submenu d-block">
+                <li>
+                  <router-link to="/Master/User" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Bidang</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Izin</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Usaha/Kegiatan</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Parameter PPA</router-link
+                  >
+                </li>
+                <li>
+                  <a href="javascript:void(0);" @click="togglePPU">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Parameter PPU</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isPPUOpen,
+                        'fe-chevron-up': isPPUOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isPPUOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/Bulanan"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Contoh Uji
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/PPA"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Kelompok Uji
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/PPU"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Parameter PPU
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+                <li>
+                  <router-link to="/Master/Ipal" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Produksi</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Ipal" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Produk</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
           </li>
           <li v-if="store.state.auth.user.role === 'ADMIN'">
             <a
