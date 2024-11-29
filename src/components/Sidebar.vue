@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -14,6 +15,7 @@ const userRole = ref('EKSEKUTIF');
 
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
+
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
@@ -155,6 +157,7 @@ onMounted(async () => {
       isUserPending.value = true
     }
 
+    await fetchUserStatus()
     const canPemantauanResult = await canCreatePemantauan()
     canPemantauan.value = canPemantauanResult.result
   } catch (e) {
@@ -163,6 +166,23 @@ onMounted(async () => {
     loader.hide()
   }
 })
+
+const companyDetail = ref(false)
+const fetchUserStatus = async () => {
+  const token = localStorage.getItem('TOKEN')
+  if (!token) return
+
+  try {
+    const response = await axios.get('/api/user/status', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    companyDetail.value = response.data.detail
+  } catch (error) {
+    console.error('Error fetching user status:', error)
+  }
+}
 </script>
 
 <style scoped>
@@ -843,7 +863,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role !== 'ADMIN'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a
               href="javascript:void(0);"
               @click="toggleData"
@@ -1008,7 +1028,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -1074,7 +1094,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
@@ -1104,7 +1124,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>

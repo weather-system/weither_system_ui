@@ -12,7 +12,7 @@ const form = ref(null)
 
 const initialValues = {
   volume_limbah_dalam_izin: 0,
-  items: [{ jenis: '', volume: null, satuan: '' }],
+  items: [{ jenis: '', volume: null, satuan: '' ,jenis_limbah_berdasarkan_sumber:'', masa_simpan:''}],
 }
 const deletetpsb3item = async id => {
   const { isConfirmed } = await Swal.fire({
@@ -57,6 +57,8 @@ const schema = yup.object({
       jenis: yup.string().required(),
       volume: yup.number().required(),
       satuan: yup.string().required(),
+      jenis_limbah_berdasarkan_sumber: yup.string().required(),
+      masa_simpan: yup.string().required(),
     }),
   ),
 })
@@ -93,7 +95,7 @@ defineExpose({ setValues })
 </script>
 
 <template>
-  <Form ref="form" :validation-schema="schema" :initial-values="initialValues">
+  <Form ref="form" :validation-schema="schema" :initial-values="initialValues" @invalid-submit="console.log">
     <div class="row">
       <div class="col-12 mt-2">
         <div class="row mb-3">
@@ -104,33 +106,38 @@ defineExpose({ setValues })
               <ErrorMessage name="no_rintek" />
             </div>
           </div>
+          <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label class="col-form-label">File Rintek</label>
               <Field name="file_rintek" v-slot="{ field, handleChange }">
                 <input @change="async ($event) => handleChange(await uploadFileWrapped($event))" type="file" class="form-control" />
+                <img :src="field.value" style="max-width: 500px; max-height: auto; object-fit: contain;" />
               </Field>
+              
               <ErrorMessage name="file_rintek" />
             </div>
           </div>
-          <div class="col-md-6">
+        </div>
+          <!-- <div class="col-md-6">
             <div class="form-group">
               <label class="col-form-label">Sumber Limbah B3</label>
               <Field name="sumber_limbah_b3" class="form-control" />
               <ErrorMessage name="sumber_limbah_b3" />
             </div>
-          </div>
+          </div> -->
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
-                <label class="col-form-label">Longitude TPS LB3</label>
+                <label class="col-form-label">Longitude TPS LB3  (Ex. -123.21312)</label>
                 <Field name="koordinat_x" class="form-control" />
+                <a href ="https://www.yogantara.info/" class="text-small" target="_blank" rel="noopener noreferrer">Konvert dari derajat ke decimal Link</a>
                 <ErrorMessage name="koordinat_x" />
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
-                <label class="col-form-label">Latitude TPS LB3</label>
+                <label class="col-form-label">Latitude TPS LB3  (Ex. -123.21312)</label>
                 <Field name="koordinat_y" class="form-control" />
                 <ErrorMessage name="koordinat_y" />
               </div>
@@ -148,7 +155,7 @@ defineExpose({ setValues })
             <ErrorMessage name="volume_limbah_dalam_izin" />
           </div> -->
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="form-group">
             <label class="col-form-label">Pihak Ke 3</label>
             <Field name="pihak_ke_3" class="form-control" />
@@ -159,20 +166,20 @@ defineExpose({ setValues })
           <div class="col-md-4">
             <div class="form-group">
               <label class="col-form-label">Sertifikat Dokumen Kerjasama</label>
-              <Field name="sertifikat_dokumen" v-slot="{ handleChange }">
+              <Field name="sertifikat_dokumen" v-slot="{field, handleChange }">
                 <input
                   type="file"
                   @change="uploadDoc($event, handleChange)"
                   class="form-control"
-                /> </Field
+                /> 
+                <img :src="field.value" style="max-width: 500px; max-height: auto; object-fit: contain;" /></Field
               ><small class="form-text text-muted"
                 >Maksimal ukuran file: 20MB</small
               >
               <ErrorMessage name="sertifikat_dokumen" />
             </div>
           </div>
-        </div>
-        <div class="row mb-3">
+          <div class="row">
           <div class="col-md-4">
             <div class="form-group">
               <label class="col-form-label">Masa Berlaku Kerjasama</label>
@@ -180,100 +187,121 @@ defineExpose({ setValues })
               <ErrorMessage name="masa_berlaku" />
             </div>
           </div>
+          </div>
         </div>
       </div>
       <div class="col-12 mt-4">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Jenis</th>
-              <th>Volume</th>
-              <th>Satuan</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <FieldArray name="items" v-slot="{ fields, push, remove }">
-              <tr v-if="fields.length === 0">
-                <td colspan="4" class="text-center">Data Tidak Ada</td>
-                <td>
-                  <button
-                    @click="async()=> {
-                      if (field.value.id){
-                        await deletetpsb3item(field.value.id)
-                      }
-                        remove(idx)
-                    }"
-                    type="button"
-                    class="btn btn-danger"
-                  >
-                    -
-                  </button>
-                  <button
-                    @click="
-                      push({ id: null, jenis: '', volume: null, satuan: '' })
-                    "
-                    type="button"
-                    class="btn btn-success m-2"
-                  >
-                    +
-                  </button>
-                </td>
+        <div class = "table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Jenis Limbah Berdasarkan Sumber</th>
+                <th>Jenis Limbah B3</th>
+                <th>Volume Limbah Dalam Izin</th>
+                <th>Satuan Limbah Dalam Izin</th>
+                <th>Masa Simpan (Hari)</th>
+                <th>Aksi</th>
               </tr>
-              <tr v-for="(field, idx) in fields" :key="idx">
-                <td>{{ idx + 1 }}</td>
-                <td>
-                  <Field
-                    :name="`items[${idx}].jenis`"
-                    type="text"
-                    class="form-control"
-                  />
-                  <ErrorMessage :name="`items[${idx}].jenis`" />
-                </td>
-                <td>
-                  <Field
-                    :name="`items[${idx}].volume`"
-                    type="number"
-                    class="form-control"
-                  />
-                  <ErrorMessage :name="`items[${idx}].volume`" />
-                </td>
-                <td>
-                  <Field
-                    :name="`items[${idx}].satuan`"
-                    type="text"
-                    class="form-control"
-                  />
-                  <ErrorMessage :name="`items[${idx}].satuan`" />
-                </td>
-                <td>
-                  <button
-                    @click="async()=> {
-                      if (field.value.id){
-                        await deletetpsb3item(field.value.id)
-                      }
-                        remove(idx)
-                    }"
-                    type="button"
-                    class="btn btn-danger"
-                  >
-                    -
-                  </button>
-                  <button
-                    @click="
-                      push({ id: null, jenis: '', volume: null, satuan: '' })
-                    "
-                    type="button"
-                    class="btn btn-success m-2"
-                  >
-                    +
-                  </button>
-                </td>
-              </tr>
-            </FieldArray>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <FieldArray name="items" v-slot="{ fields, push, remove }">
+                <tr v-if="fields.length === 0">
+                  <td colspan="6" class="text-center">Data Tidak Ada</td>
+                  <td>
+                    <button
+                      @click="async()=> {
+                        if (field.value.id){
+                          await deletetpsb3item(field.value.id)
+                        }
+                          remove(idx)
+                      }"
+                      type="button"
+                      class="btn btn-danger"
+                    >
+                      -
+                    </button>
+                    <button
+                      @click="
+                        push({ id: null, jenis: '', volume: null, satuan: '', jenis_limbah_berdasarkan_sumber: '', masa_simpan: '' })
+                      "
+                      type="button"
+                      class="btn btn-success m-2"
+                    >
+                      +
+                    </button>
+                  </td>
+                </tr>
+                <tr v-for="(field, idx) in fields" :key="idx">
+                  <td>{{ idx + 1 }}</td>
+                  <td>
+                    <Field
+                      :name="`items[${idx}].jenis_limbah_berdasarkan_sumber`"
+                      type="text"
+                      class="form-control"
+                    />
+                    <ErrorMessage :name="`items[${idx}].jenis_limbah_berdasarkan_sumber`" />
+                  </td>
+                  <td>
+                    <Field
+                      :name="`items[${idx}].jenis`"
+                      type="text"
+                      class="form-control"
+                    />
+                    <ErrorMessage :name="`items[${idx}].jenis`" />
+                  </td>
+                  <td>
+                    <Field
+                      :name="`items[${idx}].volume`"
+                      type="number"
+                      class="form-control"
+                    />
+                    <ErrorMessage :name="`items[${idx}].volume`" />
+                  </td>
+                  <td>
+                    <Field
+                      :name="`items[${idx}].satuan`"
+                      type="text"
+                      class="form-control"
+                    />
+                    <ErrorMessage :name="`items[${idx}].satuan`" />
+                  </td>
+                  <td>
+                    <Field
+                      :name="`items[${idx}].masa_simpan`"
+                      type="text"
+                      class="form-control"
+                    />
+                    <ErrorMessage :name="`items[${idx}].masa_simpan`" />
+                  </td>
+                  <td>
+                    <button
+                      @click="async()=> {
+                        if (field.value.id){
+                          await deletetpsb3item(field.value.id)
+                        }
+                          remove(idx)
+                      }"
+                      type="button"
+                      class="btn btn-danger"
+                    >
+                      -
+                    </button>
+                    <button
+                      @click="
+                        push({ id: null, jenis: '', volume: null, satuan: '', jenis_limbah_berdasarkan_sumber: '', masa_simpan: '' })
+                      "
+                      type="button"
+                      class="btn btn-success m-2"
+                    >
+                      +
+                    </button>
+                  </td>
+                </tr>
+              </FieldArray>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="row">
