@@ -650,11 +650,14 @@ const uploadFileIzinPerusahaan = async e => {
                   <label class="col-form-label"
                     >Debit Air Limbah Yang Diijinkan</label
                   >
+                  <div class ="form-duration">
                   <input
                     type="text"
                     class="form-control"
                     v-model="formData.permissible_waste_water_discharge"
                   />
+                  <span class="mins">m2</span>
+                </div>
                 </div>
               </div>
               <div class="col-md-6">
