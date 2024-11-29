@@ -51,7 +51,7 @@ const submit = async payload => {
         <div class="content-page-header content-page-headersplit">
           <div>
             <h5>
-              Form Swapantau Pengendalian Pencemaran Air ({{
+              Form Pemantauan Pencemaran Air ({{
                 store.state.auth.user.company?.name
               }})
             </h5>
