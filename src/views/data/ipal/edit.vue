@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ErrorMessage } from 'vee-validate'
 import axios from 'axios'
 import { useLoading } from 'vue-loading-overlay'
 import { uploadFile } from '@/lib/filestorage.js'
@@ -19,6 +20,7 @@ const formData = ref({
   capacity_ipal: '',
   unit_in_capacity: '',
   permissible_waste_water_discharge: '',
+  unit_permissible_waste_water_discharge: '',
   waste_water_source: '',
   recycle_efforts: '',
   longitude: '',
@@ -42,9 +44,7 @@ const isOutletChecked = ref(false)
 const fetchIpalData = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get(
-      `/api/company_ipals/${ipalId}`,
-    )
+    const response = await axios.get(`/api/company_ipals/${ipalId}`)
     const data = response.data.data
     if (data) {
       Object.assign(formData.value, data)
@@ -79,9 +79,7 @@ const removeChemical = async (detailId, index) => {
     if (confirmation.isConfirmed) {
       const loader = $loading.show() // Show loader
       try {
-        const response = await axios.delete(
-          `/api/ipal-details/${detailId}`,
-        )
+        const response = await axios.delete(`/api/ipal-details/${detailId}`)
         if (response.status === 200) {
           // Remove the item from the local list (UI update)
           formData.value.ipal_details.splice(index, 1)
@@ -129,11 +127,7 @@ const removeEffort = async (detailId, index) => {
         }
       } catch (error) {
         console.error('Error during delete operation:', error)
-        Swal.fire(
-          'Error!',
-          'Terjadi Kesalahan.',
-          'error',
-        )
+        Swal.fire('Error!', 'Terjadi Kesalahan.', 'error')
       } finally {
         loader.hide() // Hide loader after operation
       }
@@ -271,15 +265,12 @@ const saveNewChemical = async () => {
   if (!$loading.isActive) {
     const loader = $loading.show()
     try {
-      const response = await axios.post(
-        '/api/ipal-details',
-        {
-          chemicals_used: newChemical.value.chemicals_used,
-          use_of_chemicals: newChemical.value.use_of_chemicals,
-          unit_in_use_of_chemicals: newChemical.value.unit_in_use_of_chemicals,
-          company_ipal_id: newChemical.value.company_ipal_id,
-        },
-      )
+      const response = await axios.post('/api/ipal-details', {
+        chemicals_used: newChemical.value.chemicals_used,
+        use_of_chemicals: newChemical.value.use_of_chemicals,
+        unit_in_use_of_chemicals: newChemical.value.unit_in_use_of_chemicals,
+        company_ipal_id: newChemical.value.company_ipal_id,
+      })
       if (response.status === 200 || response.status === 201) {
         console.log('Data successfully saved:', response.data)
         // Show a success SweetAlert
@@ -319,13 +310,10 @@ const saveNewEffort = async () => {
   if (!$loading.isActive) {
     const loader = $loading.show()
     try {
-      const response = await axios.post(
-        '/api/management_efforts',
-        {
-          recycling_effort: newEffort.value.recycling_effort,
-          company_ipal_id: newEffort.value.company_ipal_id,
-        },
-      )
+      const response = await axios.post('/api/management_efforts', {
+        recycling_effort: newEffort.value.recycling_effort,
+        company_ipal_id: newEffort.value.company_ipal_id,
+      })
       if (response.status === 200 || response.status === 201) {
         console.log('Data successfully saved:', response.data)
         // Show a success SweetAlert
@@ -374,21 +362,44 @@ const updateCompanyDetails = async () => {
       id: ipalId,
     }
     console.log('dataaaaaa :', updatedType)
-    await axios.put(
-      `/api/company_ipals/${ipalId}`,
-      updatedType,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    await axios.put(`/api/company_ipals/${ipalId}`, updatedType, {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    )
+    })
 
     Swal.fire('Berhasil', 'Data IPAL berhasil diperbarui.', 'success')
     router.push('/Data/Ipal')
   } catch (error) {
     console.error('Error updating company details:', error)
-    Swal.fire('Error', 'Gagal memperbarui data IPAL.', 'error')
+
+    // Jika ada response dari server, tampilkan di SweetAlert
+    if (error.response) {
+      console.error('Response error:', error.response)
+      const errorMessage =
+        error.response.data?.message || 'Terjadi kesalahan pada server.'
+      Swal.fire(
+        'Error',
+        `Gagal memperbarui data IPAL. ${errorMessage}`,
+        'error',
+      )
+    } else if (error.request) {
+      // Permintaan berhasil dibuat, tetapi tidak ada respons
+      console.error('Request error:', error.request)
+      Swal.fire(
+        'Error',
+        'Gagal memperbarui data IPAL. Tidak ada respons dari server.',
+        'error',
+      )
+    } else {
+      // Error lain saat membuat request
+      console.error('Error message:', error.message)
+      Swal.fire(
+        'Error',
+        `Gagal memperbarui data IPAL. ${error.message}`,
+        'error',
+      )
+    }
   } finally {
     loader.hide()
   }
@@ -397,9 +408,7 @@ const updateCompanyDetails = async () => {
 const fetchCompanyLicences = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get(
-      '/api/company_licence',
-    )
+    const response = await axios.get('/api/company_licence')
     licenseOptions.value = response.data || []
   } catch (error) {
     console.error('Error fetching company licenses:', error)
@@ -522,25 +531,40 @@ const uploadFileIzinPerusahaan = async e => {
                     class="form-control"
                     v-model="formData.acuan_baku_mutu"
                   >
-                    <option value="Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah">Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah</option>
-                    <option value="Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah Domestik">Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah Domestik</option>
-                    <option value="Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah">Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah</option>
+                    <option
+                      value="Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah"
+                    >
+                      Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah
+                    </option>
+                    <option
+                      value="Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah Domestik"
+                    >
+                      Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah
+                      Domestik
+                    </option>
+                    <option
+                      value="Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah"
+                    >
+                      Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah
+                    </option>
                   </select>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-form-label">Longitude</label>
+                  <label class="col-form-label">Longitude (Ex. -123.21312)</label>
                   <input
                     type="text"
                     class="form-control"
+                    placeholder="-153.2123"
                     v-model="formData.longitude"
                   />
+                  <a href ="https://www.yogantara.info/" class="text-small" target="_blank" rel="noopener noreferrer">Konvert dari derajat ke decimal Link</a>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-form-label">Latitude</label>
+                  <label class="col-form-label">Latitude (Ex. -123.21312)</label>
                   <input
                     type="text"
                     class="form-control"
@@ -645,19 +669,36 @@ const uploadFileIzinPerusahaan = async e => {
               </div>
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="col-form-label"
                     >Debit Air Limbah Yang Diijinkan</label
                   >
-                  <input
-                    type="text"
+                  <div class="form-duration">
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="formData.permissible_waste_water_discharge"
+                    />
+                  </div>
+                </div>
+              </div><div class="col-md-4">
+                <div class="form-group">
+                  <label class="col-form-label"
+                    >Satuan Debit Air Limbah</label
+                  >
+                  <select
                     class="form-control"
-                    v-model="formData.permissible_waste_water_discharge"
-                  />
+                    v-model="formData.unit_permissible_waste_water_discharge"
+                    required
+                  >
+                    <option value="" disabled>Pilih Satuan</option>
+                    <option value="M3/Hari">M3/Hari</option>
+                    <option value="M3/Detik">M3/Detik</option>
+                  </select>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="col-form-label">Sumber Air Limbah</label>
                   <input
@@ -805,7 +846,9 @@ const uploadFileIzinPerusahaan = async e => {
                 <div class="form-group">
                   <label for="photo">Upload Persetujuan Teknis IPAL</label>
                   <input type="file" @change="uploadNIB" class="form-control" />
-                  <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
+                  <small class="form-text text-muted"
+                    >Maksimal ukuran file: 20MB</small
+                  >
                 </div>
               </div>
             </div>
@@ -1012,8 +1055,12 @@ const uploadFileIzinPerusahaan = async e => {
                 class="form-control"
                 v-model="formData.further_sludge_handling"
               >
-                <option value="Diserahkan pada pihak ketiga">Diserahkan pada pihak ketiga</option>
-                <option value="Dilakukan pengolahan lumpur">Dilakukan pengolahan lumpur</option>
+                <option value="Diserahkan pada pihak ketiga">
+                  Diserahkan pada pihak ketiga
+                </option>
+                <option value="Dilakukan pengolahan lumpur">
+                  Dilakukan pengolahan lumpur
+                </option>
               </select>
             </div>
 

@@ -629,9 +629,14 @@ const router = createRouter({
       component: () => import('@/views/Master/CompaniesCreateView.vue'),
     },
     {
-      path: '/Master/Companies/:id',
+      path: '/Master/CompaniesView/:id',
       name: 'MasterCompaniesEditView',
       component: () => import('@/views/Master/CompaniesEditView.vue'),
+    },
+    {
+      path: '/Master/CompaniesView/:id',
+      name: 'MasterCompaniesEditView',
+      component: () => import('@/views/Master/CompaniesDetailView.vue'),
     },
     {
       path: '/Eksekutif',

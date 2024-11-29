@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -14,6 +15,7 @@ const userRole = ref('EKSEKUTIF');
 
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
+
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
@@ -34,6 +36,8 @@ const isVerifikasiOpen = ref(false)
 const isSwapantauOpen = ref(false)
 const isMonitoringOpen = ref(false)
 const isVerifikasiLogOpen = ref(false)
+const isReferensiMasterOpen = ref(false)
+const isPPUOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
@@ -94,6 +98,12 @@ const toggleMonitoring = () => {
 const toggleVerifikasiLog = () => {
   isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value
 }
+const toggleReferensiMaster = () => {
+  isReferensiMasterOpen.value = !isReferensiMasterOpen.value
+}
+const togglePPU = () => {
+  isPPUOpen.value = !isPPUOpen.value
+}
 const togglePerDas = () => {
   console.log('Data clicked')
   isperdasOpen.value = !isperdasOpen.value
@@ -147,6 +157,7 @@ onMounted(async () => {
       isUserPending.value = true
     }
 
+    await fetchUserStatus()
     const canPemantauanResult = await canCreatePemantauan()
     canPemantauan.value = canPemantauanResult.result
   } catch (e) {
@@ -155,6 +166,23 @@ onMounted(async () => {
     loader.hide()
   }
 })
+
+const companyDetail = ref(false)
+const fetchUserStatus = async () => {
+  const token = localStorage.getItem('TOKEN')
+  if (!token) return
+
+  try {
+    const response = await axios.get('/api/user/status', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    companyDetail.value = response.data.detail
+  } catch (error) {
+    console.error('Error fetching user status:', error)
+  }
+}
 </script>
 
 <style scoped>
@@ -229,7 +257,6 @@ onMounted(async () => {
             <a
               href="javascript:void(0);"
               @click="toggleMaster"
-              :class="{ active: route.path.startsWith('/Master') }"
             >
               <i class="fas fa-book-bookmark"></i>
               <span>Data Master</span>
@@ -280,7 +307,6 @@ onMounted(async () => {
             <a
               href="javascript:void(0);"
               @click="toggleVerifikasi"
-              :class="{ active: route.path.startsWith('/Master/Operator') }"
             >
               <i class="fas fa-check"></i>
               <span>Verifikasi</span>
@@ -477,11 +503,108 @@ onMounted(async () => {
               </ul>
             </transition>
           </li>
-          <li>
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
             <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a
+              href="javascript:void(0);"
+              @click="toggleReferensiMaster"
+            >
+              <i class="fas fa-book"></i>
+              <span>Referensi</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isReferensiMasterOpen,
+                  'fe-chevron-up': isReferensiMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="isReferensiMasterOpen" class="submenu d-block">
+                <li>
+                  <router-link to="/Master/User" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Bidang</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Izin</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Usaha/Kegiatan</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Companies" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Parameter PPA</router-link
+                  >
+                </li>
+                <li>
+                  <a href="javascript:void(0);" @click="togglePPU">
+                    <i class="fas fa-chevron-right me-2"></i>
+                    <span>Parameter PPU</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isPPUOpen,
+                        'fe-chevron-up': isPPUOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul v-if="isPPUOpen" class="submenu d-block ms-3">
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/Bulanan"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Contoh Uji
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/PPA"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Kelompok Uji
+                        </router-link>
+                      </li>
+                      <li>
+                        <router-link
+                          to="/Master/Swapantau/PPU"
+                          active-class="active"
+                        >
+                          <i class="fas fa-chevron-right"></i> Parameter PPU
+                        </router-link>
+                      </li>
+                    </ul>
+                  </transition>
+                </li>
+                <li>
+                  <router-link to="/Master/Ipal" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Produksi</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Ipal" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Produk</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
           </li>
           <li v-if="store.state.auth.user.role === 'ADMIN'">
             <a
@@ -740,7 +863,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a
               href="javascript:void(0);"
               @click="toggleData"
@@ -905,7 +1028,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -971,7 +1094,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
@@ -1001,7 +1124,7 @@ onMounted(async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER'">
+          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
