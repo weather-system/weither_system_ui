@@ -112,7 +112,7 @@ defineExpose({ setValues })
               <label class="col-form-label">File Rintek</label>
               <Field name="file_rintek" v-slot="{ field, handleChange }">
                 <input @change="async ($event) => handleChange(await uploadFileWrapped($event))" type="file" class="form-control" />
-                <img :src="field.value" style="max-width: 1000px; max-height: auto; object-fit: contain;" />
+                <img :src="field.value" style="max-width: 500px; max-height: auto; object-fit: contain;" />
               </Field>
               
               <ErrorMessage name="file_rintek" />
@@ -129,14 +129,15 @@ defineExpose({ setValues })
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="col-form-label">Longitude TPS LB3</label>
+                <label class="col-form-label">Longitude TPS LB3  (Ex. -123.21312)</label>
                 <Field name="koordinat_x" class="form-control" />
+                <a href ="https://www.yogantara.info/" class="text-small" target="_blank" rel="noopener noreferrer">Konvert dari derajat ke decimal Link</a>
                 <ErrorMessage name="koordinat_x" />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="col-form-label">Latitude TPS LB3</label>
+                <label class="col-form-label">Latitude TPS LB3  (Ex. -123.21312)</label>
                 <Field name="koordinat_y" class="form-control" />
                 <ErrorMessage name="koordinat_y" />
               </div>
@@ -171,7 +172,7 @@ defineExpose({ setValues })
                   @change="uploadDoc($event, handleChange)"
                   class="form-control"
                 /> 
-                <img :src="field.value" style="max-width: 700px; max-height: auto; object-fit: contain;" /></Field
+                <img :src="field.value" style="max-width: 500px; max-height: auto; object-fit: contain;" /></Field
               ><small class="form-text text-muted"
                 >Maksimal ukuran file: 20MB</small
               >

@@ -552,19 +552,19 @@ const uploadFileIzinPerusahaan = async e => {
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-form-label">Longitude (Ex. -123.213)</label>
+                  <label class="col-form-label">Longitude (Ex. -123.21312)</label>
                   <input
                     type="text"
                     class="form-control"
                     placeholder="-153.2123"
                     v-model="formData.longitude"
                   />
-                  <p class="text-small">Konvert dari derajat ke decimal Link</p>
+                  <a href ="https://www.yogantara.info/" class="text-small" target="_blank" rel="noopener noreferrer">Konvert dari derajat ke decimal Link</a>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-form-label">Latitude</label>
+                  <label class="col-form-label">Latitude (Ex. -123.21312)</label>
                   <input
                     type="text"
                     class="form-control"
