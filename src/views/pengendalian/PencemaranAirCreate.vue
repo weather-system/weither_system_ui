@@ -35,7 +35,7 @@ const submit = async payload => {
         title: 'Success',
         text: 'Data Pencemaran Berhasil dibuat!',
       });
-    // router.push('/Pengendalian/PencemaranAir')
+    router.push('/Pengendalian/PencemaranAir')
   } catch (e) {
     console.error(e)
   } finally {
