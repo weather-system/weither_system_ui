@@ -12,6 +12,7 @@ const form = ref(null)
 
 const initialValues = {
   volume_limbah_dalam_izin: 0,
+  sumber_limbah_b3: '-',
   items: [{ jenis: '', volume: null, satuan: '' ,jenis_limbah_berdasarkan_sumber:'', masa_simpan:''}],
 }
 const deletetpsb3item = async id => {
@@ -114,7 +115,7 @@ defineExpose({ setValues })
                 <input @change="async ($event) => handleChange(await uploadFileWrapped($event))" type="file" class="form-control" />
                 <img :src="field.value" style="max-width: 500px; max-height: auto; object-fit: contain;" />
               </Field>
-              
+
               <ErrorMessage name="file_rintek" />
             </div>
           </div>
@@ -171,7 +172,7 @@ defineExpose({ setValues })
                   type="file"
                   @change="uploadDoc($event, handleChange)"
                   class="form-control"
-                /> 
+                />
                 <img :src="field.value" style="max-width: 500px; max-height: auto; object-fit: contain;" /></Field
               ><small class="form-text text-muted"
                 >Maksimal ukuran file: 20MB</small

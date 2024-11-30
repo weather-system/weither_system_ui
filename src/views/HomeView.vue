@@ -20,8 +20,7 @@ import '@/assets/css/style.css'
           <div class="row align-items-center w-100">
             <div class="col-lg-7 col-md-10 mx-auto">
               <div class="section-search aos" data-aos="fade-up">
-                <h1>Professional Services For Your Home & Commercial</h1>
-                <p>Search From 100 Awesome Verified Ads!</p>
+                <h1>Dinas Lingkungan Hidup Kota Cimahi</h1>
                 <div class="search-box">
                   <form action="search.html">
                     <div class="search-input line">
