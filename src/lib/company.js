@@ -70,3 +70,8 @@ export const updateCompany = async (id, data) => {
   const resp = await axios.put(`/api/company/updateCompany/${id}`, data)
   return resp.data
 }
+
+export const getIpals = async () => {
+  const resp = await axios.get('/api/data_company_ipals')
+  return resp.data
+}
