@@ -320,7 +320,7 @@ const fetchUserStatus = async () => {
                 <li>
                   <a href="javascript:void(0);" @click="toggleSwapantau">
                     <i class="fas fa-chevron-right me-2"></i>
-                    <span>Swapantau</span>
+                    <span>Pemantauan</span>
                     <i
                       class="fe"
                       :class="{
