@@ -159,6 +159,12 @@ onMounted(async () => {
                         >
                         <p>{{ company.no_skklh }}</p>
                       </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold"
+                          >Tanggal Terbit Persetujuan Lingkungan</label
+                        >
+                        <p>{{ company.	terbit_persetujuan_lingkungan	 }}</p>
+                      </div>
                     </div>
                     <div class="row">
                       <div v-if="company.photo_skklh" class="col-md-6">

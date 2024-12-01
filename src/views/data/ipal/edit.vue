@@ -18,7 +18,7 @@ const formData = ref({
   waste_discharge_measuring_instrument_outlet_name: '',
   year_of_manufacture_of_ipal: '',
   capacity_ipal: '',
-  unit_in_capacity: '',
+  unit_in_capacity: 'm3',
   permissible_waste_water_discharge: '',
   unit_permissible_waste_water_discharge: '',
   waste_water_source: '',
@@ -584,17 +584,20 @@ const uploadFileIzinPerusahaan = async e => {
                   />
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-form-label">Kapasitas IPAL</label>
+                  <div class="form-duration">
                   <input
                     type="number"
                     class="form-control"
                     v-model="formData.capacity_ipal"
                   />
-                </div>
+                  <span class="mins">m3</span>
+                  </div>
+                  </div>
               </div>
-              <div class="col-md-4">
+              <!-- <div class="col-md-4">
                 <div class="form-group">
                   <label class="col-form-label">Satuan Kapasitas</label>
                   <input
@@ -603,7 +606,7 @@ const uploadFileIzinPerusahaan = async e => {
                     v-model="formData.unit_in_capacity"
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -623,14 +626,18 @@ const uploadFileIzinPerusahaan = async e => {
                     </div>
                     <div class="col-md-6">
                       <div v-if="isInletChecked" class="form-group">
-                        <input
-                          type="text"
-                          class="form-control input-dark-placeholder"
+                        <select
+                          class="form-control"
                           v-model="
                             formData.waste_discharge_measuring_instrument_inlet_name
                           "
-                          placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Masuk"
-                        />
+                        >
+                          <option value="" disabled>Pilih Nama Alat Ukur Pembuangan Limbah Masuk</option>
+                          <option value="U Notch"> U Notch</option>
+                          <option value="V Notch">V Notch</option>
+                          <option value="Flowmeter">Flowmeter</option>r
+                        </select>
+                        
                       </div>
                     </div>
                   </div>
@@ -654,14 +661,17 @@ const uploadFileIzinPerusahaan = async e => {
                     </div>
                     <div class="col-md-6">
                       <div v-if="isOutletChecked" class="form-group">
-                        <input
-                          type="text"
-                          class="form-control input-dark-placeholder"
-                          placeholder="Masukkan Nama Alat Ukur Pembuangan Limbah Keluar"
+                        <select
+                          class="form-control"
                           v-model="
                             formData.waste_discharge_measuring_instrument_outlet_name
                           "
-                        />
+                        >
+                          <option value="" disabled>Pilih Nama Alat Ukur Pembuangan Limbah Masuk</option>
+                          <option value="U Notch"> U Notch</option>
+                          <option value="V Notch">V Notch</option>
+                          <option value="Flowmeter">Flowmeter</option>r
+                        </select>
                       </div>
                     </div>
                   </div>
