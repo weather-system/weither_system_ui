@@ -24,3 +24,13 @@ export const deleteCerobong = async (id) => {
   const resp = await axios.delete(`/api/companyCerobong/${id}`)
   return resp.data
 }
+
+export const getAllCerobong = async () => {
+  try {
+    const response = await axios.get(`/api/master/cerobong`)
+    return response.data
+  } catch (error) {
+    console.error('Gagal mengambil data cerobong:', error)
+    throw error
+  }
+}

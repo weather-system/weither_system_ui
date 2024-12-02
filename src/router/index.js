@@ -579,9 +579,14 @@ const router = createRouter({
       component: () => import('@/views/Master/MasterIpal.vue'),
     },
     {
-      path: '/Master/IpalCreate',
-      name: 'MasterIpalCreateView',
-      component: () => import('@/views/Master/MasterIpalCreate.vue'),
+      path: '/Master/Emisi',
+      name: 'MasterEmisiView',
+      component: () => import('@/views/Master/MasterEmisi.vue'),
+    },
+    {
+      path: '/Master/LB3',
+      name: 'MasterLB3View',
+      component: () => import('@/views/Master/MasterLB3.vue'),
     },
     {
       path: '/Pengendalian/PencemaranUdara/TambahUdaraAmbien',

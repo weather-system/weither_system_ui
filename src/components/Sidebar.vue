@@ -283,13 +283,13 @@ const fetchUserStatus = async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/Master/Companies" activeClass="active">
+                  <router-link to="" activeClass="active">
                     <i class="fas fa-chevron-right"></i>
                     Perusahaan DPMPTSP</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/Master/Companies" activeClass="active">
+                  <router-link to="" activeClass="active">
                     <i class="fas fa-chevron-right"></i>
                     Izin DPMPTSP</router-link
                   >
@@ -297,7 +297,19 @@ const fetchUserStatus = async () => {
                 <li>
                   <router-link to="/Master/Ipal" activeClass="active">
                     <i class="fas fa-chevron-right"></i>
-                    Izin Ipal</router-link
+                    Pertek Ipal</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/Emisi" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Pertek Emisi</router-link
+                  >
+                </li>
+                <li>
+                  <router-link to="/Master/LB3" activeClass="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Rintek LB3</router-link
                   >
                 </li>
               </ul>

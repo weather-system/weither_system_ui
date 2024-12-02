@@ -118,7 +118,7 @@ onMounted(async () => {
                           </li>
                           <li>
                             <router-link
-                              :to="`/Master/Companies/${data.id}`"
+                              :to="`/Master/Ipal/?company_id=${data.id}`"
                               class="dropdown-item"
                             >
                               Data IPAL
