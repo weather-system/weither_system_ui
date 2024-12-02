@@ -252,11 +252,20 @@ defineExpose({ setValues })
               <Field name="year" class="form-control" />
               <ErrorMessage name="year" />
             </div>
-            <div class="mt-2">
+            <div class="mt-2 row">
               <div class="col-4">
                 <label class="form-label">Debit Terukur</label>
                 <Field name="debit_terukur" class="form-control" />
                 <ErrorMessage name="debit_terukur" />
+              </div>
+              <div class="col-4">
+                <label class="form-label">Satuan</label>
+                <Field name="debit_terukur_satuan" class="form-control" as="select">
+                  <option value="">Pilih</option>
+                  <option value="m3/hari">m3/hari</option>
+                  <option value="m3/detik">m3/detik</option>
+                </Field>
+                <ErrorMessage name="debit_terukur_satuan" />
               </div>
             </div>
             <div class="mt-2">
@@ -309,6 +318,7 @@ defineExpose({ setValues })
 
             <div>
               <div class="table-resposnive table-div">
+                <p>NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,) Contoh: 123.32</p>
                 <table class="table datatable">
                   <thead>
                     <tr>
