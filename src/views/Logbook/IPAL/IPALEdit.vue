@@ -4,13 +4,31 @@ import MainWrapper from "@/components/MainWrapper.vue";
 
 const ipalDataModal = ref(false);
 
-// Data ini bisa diisi dari API atau parameter route
+// Data awal (bisa diisi dari API atau parameter route)
 const ipalData = ref({
   tanggal: "2024-12-03",
   sumberLimbah: "Produksi",
-  inlet: { warna: "Keruh", pH: 7, debit: 1200, suhu: 30, keterangan: "Normal" },
-  outlet: { warna: "Bening", pH: 6.8, debit: 1180, suhu: 28, keterangan: "Normal" },
+  tableData: [
+    { warna: "Keruh", pH: 7, debit: 1200, suhu: 30, keterangan: "Normal" },
+    { warna: "Bening", pH: 6.8, debit: 1180, suhu: 28, keterangan: "Normal" },
+  ],
 });
+
+// Fungsi untuk menambah baris baru di tabel
+const addRow = () => {
+  ipalData.value.tableData.push({
+    warna: "",
+    pH: "",
+    debit: "",
+    suhu: "",
+    keterangan: "",
+  });
+};
+
+// Fungsi untuk menghapus baris terakhir di tabel
+const removeRow = (index) => {
+  ipalData.value.tableData.splice(index, 1);
+};
 </script>
 
 <template>
@@ -43,14 +61,14 @@ const ipalData = ref({
 
           <div class="mb-3">
             <label for="sumber-limbah" class="form-label">Sumber Limbah</label>
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
               <input
                 type="text"
                 id="sumber-limbah"
                 class="form-control me-2"
                 v-model="ipalData.sumberLimbah"
               />
-              <button type="button" class="btn btn-primary" @click="ipalDataModal = true">
+              <button type="button" class="btn btn-sm btn-primary" @click="ipalDataModal = true">
                 Pilih Data IPAL
               </button>
             </div>
@@ -65,90 +83,77 @@ const ipalData = ref({
                   <th>Debit (m³)</th>
                   <th>Suhu (°C)</th>
                   <th>Keterangan</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr v-for="(row, index) in ipalData.tableData" :key="index">
+                  <td><input type="text" class="form-control" v-model="row.warna" /></td>
+                  <td><input type="text" class="form-control" v-model="row.pH" /></td>
+                  <td><input type="text" class="form-control" v-model="row.debit" /></td>
+                  <td><input type="text" class="form-control" v-model="row.suhu" /></td>
+                  <td><input type="text" class="form-control" v-model="row.keterangan" /></td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Inlet"
-                      v-model="ipalData.inlet.warna"
-                    />
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" v-model="ipalData.inlet.pH" />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.inlet.debit"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.inlet.suhu"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.inlet.keterangan"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Outlet"
-                      v-model="ipalData.outlet.warna"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.outlet.pH"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.outlet.debit"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.outlet.suhu"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      v-model="ipalData.outlet.keterangan"
-                    />
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      @click="removeRow(index)"
+                    >
+                      Hapus
+                    </button>
                   </td>
                 </tr>
               </tbody>
             </table>
+            <button type="button" class="btn btn-sm btn-success mt-2" @click="addRow">
+              + Tambah Baris
+            </button>
           </div>
 
-          <div class="mt-4">
-            <button type="submit" class="btn btn-success">Perbarui</button>
-            <button type="reset" class="btn btn-warning">Batal</button>
+          <div class="mt-4 d-flex gap-3">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="reset" class="btn btn-danger">Batal</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Modal Pilih Data IPAL -->
+    <div v-if="ipalDataModal" class="modal-backdrop">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5>Data IPAL</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="ipalDataModal = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Sumber Air Limbah</th>
+                <th>Sistem IPAL</th>
+                <th>Kapasitas IPAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Produksi</td>
+                <td>1200m³/hari</td>
+                <td>Fisika, Kimia, Biologi</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="ipalDataModal = false">
+            Tutup
+          </button>
+        </div>
       </div>
     </div>
   </MainWrapper>
