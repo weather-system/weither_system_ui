@@ -1043,81 +1043,15 @@ const fetchUserStatus = async () => {
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-0">
                 <li>
-                  <router-link to="/logbook/produksisenyatanya">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Produksi Senyatanya</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/PemakaianBahanKimia">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Pemakaian Kimia</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/PemakaianAir">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Pemakaian Air</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/DebitOutletIPAL">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Debit Outlet IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/DebitPemakaianAir">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Debit Pemakaian Air</router-link
-                  >
-                </li>
-                <li>
                   <router-link to="/logbook/IPAL">
                     <i class="fas fa-chevron-right me-2"></i>
                     IPAL</router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/PenggunaanB3">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Penggunaan B3</router-link
-                  >
-                </li>
-                <li>
                   <router-link to="/logbook/TPSLimbahB3">
                     <i class="fas fa-chevron-right me-2"></i>
                     TPS Limbah B3</router-link
-                  >
-                </li>
-              </ul>
-            </transition>
-          </li>
-
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
-            <a href="javascript:void(0);" @click="toggleImportLogbook">
-              <i class="fas fa-file-import"></i>
-              <span>Import Logbook</span>
-              <i
-                class="fe"
-                :class="{
-                  'fe-chevron-down': !isImportLogbookOpen,
-                  'fe-chevron-up': isImportLogbookOpen,
-                }"
-              ></i>
-            </a>
-            <transition name="slide-fade">
-              <ul v-if="isImportLogbookOpen" class="submenu d-block ms-0">
-                <li>
-                  <router-link to="/import-logbook/ipal">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Logbook IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/import-logbook/limbah-b3">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Logbook Limbah B3</router-link
                   >
                 </li>
               </ul>
