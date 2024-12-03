@@ -22,6 +22,8 @@ const adminRoutes = [
   '/Logbook/IPAL/IPALEdit',
   '/Logbook/PenggunaanB3',
   '/Logbook/TPSLimbahB3',
+  '/Logbook/TPSLimbahB3/TPSLimbahB3Create',
+  '/Logbook/TPSLimbahB3/TPSLimbahB3Edit',
   '/Data/Company',
   '/Data/Ipal/:company_detail_id',
   '/Data/Perizinan',
@@ -287,6 +289,16 @@ const router = createRouter({
       path: '/Logbook/TPSLimbahB3',
       name: 'TPSLimbahB3',
       component: () => import('@/views/Logbook/TPSLimbahB3.vue'),
+    },
+    {
+      path: '/Logbook/TPSLimbahB3/TPSLimbahB3Create',
+      name: 'TPSLimbahB3Create',
+      component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahCreate.vue'),
+    },
+    {
+      path: '/Logbook/TPSLimbahB3Edit',
+      name: 'TPSLimbahB3Edit',
+      component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahEdit.vue'),
     },
     {
       path: '/Data/Company',
