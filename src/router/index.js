@@ -18,6 +18,8 @@ const adminRoutes = [
   '/Logbook/DebitOutletIPAL',
   '/Logbook/DebitPemakaianAir',
   '/Logbook/IPAL',
+  '/Logbook/IPAL/IPALCreate',
+  '/Logbook/IPAL/IPALEdit',
   '/Logbook/PenggunaanB3',
   '/Logbook/TPSLimbahB3',
   '/Data/Company',
@@ -263,6 +265,16 @@ const router = createRouter({
       path: '/Logbook/IPAL',
       name: 'IPAL',
       component: () => import('@/views/Logbook/IPAL.vue'),
+    },
+    {
+      path: '/Logbook/IPAL/IPALCreate',
+      name: 'IPALCreate',
+      component: () => import('@/views/Logbook/IPAL/IPALCreate.vue'),
+    },
+    {
+      path: '/Logbook/IPAL/IPALEdit',
+      name: 'IPALEdit',
+      component: () => import('@/views/Logbook/IPAL/IPALEdit.vue'),
     },
 
     {

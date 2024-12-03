@@ -58,7 +58,7 @@ onMounted(async () => {
               <li>
                 <RouterLink
                   class="btn btn-primary"
-                  to="/Logbook/IPAL/Create"
+                  to="/Logbook/IPAL/IPALCreate"
                 >
                   <i class="fa fa-plus me-2"></i>Tambah
                 </RouterLink>
