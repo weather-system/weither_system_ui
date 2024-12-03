@@ -644,6 +644,26 @@ const router = createRouter({
       component: () => import('@/views/EksekutifView.vue'),
     },
     {
+      path: '/Eksekutif/Cerobong',
+      name: 'CerobongView',
+      component: () => import('@/views/Eksekutif/Cerobong.vue'),
+    },
+    {
+      path: '/Eksekutif/PenataanIPAL',
+      name: 'PenataanIPALView',
+      component: () => import('@/views/Eksekutif/PenataanIPAL.vue'),
+    },
+    {
+      path: '/Eksekutif/RTH',
+      name: 'RTHView',
+      component: () => import('@/views/Eksekutif/RTH.vue'),
+    },
+    {
+      path: '/Eksekutif/TPSB3',
+      name: 'TPSB3View',
+      component: () => import('@/views/Eksekutif/TPSB3.vue'),
+    },
+    {
       path: '/Data/PersLing',
       name: 'PersetujuanLingkunganView',
       component: () => import('@/views/data/persling.vue'),
