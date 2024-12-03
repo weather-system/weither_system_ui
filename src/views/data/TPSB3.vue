@@ -102,7 +102,6 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>Pihak Ke 3</th>
                     <th>Sumber Limbah B3</th>
                     <th>Koordinat (X, Y)</th>
                     <th>Volume Limbah B3 Dalam Izin</th>
@@ -112,7 +111,6 @@ onMounted(async () => {
                 </thead>
                 <tbody>
                   <tr v-for="data in tpsB3" :key="data.id">
-                    <td>{{ data.pihak_ke_3 }}</td>
                     <td>{{ data.sumber_limbah_b3 }}</td>
                     <td>{{ data.koordinat_x }}, {{ data.koordinat_y }}</td>
                     <td>{{ data.volume_limbah_dalam_izin }}</td>

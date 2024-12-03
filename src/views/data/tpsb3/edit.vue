@@ -42,6 +42,12 @@ onMounted(async () => {
   const loader = $loading.show()
   try {
     const data = await getTpsB3Detail(route.params.id)
+    data.itemz=data.itemz.map((v)=>{
+      delete v.created_at
+      delete v.updated_at
+      return v
+    })
+    console.log(data)
     form.value.setValues(data)
   } catch (e) {
     console.error(e)
