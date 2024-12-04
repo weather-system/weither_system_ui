@@ -1,55 +1,53 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
-import { useLoading } from 'vue-loading-overlay'
-import MainWrapper from '@/components/MainWrapper.vue'
+import { ref, onMounted } from "vue";
+import { RouterLink } from "vue-router";
+import { useLoading } from "vue-loading-overlay";
+import MainWrapper from "@/components/MainWrapper.vue";
 
-const $loading = useLoading()
+const $loading = useLoading();
 
-const tpsLimbahB3Data = ref([])
-const selectedMonth = ref('')
-const selectedYear = ref('')
+const tpsLimbahB3Data = ref([]);
+const selectedMonth = ref("");
+const selectedYear = ref("");
 
 onMounted(async () => {
-  const loader = $loading.show()
+  const loader = $loading.show();
   try {
     // Dummy data, ganti dengan panggilan API Anda
     tpsLimbahB3Data.value = [
       {
         id: 1,
-        company: 'PT ALLINSTUDIO',
-        jenis_lb3: 'Limbah A',
-        jumlah: '50',
-        kemasan: 'Drum',
-        jenis_transaksi: 'Pengiriman',
-        tgl_input: '2023-11-20 08:30:00',
+        company: "PT ALLINSTUDIO",
+        jenis_lb3: "Limbah A",
+        jumlah: "50",
+        kemasan: "Drum",
+        jenis_transaksi: "Pengiriman",
+        tgl_input: "2023-11-20 08:30:00",
       },
       {
         id: 2,
-        company: 'PT XYZ',
-        jenis_lb3: 'Limbah B',
-        jumlah: '30',
-        kemasan: 'Kantong',
-        jenis_transaksi: 'Penerimaan',
-        tgl_input: '2023-11-25 14:15:00',
+        company: "PT XYZ",
+        jenis_lb3: "Limbah B",
+        jumlah: "30",
+        kemasan: "Kantong",
+        jenis_transaksi: "Penerimaan",
+        tgl_input: "2023-11-25 14:15:00",
       },
       // Tambahkan data dummy lainnya sesuai kebutuhan
-    ]
+    ];
   } catch (e) {
-    console.error(e)
+    console.error(e);
   } finally {
-    loader.hide()
+    loader.hide();
   }
-})
+});
 </script>
 
 <template>
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
-        <div v-if="$loading.isLoading" class="loading-overlay">
-          Loading...
-        </div>
+        <div v-if="$loading.isLoading" class="loading-overlay">Loading...</div>
 
         <div class="content-page-header content-page-headersplit">
           <h5>TPS Limbah B3</h5>
@@ -58,7 +56,7 @@ onMounted(async () => {
               <li>
                 <RouterLink
                   class="btn btn-primary"
-                  to="/Logbook/TPSLimbahB3/Create"
+                  to="/Logbook/TPSLimbahB3/TPSLimbahB3Create"
                 >
                   <i class="fa fa-plus me-2"></i>Tambah
                 </RouterLink>
