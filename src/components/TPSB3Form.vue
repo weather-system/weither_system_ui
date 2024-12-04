@@ -205,7 +205,7 @@ defineExpose({ setValues })
             </div>
           </div> -->
           <div class="row">
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label class="col-form-label">No. Rintek</label>
                 <Field name="no_rintek" class="form-control" />
@@ -238,7 +238,7 @@ defineExpose({ setValues })
                   <ErrorMessage name="file_rintek" />
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- <div class="col-md-6">
               <div class="form-group">
                 <label class="col-form-label">Sumber Limbah B3</label>

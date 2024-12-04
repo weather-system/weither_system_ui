@@ -17,63 +17,51 @@ const initialData = {
   details: [
     {
       parameter: 'Temperatur Udara Sekitar',
-      satuan: 'C',
-      ekspresi: '='
+      satuan: 'C'
     },
     {
       parameter: 'BOD',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'COD',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'TSS',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Fenol Total',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Krom Total',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Amonia Total',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Sulfida',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Minyak dan Lemak',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Warna',
-      satuan: 'Pt-Co',
-      ekspresi: '='
+      satuan: 'Pt-Co'
     },
     {
       parameter: 'pH',
-      satuan: null,
-      ekspresi: '='
+      satuan: null
     },
     {
       parameter: 'Temperatur Air',
-      satuan: 'C',
-      ekspresi: '='
+      satuan: 'C'
     }
   ],
 };
@@ -87,7 +75,6 @@ const schema = yup.object({
   tgl_pengambilan_contoh: yup.string().required(),
   details: yup.array().of(yup.object({
     parameter: yup.string().required(),
-    ekspresi: yup.string().required(),
     hasil_pengukuran: yup.number().required(),
     satuan: yup.string().nullable()
   }))
@@ -288,7 +275,6 @@ defineExpose({ setValues })
                   <thead>
                     <tr>
                       <th>Parameter</th>
-                      <th>Ekspresi</th>
                       <th>Hasil Pengukuran</th>
                     </tr>
                   </thead>
@@ -296,18 +282,6 @@ defineExpose({ setValues })
                     <FieldArray name="details" v-slot="{ fields }">
                       <tr v-for="(field, i) in fields" :key="field.key">
                         <td>{{ field.value.parameter }}</td>
-                        <td>
-                          <Field
-                            :name="`details[${i}].ekspresi`"
-                            class="form-select"
-                            as="select"
-                          >
-                            <option value="=">=</option>
-                            <option value=">">></option>
-                            <option value="<"><</option>
-                          </Field>
-                          <ErrorMessage :name="`details[${i}].ekspresi`" />
-                        </td>
                         <td>
                           <div
                             class="d-flex align-items-center"

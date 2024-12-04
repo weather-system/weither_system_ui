@@ -209,18 +209,23 @@ defineExpose({ setValues })
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="col-form-label">Longitude</label>
-                    <Field
-                      name="koordinat_x"
-                      class="form-control"
-                      type="number"
-                    />
+                    <label class="col-form-label"
+                    >Longitude (Ex. -123.21312)</label
+                  >
+                  <Field name="koordinat_x" class="form-control" />
+                  <a
+                    href="https://www.yogantara.info/"
+                    class="text-small"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Konvert dari derajat ke decimal Link</a
+                  >
                     <ErrorMessage name="koordinat_x" />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="col-form-label">Latitude</label>
+                    <label class="col-form-label">Latitude (Ex. -123.21312)</label>
                     <Field
                       name="koordinat_y"
                       class="form-control"
@@ -305,6 +310,9 @@ defineExpose({ setValues })
 
               <div class="mt-4">
                 <button class="btn btn-primary">Simpan</button>
+                <router-link to="/Data/Cerobong" class="btn btn-secondary m-2"
+                        >Kembali</router-link
+                      >
               </div>
             </div>
           </div>

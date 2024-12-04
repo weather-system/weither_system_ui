@@ -22,6 +22,7 @@ const isDataOpen = ref(false)
 const isEksekutifOpen = ref(false)
 
 const isperdasOpen = ref(false)
+const ispenudaraOpen = ref(false)
 const isMasterOpen = ref(false)
 const isOperatorOpen = ref(false)
 const isKontenOpen = ref(false)
@@ -114,17 +115,35 @@ const togglePerDas = () => {
     }
   });
 }
-watch(() => route.query.sidebar, (latest,_) =>{
-  if (latest=='perscompany'){
-    isDataOpen.value=true
-    isperdasOpen.value=true
+const togglePenUdara = () => {
+  console.log('Data clicked')
+  ispenudaraOpen.value = !ispenudaraOpen.value
+  console.log(ispenudaraOpen)
+  router.push({
+    path: '/Pengendalian/PencemaranUdara',
+    query: {
+      sidebar: 'PencemaranUdara'
+    }
+  });
+}
+watch(() => route.query.sidebar, (latest, _) => {
+  if (latest === 'perscompany') {
+    isDataOpen.value = true;
+    isperdasOpen.value = true;
+  } else {
+    isperdasOpen.value = false;
   }
-  else {
-    isperdasOpen.value=false
+
+  if (latest === 'PencemaranUdara') {
+    isPengendalianOpen.value = true;
+    ispenudaraOpen.value = true;
+  } else {
+    ispenudaraOpen.value = false;
   }
 }, {
   immediate: true
-})
+});
+
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
   isDataOpen.value = false
@@ -1011,12 +1030,42 @@ const fetchUserStatus = async () => {
                   </router-link>
                 </li>
                 <li>
-                  <router-link to="/Pengendalian/PencemaranUdara">
+                  <a
+                    @click="togglePenUdara"
+                    :class="{ active: route.path.startsWith('/Pengendalian/PencemaranUdara') }"
+                    style="cursor:pointer"
+                  >
                     <i class="fas fa-chevron-right me-2"></i>
-                    <!-- Panah ke kanan -->
-                    Pencemaran Udara
-                  </router-link>
+                    <span>Pencemaran Udara</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !ispenudaraOpen,
+                        'fe-chevron-up': ispenudaraOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul
+                      v-if="isPengendalianOpen && ispenudaraOpen"
+                      class="submenu d-block ms-3"
+                    >
+                      <li>
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi" activeClass="active">
+                          <i class="fas fa-chevron-right"></i>
+                          Emisi</router-link
+                        >
+                      </li>
+                      <li>
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien" activeClass="active">
+                          <i class="fas fa-chevron-right"></i>
+                          Ambien</router-link
+                        >
+                      </li>
+                    </ul>
+                  </transition>
                 </li>
+
                 <li>
                   <router-link to="/pengendalian/PengelolaanLimbahB3">
                     <i class="fas fa-chevron-right me-2"></i>
