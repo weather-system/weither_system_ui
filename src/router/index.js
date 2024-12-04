@@ -274,7 +274,7 @@ const router = createRouter({
       component: () => import('@/views/Logbook/IPAL/IPALCreate.vue'),
     },
     {
-      path: '/Logbook/IPAL/IPALEdit',
+      path: '/Logbook/IPAL/IPALEdit/:id',
       name: 'IPALEdit',
       component: () => import('@/views/Logbook/IPAL/IPALEdit.vue'),
     },
