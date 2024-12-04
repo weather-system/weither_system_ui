@@ -47,3 +47,7 @@ export const deletePengelolaanLimbahB3 = async (id) => {
   const resp = await axios.delete(`/api/pengelolaan-limbah-b3/${id}`)
   return resp.data
 }
+export const getStatusPertek = async () => {
+  const resp = await axios.get(`/api/statusespertek`)
+  return resp.data
+}

@@ -3,25 +3,27 @@ import { ref, onMounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
-import { getPencemaranAir, deletePencemaranAir } from '@/lib/pencemaranAir.js'
+import { getPencemaranAir, deletePencemaranAir, getStatusPertek } from '@/lib/pencemaranAir.js'
 import MainWrapper from '@/components/MainWrapper.vue' // Import MainWrapper
 import Swal from 'sweetalert2'
 const $loading = useLoading()
+
+const isUserIpalPending = ref(false)
 const store = useStore()
 const router = useRouter()
-
+const statuspertek = ref([])
 const pencemaranAir = ref([])
-const fetchData = async () => {
-  const loader = $loading.show()
-  try {
-    pencemaranAir.value = await getPencemaranAir()
-  } catch (e) {
-    console.error('Error fetching data:', e)
-    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
-  } finally {
-    loader.hide()
-  }
-}
+// const fetchData = async () => {
+//   const loader = $loading.show()
+//   try {
+//     pencemaranAir.value = await getPencemaranAir()
+//   } catch (e) {
+//     console.error('Error fetching data:', e)
+//     Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+//   } finally {
+//     loader.hide()
+//   }
+// }
 
 const deleteData = async id => {
   const { isConfirmed } = await Swal.fire({
@@ -51,12 +53,35 @@ const deleteData = async id => {
     }
   }
 }
-onMounted(fetchData)
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    statuspertek.value = await getStatusPertek()
+    if (statuspertek.value?.company_ipals?.includes('PENDING')) {
+      isUserIpalPending.value = true
+    }
+    if (isUserIpalPending.value) {
+    Swal.fire({
+      title: 'Warning!',
+      text: 'Pertek IPAL Anda Statusnya Pending.',
+      icon: 'warning',
+    });
+  }
+
+    pencemaranAir.value = await getPencemaranAir()
+  } catch (e) {
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+  } finally {
+    loader.hide()
+  }
+})
 </script>
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper page-settings">
+    <div class="" v-if="isUserIpalPending"></div>
+    <div class="page-wrapper page-settings" v-if="!isUserIpalPending">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <h5>

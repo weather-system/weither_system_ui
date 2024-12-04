@@ -3,11 +3,13 @@ import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import { getPengelolaanLimbahB3, deletePengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
+import { getPengelolaanLimbahB3, deletePengelolaanLimbahB3, getStatusPertek } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
+const isUserIpalPending = ref(false)
 const $loading = useLoading()
 const dataEntries = ref([])
+const statuspertek = ref([])
 const selectedYear = ref('')
 
 const filteredDataEntries = computed(() => {
@@ -20,6 +22,17 @@ const filteredDataEntries = computed(() => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
+    statuspertek.value = await getStatusPertek()
+    if (statuspertek.value?.company_tps_b3_s?.includes('PENDING')) {
+      isUserIpalPending.value = true
+    }
+    if (isUserIpalPending.value) {
+    Swal.fire({
+      title: 'Warning!',
+      text: 'Rintek LB3 Anda Statusnya Pending.',
+      icon: 'warning',
+    });
+  }
     const response = await getPengelolaanLimbahB3()
     dataEntries.value = response
     console.log(dataEntries.value)
@@ -59,7 +72,8 @@ const deleteEntry = async (id) => {
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper page-settings">
+    <div class="" v-if="isUserIpalPending"></div>
+    <div class="page-wrapper page-settings" v-if="!isUserIpalPending">
       <div class="content">
         <div class="content-page-header d-flex align-items-center mb-4">
           <div class="d-flex align-items-center gap-2">

@@ -89,9 +89,9 @@ onMounted(() => {
                     <th>No</th>
                     <th>Jenis</th>
                     <th>Nomor Izin</th>
-                    <th>Instansi Yang Mengeluarkan</th>
-                    <th>Tanggal Izin</th>
-                    <th>Tanggal Izin Berakhir</th>
+                    <th>Tahun Pembuatan IPAL</th>
+                    <th>Kapasitas IPAL</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -99,10 +99,10 @@ onMounted(() => {
                   <tr v-for="(ipal, index) in ipals" :key="ipal.id">
                     <td>{{ index + 1 }}</td>
                     <td>{{ ipal.type }}</td>
-                    <td>{{ ipal.company_licence ? ipal.company_licence.license_number : 'N/A' }}</td>
-                    <td>{{ ipal.company_licence ? ipal.company_licence.issuing_agency : 'N/A' }}</td>
-                    <td>{{ new Date(ipal.permit_date).toLocaleDateString() }}</td>
-                    <td>{{ new Date(ipal.permit_date_expired).toLocaleDateString() }}</td>
+                    <td>{{ ipal.no_izin_perusahaan }}</td>
+                    <td>{{ ipal.year_of_manufacture_of_ipal }}</td>
+                    <td>{{ ipal.capacity_ipal}}</td>
+                    <td>{{ ipal.status }}</td>
                     <td>
                       <router-link :to="`/Data/IPAL/Edit/${ipal.id}`" class="btn btn-primary">Edit</router-link>
                       <button @click="deleteIpal(ipal.id)" class="btn btn-primary m-2">Delete</button>

@@ -106,6 +106,7 @@ onMounted(async () => {
                     <th>Koordinat (X, Y)</th>
                     <th>Volume Limbah B3 Dalam Izin</th>
                     <th>Masa Berlaku</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -115,6 +116,7 @@ onMounted(async () => {
                     <td>{{ data.koordinat_x }}, {{ data.koordinat_y }}</td>
                     <td>{{ data.volume_limbah_dalam_izin }}</td>
                     <td>{{ data.masa_berlaku }}</td>
+                    <td>{{ data.status }}</td>
                     <td>
                       <router-link
                         :to="data.id ? `/Data/TPSB3/Edit/${data.id}` : '/Data/TPSB3/Tambah'"
