@@ -24,3 +24,14 @@ export const deleteTpsB3 = async (id) => {
   const resp = await axios.delete(`/api/companyTpsB3/${id}`)
   return resp.data
 }
+
+export const getAllForAdmin = async () => {
+  try {
+    const response = await axios.get('/api/master/TpsB3');
+    console.log(response.data); 
+    return response.data;  
+  } catch (error) {
+    console.error("Error fetching data:", error);  
+    throw new Error('Error fetching data');
+  }
+}

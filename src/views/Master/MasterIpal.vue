@@ -4,16 +4,21 @@ import { useLoading } from 'vue-loading-overlay'
 import axios from 'axios'
 import MainWrapper from '@/components/MainWrapper.vue'
 import Swal from 'sweetalert2'
+import { useRoute } from 'vue-router'
 
 const $loading = useLoading()
-
+const route = useRoute()
 const ipals = ref([])
 
 const fetchIpals = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get('/api/ipals_show')
-    console.log('Response Data:', response.data.data) // Cek data yang diterima
+    const response = await axios.get('/api/ipals_show', {
+    params: {
+      company_id:route.query.company_id,
+    },
+  })
+    console.log('Response Data:', response.data.data)
     ipals.value = response.data.data.map(ipal => ({
       id: ipal.id,
       year_of_manufacture_of_ipal: ipal.year_of_manufacture_of_ipal || 'N/A',

@@ -118,7 +118,7 @@ onMounted(async () => {
                           </li>
                           <li>
                             <router-link
-                              :to="`/Master/Companies/${data.id}`"
+                              :to="`/Master/Ipal/?company_id=${data.id}`"
                               class="dropdown-item"
                             >
                               Data IPAL
@@ -126,18 +126,18 @@ onMounted(async () => {
                           </li>
                           <li>
                             <router-link
-                              :to="`/Master/Companies/${data.id}`"
+                              :to="`/Master/Emisi/?company_id=${data.id}`"
                               class="dropdown-item"
                             >
-                              Data Cerobong
+                              Data Emisi
                             </router-link>
                           </li>
                           <li>
                             <router-link
-                              :to="`/Master/Companies/${data.id}`"
+                              :to="`/Master/LB3/?company_id=${data.id}`"
                               class="dropdown-item"
                             >
-                              Data TPS B3
+                              Data LB3
                             </router-link>
                           </li>
                           <li>

@@ -2,10 +2,11 @@
 import MainWrapper from '@/components/MainWrapper.vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex' // untuk mengakses state dari store
 
 const companyName = ref('')
 const companyEmail = ref('')
@@ -15,9 +16,11 @@ const ticketPriority = ref('')
 const ticketMessage = ref('')
 const filePengaduan = ref(null)
 const adminReply = ref('')
-const complaints = ref([])
+const isAdmin = computed(() => store.state.auth.user.role === 'ADMIN')
+const canReply = ref(false)
 const $loading = useLoading()
 const route = useRoute()
+const store = useStore()
 
 // Fungsi untuk mengambil data perusahaan
 const getCompanyData = async () => {
@@ -32,11 +35,35 @@ const getCompanyData = async () => {
   }
 }
 
-// Fungsi untuk mengambil daftar pengaduan
+const fetchAdminStatus = async () => {
+  try {
+    const token = store.state.auth.token || localStorage.getItem('token');
+    console.log('Token:', token);
+
+    if (!token) {
+      console.error('Token is missing!');
+      return Swal.fire('Error', 'User is not authenticated', 'error');
+    }
+
+    const response = await axios.get('/api/status', {
+        Authorization: `Bearer ${token}`, // Perbaikan header
+    });
+
+    console.log('Status Admin:', response.data.status);
+    canReply.value = response.data.status === 'can_reply';
+  } catch (error) {
+    console.error('Error fetching admin status:', error);
+    if (error.response && error.response.status === 401) {
+      Swal.fire('Error', 'Unauthorized. Please login again.', 'error');
+    }
+  }
+};
+
+// Fungsi untuk mengambil detail tiket
 const fetchTicketDetail = async ticketId => {
   try {
     const response = await axios.get(`/api/tikets/${ticketId}`)
-    console.log('Ticket detail:', response.data) // Cek data yang diterima
+    console.log('Ticket detail:', response.data)
     const ticket = response.data
 
     if (!ticket) {
@@ -54,9 +81,13 @@ const fetchTicketDetail = async ticketId => {
   }
 }
 
+console.log('Is Admin:', isAdmin.value); // Harus bernilai true jika role = 'ADMIN'
+console.log('Can Reply:', canReply.value); // Harus bernilai true jika status sesuai
+
 onMounted(() => {
   fetchTicketDetail(route.params.id)
   getCompanyData()
+  fetchAdminStatus() // Cek status admin saat halaman dimuat
 })
 </script>
 
@@ -117,18 +148,20 @@ onMounted(() => {
                   ></textarea>
                 </div>
               </div>
-              <div class="col-md-12" v-if="adminReply">
-                <div class="form-group">
-                  <label class="col-form-label">Pesan Balasan</label>
-                  <textarea
-                    class="form-control message-reply"
-                    v-model="adminReply"
-                    rows="4"
-                    disabled
-                  ></textarea>
+
+              <div v-if="isAdmin && canReply">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-form-label">Pesan Balasan</label>
+                    <textarea
+                      v-model="adminReply"
+                      class="form-control message-reply"
+                      rows="4"
+                    ></textarea>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-12" v-else>
+              <div v-else>
                 <p class="text-muted">Belum ada balasan dari admin.</p>
               </div>
 
