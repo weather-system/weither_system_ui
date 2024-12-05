@@ -94,6 +94,16 @@ const router = createRouter({
       component: () => import('@/views/ReferensiBakuMutu/Edit.vue'),
     },
     {
+      path: '/Verifikator/PertekIPAL',
+      name: 'VerifikatorPertekIPAL',
+      component: () => import('@/views/Verifikator/PertekIPAL.vue'),
+    },
+    {
+      path: '/Verifikator/PertekIPAL/:id',
+      name: 'VerifikatorPertekIPALDetail',
+      component: () => import('@/views/Verifikator/PertekIPALDetail.vue'),
+    },
+    {
       path: '/Verifikator/PemantauanAir',
       name: 'VerifikatorPemantauanAir',
       component: () => import('@/views/Verifikator/PemantauanAir.vue'),

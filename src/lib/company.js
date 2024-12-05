@@ -85,3 +85,29 @@ export const getIpalAcc = async () => {
   const resp = await axios.get('/api/company_ipal_acc')
   return resp.data
 }
+
+export const getAllIpals = async (status) => {
+  const resp = await axios.get('/api/ipals_show', {
+    params: {
+      status
+    }
+  })
+  return resp.data.data
+}
+
+export const getIpalDetail = async (id) => {
+  const response = await axios.get(`/api/company_ipals/${id}`)
+  const data = response.data.data
+  if (data) {
+    data.ipalTypes = data.system_ipal
+      ? data.system_ipal.split(',')
+      : []
+
+    return data
+  }
+}
+
+export const updateStatusIpal = async (id, data) => {
+  const resp  = await axios.put(`/api/company_ipals/updateStatus/${id}`, data);
+  return resp.data
+}

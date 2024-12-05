@@ -9,7 +9,7 @@ import '@/assets/css/admin.css'
 import Swal from 'sweetalert2'
 const handleNavigation = (event) => {
   if (isUserIpalPending.value) {
-    event.preventDefault() 
+    event.preventDefault()
     Swal.fire({
       icon: 'warning',
       title: 'Akses Ditolak',
@@ -20,7 +20,7 @@ const handleNavigation = (event) => {
 }
 const handleNavigationTpsb3 = (event) => {
   if (isUserTpsb3Pending.value) {
-    event.preventDefault() 
+    event.preventDefault()
     Swal.fire({
       icon: 'warning',
       title: 'Akses Ditolak',
@@ -142,7 +142,7 @@ const togglePerDas = () => {
 
 const togglePenUdara = (event) => {
   if (isUserCerobongPending.value) {
-    event.preventDefault() 
+    event.preventDefault()
     Swal.fire({
       icon: 'warning',
       title: 'Akses Ditolak',
@@ -294,6 +294,24 @@ const fetchUserStatus = async () => {
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PertekIPAL" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pertek IPAL</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/PertekEmisi" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pertek Emisi</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
+            <router-link to="/Verifikator/RintekLB3" activeClass="active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Rintek LB3</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role == 'PENGAWAS'">
             <router-link to="/Verifikator/PemantauanAir" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
               <span>Pem. Air</span>
@@ -422,7 +440,7 @@ const fetchUserStatus = async () => {
                     to="/Master/Swapantau/Bulanan"
                     active-class="active"
                   >
-                    <i class="fas fa-chevron-right"></i> Udara Emisi 
+                    <i class="fas fa-chevron-right"></i> Udara Emisi
                   </router-link>
                 </li>
                 <li>
@@ -430,7 +448,7 @@ const fetchUserStatus = async () => {
                     to="/Master/Swapantau/Bulanan"
                     active-class="active"
                   >
-                    <i class="fas fa-chevron-right"></i> Kebisingan 
+                    <i class="fas fa-chevron-right"></i> Kebisingan
                   </router-link>
                 </li>
               </ul>
@@ -953,7 +971,7 @@ const fetchUserStatus = async () => {
                 <li>
                   <a
                     @click="togglePenUdara"
-                   
+
                     :to="!isUserEmisiPending ? '/Pengendalian/PencemaranUdara' : ''"
                     style="cursor:pointer"
                   >
