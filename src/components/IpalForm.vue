@@ -22,6 +22,7 @@ const initialValues = {
   recycle_efforts: null,
   unit_in_capacity: 'm3',
   ipal_sludge_storage_site: null,
+  unit_permissible_waste_water_discharge: null,
   items: [],
   itemz: [],
 }
@@ -97,7 +98,6 @@ const schema = yup.object({
   waste_discharge_measuring_instrument_outlet: yup.string().nullable(),
   waste_discharge_measuring_instrument_outlet_name: yup.string().nullable(),
   permissible_waste_water_discharge: yup.string().required(),
-  unit_permissible_waste_water_discharge: yup.string().required(),
   waste_water_source: yup.string().required(),
 //   system_ipal: yup.string().required(),
   water_bodies_receiving_liquid_waste: yup.string().required(),
@@ -386,7 +386,7 @@ watch(selectedIPALSystems,(latest,_) => {
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-form-label"
                     >Debit Air Limbah Yang Diijinkan</label
@@ -395,24 +395,7 @@ watch(selectedIPALSystems,(latest,_) => {
                   <ErrorMessage name="permissible_waste_water_discharge" />
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                  <label class="col-form-label"
-                    >Satuan Debit Air Limbah</label
-                  >
-                  <Field
-                    name="unit_permissible_waste_water_discharge"
-                    as="select"
-                    class="form-control"
-                  >
-                    <option value="" disabled>Pilih Satuan</option>
-                    <option value="M3/Hari">M3/Hari</option>
-                    <option value="M3/Detik">M3/Detik</option>
-                  </Field>
-                  <ErrorMessage name="unit_permissible_waste_water_discharge" />
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-form-label"
                     >Sumber Air Limbah</label

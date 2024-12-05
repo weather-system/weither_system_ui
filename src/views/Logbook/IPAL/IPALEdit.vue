@@ -14,6 +14,7 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  delete data.unit_permissible_waste_water_discharge;
   data.items = data.items.map((v) => {
     delete v.company_tps_b3_id;
     delete v.created_at;
