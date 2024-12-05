@@ -180,13 +180,15 @@ const submitForm = async () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      const companyId = response.data.data.id
+      const companyId = response.data.data.company_id
+      console.log("ini dataaaaa :", response.data)
+      console.log("ini companyId :", companyId)
       const ipalPromises = formData.value.ipalTypes.map(async type => {
         if (type) {
           return axios.post(
             '/api/company_ipals',
             {
-              company_detail_id: companyId, // Ensure you are using the correct ID here
+              company_id: companyId, // Ensure you are using the correct ID here
               type,
             },
             {

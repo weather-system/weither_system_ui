@@ -3,8 +3,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay';
 import MainWrapper from '@/components/MainWrapper.vue'
-import TPSB3Form from '@/components/TPSB3Form.vue';
-import { getTpsB3Detail, updateTpsB3 } from '@/lib/tpsb3';
+import LogbookForm from '@/components/LogbookForm.vue';
+import { getLogbookIpalDetail, updateLogbookIpal } from '@/lib/logbookipal';
 import Swal from 'sweetalert2'
 
 const $loading = useLoading()
@@ -22,9 +22,9 @@ const submit = async (data) => {
   });
   const loader = $loading.show()
   try {
-    await updateTpsB3(route.params.id, data);
+    await updateLogbookIpal(route.params.id, data);
     Swal.fire('Success!', 'Data Berhasil Diperbarui.', 'success')
-    router.push('/Data/TPSB3');
+    router.push('/Logbook/IPAL');
   } catch (e) {
     console.error(e);
     const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
@@ -41,12 +41,7 @@ const submit = async (data) => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    const data = await getTpsB3Detail(route.params.id)
-    data.itemz=data.itemz.map((v)=>{
-      delete v.created_at
-      delete v.updated_at
-      return v
-    })
+    const data = await getLogbookIpalDetail(route.params.id)
     console.log(data)
     form.value.setValues(data)
   } catch (e) {
@@ -62,10 +57,10 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header mb-2">
-          <h3>Rincian Teknis LB3</h3>
+          <h3>Edit Data Logbook IPAL</h3>
         </div>
 
-        <TPSB3Form ref="form" @submit="submit" />
+        <LogbookForm ref="form" @submit="submit" />
       </div>
     </div>
   </MainWrapper>

@@ -159,17 +159,22 @@ onMounted(async () => {
                         >
                         <p>{{ company.no_skklh }}</p>
                       </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold"
+                          >Tanggal Terbit Persetujuan Lingkungan</label
+                        >
+                        <p>{{ company.	terbit_persetujuan_lingkungan	 }}</p>
+                      </div>
                     </div>
                     <div class="row">
                       <div v-if="company.photo_skklh" class="col-md-6">
-                        <label class="form-label fw-bold"
-                          >Upload File SKKLH</label
-                        >
-                        <img
+                        <label class="form-label fw-bold">File SKKLH</label>
+                        <iframe
                           :src="company.photo_skklh"
-                          alt="Uploaded Photo"
-                          class="img-thumbnail mt-2"
-                        />
+                          width="100%"
+                          height="100%"
+                          frameborder="0"
+                        ></iframe>
                       </div>
                     </div>
                   </div>
@@ -188,17 +193,18 @@ onMounted(async () => {
                         <label class="form-label fw-bold"
                           >Upload File PKPLH</label
                         >
-                        <img
+                        <iframe
                           :src="company.photo_pkplh"
-                          alt="Uploaded Photo"
-                          class="img-thumbnail mt-2"
-                        />
+                          width="100%"
+                          height="100%"
+                          frameborder="0"
+                        ></iframe>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="row mt-3">
-                      <div class="col-md-6">
+                      <div class="col-md-6 mt-5">
                         <label class="form-label fw-bold">NIB</label>
                         <p>{{ company.nib }}</p>
                       </div>
@@ -206,13 +212,14 @@ onMounted(async () => {
                     <div class="row">
                       <div v-if="company.photo_nib" class="col-md-6">
                         <label class="form-label fw-bold"
-                          >Upload File NIB (PDF)</label
+                          >File NIB (PDF)</label
                         >
-                        <img
+                        <iframe
                           :src="company.photo_nib"
-                          alt="Uploaded Photo"
-                          class="img-thumbnail mt-2"
-                        />
+                          width="100%"
+                          height="500px"
+                          frameborder="0"
+                        ></iframe>
                       </div>
                     </div>
                   </div>

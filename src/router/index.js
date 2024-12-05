@@ -18,8 +18,12 @@ const adminRoutes = [
   '/Logbook/DebitOutletIPAL',
   '/Logbook/DebitPemakaianAir',
   '/Logbook/IPAL',
+  '/Logbook/IPAL/IPALCreate',
+  '/Logbook/IPAL/IPALEdit',
   '/Logbook/PenggunaanB3',
   '/Logbook/TPSLimbahB3',
+  '/Logbook/TPSLimbahB3/TPSLimbahB3Create',
+  '/Logbook/TPSLimbahB3/TPSLimbahB3Edit',
   '/Data/Company',
   '/Data/Ipal/:company_detail_id',
   '/Data/Perizinan',
@@ -279,6 +283,16 @@ const router = createRouter({
       name: 'IPAL',
       component: () => import('@/views/Logbook/IPAL.vue'),
     },
+    {
+      path: '/Logbook/IPAL/IPALCreate',
+      name: 'IPALCreate',
+      component: () => import('@/views/Logbook/IPAL/IPALCreate.vue'),
+    },
+    {
+      path: '/Logbook/IPAL/IPALEdit/:id',
+      name: 'IPALEdit',
+      component: () => import('@/views/Logbook/IPAL/IPALEdit.vue'),
+    },
 
     {
       path: '/Logbook/PenggunaanB3',
@@ -290,6 +304,16 @@ const router = createRouter({
       path: '/Logbook/TPSLimbahB3',
       name: 'TPSLimbahB3',
       component: () => import('@/views/Logbook/TPSLimbahB3.vue'),
+    },
+    {
+      path: '/Logbook/TPSLimbahB3/TPSLimbahB3Create',
+      name: 'TPSLimbahB3Create',
+      component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahCreate.vue'),
+    },
+    {
+      path: '/Logbook/TPSLimbahB3Edit',
+      name: 'TPSLimbahB3Edit',
+      component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahEdit.vue'),
     },
     {
       path: '/Data/Company',
@@ -657,6 +681,26 @@ const router = createRouter({
       path: '/Eksekutif',
       name: 'EksekutifView',
       component: () => import('@/views/EksekutifView.vue'),
+    },
+    {
+      path: '/Eksekutif/Cerobong',
+      name: 'CerobongView',
+      component: () => import('@/views/Eksekutif/Cerobong.vue'),
+    },
+    {
+      path: '/Eksekutif/PenataanIPAL',
+      name: 'PenataanIPALView',
+      component: () => import('@/views/Eksekutif/PenataanIPAL.vue'),
+    },
+    {
+      path: '/Eksekutif/RTH',
+      name: 'RTHView',
+      component: () => import('@/views/Eksekutif/RTH.vue'),
+    },
+    {
+      path: '/Eksekutif/TPSB3',
+      name: 'TPSB3View',
+      component: () => import('@/views/Eksekutif/TPSB3.vue'),
     },
     {
       path: '/Data/PersLing',

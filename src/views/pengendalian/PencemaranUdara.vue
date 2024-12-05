@@ -8,6 +8,8 @@ import Swal from 'sweetalert2'
 import html2pdf from 'html2pdf.js'
 // Ref to store data from the API
 const pencemaranUdaraData = ref([])
+const statuspertek = ref([])
+const isUserCerobongPending = ref(false)
 function cetakPDF() {
   const element = document.getElementById('pdfContent')
   const options = {
@@ -48,18 +50,31 @@ const getPencemaranAir = async () => {
   }
 }
 
-// Fetch data on component mount
-const fetchData = async () => {
-  const loader = $loading.show()
+const getStatusPertek = async () => {
   try {
-    pencemaranUdaraData.value = await getPencemaranAir()
-  } catch (e) {
-    console.error('Error fetching data:', e)
-    Swal.fire('Error', 'Gagal mengambil data pencemaran udara.', 'error')
-  } finally {
-    loader.hide()
+    const response = await axios.get('/api/statusespertek') 
+    return response.data
+  } catch (error) {
+    throw new Error('Failed to fetch data from API')
   }
 }
+
+// Fetch data on component mount
+// const fetchData = async () => {
+//   const loader = $loading.show()
+//   try {
+//     statuspertek.value = await getStatusPertek()
+//     if (statuspertek.company_cerobongs.includes('PENDING')){
+//       isUserCerobongPending.value = true
+//     }
+//     pencemaranUdaraData.value = await getPencemaranAir()
+//   } catch (e) {
+//     console.error('Error fetching data:', e)
+//     Swal.fire('Error', 'Gagal mengambil data pencemaran udara.', 'error')
+//   } finally {
+//     loader.hide()
+//   }
+// }
 
 // Delete data function
 const deleteData = async id => {
@@ -92,13 +107,36 @@ const deleteData = async id => {
   }
 }
 
-// Fetch data when the component is mounted
-onMounted(fetchData)
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    statuspertek.value = await getStatusPertek()
+    if (statuspertek.value?.company_cerobongs?.includes('PENDING')) {
+      isUserCerobongPending.value = true
+    }
+    if (isUserCerobongPending.value) {
+    Swal.fire({
+      title: 'Warning!',
+      text: 'Pertek Cerobong Anda Statusnya Pending..',
+      icon: 'warning',
+    });
+  }
+
+    pencemaranUdaraData.value = await getPencemaranAir()
+  } catch (e) {
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran udara.', 'error')
+  } finally {
+    loader.hide()
+  }
+})
 </script>
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper page-settings">
+    <div class="" v-if="isUserCerobongPending">
+    </div>
+    <div class="page-wrapper page-settings" v-if="!isUserCerobongPending">
       <div class="content">
         <div
           class="content-page-header content-page-headersplit d-flex align-items-center mb-4"
