@@ -6,9 +6,12 @@ import MainWrapper from '@/components/MainWrapper.vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import html2pdf from 'html2pdf.js'
+import { useStore } from 'vuex'
+
 // Ref to store data from the API
 const pencemaranUdaraData = ref([])
 const statuspertek = ref([])
+const store = useStore()
 const isUserCerobongPending = ref(false)
 function cetakPDF() {
   const element = document.getElementById('pdfContent')
@@ -139,31 +142,38 @@ onMounted(async () => {
     <div class="page-wrapper page-settings" v-if="!isUserCerobongPending">
       <div class="content">
         <div
-          class="content-page-header content-page-headersplit d-flex align-items-center mb-4"
+          class="content-page-header"
         >
-          <div class="d-flex align-items-center gap-2">
-            <RouterLink
-              class="btn btn-primary"
-              to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
-            >
-              Tambah Udara Ambien
-            </RouterLink>
-            <RouterLink
-              class="btn btn-primary"
-              to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi"
-            >
-              Tambah Udara Emisi
-            </RouterLink>
-            <!-- <RouterLink
-              class="btn btn-primary"
-              to="/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge"
-            >
-              Tambah Fly Ash, Bottom Ash, dan Sludge
-            </RouterLink> -->
-          </div>
+          <h4>
+            Pemantauan Pencemaran Air ({{
+              store.state.auth.user.company?.name
+            }})
+          </h4>
         </div>
+        <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <RouterLink
+                class="btn btn-primary"
+                to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
+              >
+                Tambah Pemantauan Udara Ambien
+              </RouterLink>
+              <RouterLink
+                class="btn btn-primary"
+                to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi"
+              >
+                Tambah Pemantauan Udara Emisi
+              </RouterLink>
+              <!-- <RouterLink
+                class="btn btn-primary"
+                to="/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge"
+              >
+                Tambah Fly Ash, Bottom Ash, dan Sludge
+              </RouterLink> -->
+            </div>
+          </div>
 
-        <div class="row mt-4">
+        <div class="row mt-1">
           <div class="col-12">
             <div class="table-responsive table-div">
               <table class="table datatable">
@@ -179,7 +189,9 @@ onMounted(async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Loop through the data and display it in the table -->
+                  <tr v-if="pencemaranUdaraData.length === 0">
+                    <td colspan="7" class="text-center">Data Tidak Ada</td>
+                  </tr>
                   <tr
                     v-for="(item, index) in pencemaranUdaraData"
                     :key="item.id"
