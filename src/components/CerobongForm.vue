@@ -14,6 +14,7 @@ const initialData = {
   satuan_tinggi_cerobong: 'm',
   satuan_diameter_cerobong: 'm',
   satuan_kedalaman_lubang_sampling: 'm2',
+  kedalaman_lubang_sampling: null,
 }
 
 const schema = yup.object({
@@ -28,9 +29,14 @@ const schema = yup.object({
   satuan_kapasitas_boiler: yup.string().required(),
   pengendalian_emisi_cerobong: yup.string().required(),
   lubang_sampling: yup.string().required(),
-  kedalaman_lubang_sampling: yup.number(),
+  kedalaman_lubang_sampling: yup.string()
+    .nullable(),
+  nrOfApples: yup
+    .number()
+    .nullable(true)
+    .transform((_, val) => val === Number(val) ? val : null),
   satuan_kedalaman_lubang_sampling: yup.string(),
-  stage: yup.string().required(),
+  stage: yup.string().nullable(),
   jenis_bahan_bakar: yup.string().required(),
 })
 

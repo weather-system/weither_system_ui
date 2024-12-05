@@ -16,7 +16,7 @@ const loggedInUserId = 3 // Change this to fetch the logged-in user's ID dynamic
 const fetchIpals = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get('/api/data_company_ipals') // Adjust endpoint if needed
+    const response = await axios.get('/api/company_ipals') // Adjust endpoint if needed
     ipals.value = response.data
     console.log('Fetched IPALs:', ipals.value)
   } catch (error) {

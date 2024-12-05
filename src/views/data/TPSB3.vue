@@ -102,9 +102,8 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>Sumber Limbah B3</th>
-                    <th>Koordinat (X, Y)</th>
-                    <th>Volume Limbah B3 Dalam Izin</th>
+                    <th>No. Rintek</th>
+                    <th>Titik Longitude, Latitude</th>
                     <th>Masa Berlaku</th>
                     <th>Status</th>
                     <th>Aksi</th>
@@ -112,9 +111,8 @@ onMounted(async () => {
                 </thead>
                 <tbody>
                   <tr v-for="data in tpsB3" :key="data.id">
-                    <td>{{ data.sumber_limbah_b3 }}</td>
+                    <td>{{ data.no_rintek }}</td>
                     <td>{{ data.koordinat_x }}, {{ data.koordinat_y }}</td>
-                    <td>{{ data.volume_limbah_dalam_izin }}</td>
                     <td>{{ data.masa_berlaku }}</td>
                     <td>{{ data.status }}</td>
                     <td>

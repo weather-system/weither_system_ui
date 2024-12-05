@@ -206,14 +206,15 @@ onMounted(async () => {
   const loader = $loading.show()
   try {
     const dataa = await getStatusPertek()
-    if (dataa.company_ipals.includes('PENDING')) {
-      isUserIpalPending.value = true
+    console.log(dataa);
+    if (dataa?.company_ipals?.includes('PENDING')) {
+      isUserIpalPending.value = true;
     }
-    if (dataa.company_cerobongs.includes('PENDING')){
-      isUserCerobongPending.value = true
+    if (dataa?.company_cerobongs?.includes('PENDING')) {
+      isUserCerobongPending.value = true;
     }
-    if (dataa.company_tps_b3_s.includes('PENDING')){
-      isUserTpsb3Pending.value = true
+    if (dataa?.company_tps_b3_s?.includes('PENDING')) {
+      isUserTpsb3Pending.value = true;
     }
     const data = await getUserStatus()
     if (data.status === 'PENDING') {

@@ -20,11 +20,10 @@ const submit = async (data) => {
     router.push('/Data/Cerobong')
   } catch (e) {
     console.error(e)
-    await Swal.fire({
+    Swal.fire({
       title: 'Error!',
       text: 'Gagal menambahkan Data.',
       icon: 'error',
-      confirmButtonText: 'OK',
     })
   } finally {
     loader.hide()
