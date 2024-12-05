@@ -15,6 +15,7 @@ const form = ref(null)
 
 const submit = async (data) => {
   try {
+    delete data.id
     await createReferensiBakuMutu(data)
     router.push('/ReferensiBakuMutu')
   } catch (e) {
