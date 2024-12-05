@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { RouterLink } from 'vue-router'
 import moment from 'moment'
@@ -9,6 +9,7 @@ import { getPencemaranUdaraDetail, verifikasiPencemaranUdara } from '@/lib/pence
 
 const $loading = useLoading()
 const route = useRoute()
+const router = useRouter()
 
 const data = ref(null)
 const status = ref('')
@@ -17,6 +18,7 @@ const submit = async () => {
   const loader = $loading.show()
   try {
     await verifikasiPencemaranUdara(data.value.id, { status: status.value })
+    router.push('/Verifikator/PemantauanUdaraEmisi')
   } catch (e) {
     console.error(e)
   } finally {
@@ -105,6 +107,7 @@ onMounted(async () => {
                   <tr>
                     <th>No</th>
                     <th>Parameter Udara Emisi</th>
+                    <th>Baku Mutu</th>
                     <th>Ekspresi</th>
                     <th>Hasil Pengujian</th>
                     <th>Satuan</th>
@@ -114,6 +117,7 @@ onMounted(async () => {
                   <tr v-for="(detail, index) in data.details" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ detail.parameter_udara }}</td>
+                    <td>{{ detail.referensi_baku_mutu?.baku_mutu }}</td>
                     <td>{{ detail.ekspresi1 }}</td>
                     <td>{{ detail.hasil_pengujian1 }}</td>
                     <td>{{ detail.satuan }}</td>
@@ -125,6 +129,7 @@ onMounted(async () => {
           </div>
 
           <div class="d-flex justify-content-end">
+            <button @click="router.back()" class="btn btn-secondary me-2">Kembali</button>
             <button @click="submit" class="btn btn-primary">Simpan</button>
           </div>
         </div>

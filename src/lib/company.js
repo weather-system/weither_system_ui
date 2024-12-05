@@ -75,3 +75,8 @@ export const getStatusPertek = async () => {
   const resp = await axios.get(`/api/statusespertek`)
   return resp.data
 }
+
+export const getIpals = async () => {
+  const resp = await axios.get('/api/data_company_ipals')
+  return resp.data
+}

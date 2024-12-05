@@ -573,6 +573,12 @@ const fetchUserStatus = async () => {
               <span>Monitoring Swapantau</span>
             </router-link>
           </li>
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
+            <router-link to="/ReferensiBakuMutu" activeClass="active"> <!-- GATAU INI ROLE APA -->
+              <i class="fas fa-eye"></i>
+              <span>Referensi Baku Mutu</span>
+            </router-link>
+          </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
             <a
               href="javascript:void(0);"
