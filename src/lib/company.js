@@ -77,6 +77,11 @@ export const getStatusPertek = async () => {
 }
 
 export const getIpals = async () => {
-  const resp = await axios.get('/api/data_company_ipals')
+  const resp = await axios.get('/api/company_ipals')
+  return resp.data
+}
+
+export const getIpalAcc = async () => {
+  const resp = await axios.get('/api/company_ipal_acc')
   return resp.data
 }

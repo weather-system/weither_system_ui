@@ -1,36 +1,28 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import axios from 'axios'
+import { getIpal, deleteIpal } from '@/lib/ipal';
 import MainWrapper from '@/components/MainWrapper.vue'
-import Swal from 'sweetalert2' // Import SweetAlert
+import Swal from 'sweetalert2'
 
 const $loading = useLoading()
-const route = useRoute()
 
-const ipals = ref([]) // Holds the IPAL data for the logged-in user
-const loggedInUserId = 3 // Change this to fetch the logged-in user's ID dynamically
-
-// Fetch IPAL data for the logged-in user's company
-const fetchIpals = async () => {
+const ipal = ref([])
+const fetchData = async () => {
   const loader = $loading.show()
   try {
-    const response = await axios.get('/api/company_ipals') // Adjust endpoint if needed
-    ipals.value = response.data
-    console.log('Fetched IPALs:', ipals.value)
-  } catch (error) {
-    console.error('Error fetching IPALs:', error)
+    ipal.value = await getIpal()
+  } catch (e) {
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
   } finally {
     loader.hide()
   }
 }
-
-// Delete IPAL Function
-const deleteIpal = async id => {
+const deleteData = async (id) => {
   const { isConfirmed } = await Swal.fire({
     title: 'Apa kamu yakin ?',
-    text: "Kamu tidak akan bisa mengembalikan ini!",
+    text: 'Kamu tidak akan bisa mengembalikan ini!',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Ya',
@@ -44,22 +36,27 @@ const deleteIpal = async id => {
 
   if (isConfirmed) {
     const loader = $loading.show()
-    try {
-      await axios.delete(`/api/ipals/${id}`) // Adjust endpoint for deleting IPALs
-      await fetchIpals() // Refresh the IPALs after deletion
-      Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
-    } catch (error) {
-      console.error('Error deleting IPAL:', error)
-      Swal.fire('Error!', 'There was an error deleting the IPAL.', 'error')
-    }finally {
+  try {
+    await deleteIpal(id)
+    await fetchData()
+    Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+  } catch (e) {
+    console.error(e)
+  } finally {
     loader.hide()
   }
-  }
+}
 }
 
-// Fetch IPALs on mount
-onMounted(() => {
-  fetchIpals()
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    ipal.value = await getIpal()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
 })
 </script>
 
@@ -96,16 +93,25 @@ onMounted(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(ipal, index) in ipals" :key="ipal.id">
+                  <tr v-for="(data,index) in ipal" :key="data.id">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ ipal.type }}</td>
-                    <td>{{ ipal.no_izin_perusahaan }}</td>
-                    <td>{{ ipal.year_of_manufacture_of_ipal }}</td>
-                    <td>{{ ipal.capacity_ipal}}</td>
-                    <td>{{ ipal.status }}</td>
+                    <td>{{ data.type }}</td>
+                    <td>{{ data.no_izin_perusahaan }}</td>
+                    <td>{{ data.year_of_manufacture_of_ipal }}</td>
+                    <td>{{ data.capacity_ipal}}</td>
+                    <td>{{ data.status }}</td>
                     <td>
-                      <router-link :to="`/Data/IPAL/Edit/${ipal.id}`" class="btn btn-primary">Edit</router-link>
-                      <button @click="deleteIpal(ipal.id)" class="btn btn-primary m-2">Delete</button>
+                      <router-link
+                        :to="data.id ? `/Data/IPAL/Edit/${data.id}` : '/Data/IPAL/Tambah'"
+                        class="btn btn-primary"
+                        >Edit</router-link
+                      >
+                      <button
+                        @click="deleteData(data.id)"
+                        class="btn btn-primary m-2"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 </tbody>

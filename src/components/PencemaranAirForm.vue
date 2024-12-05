@@ -4,7 +4,7 @@ import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
 import { uploadFile } from '@/lib/filestorage.js'
-import { getIpals } from '@/lib/company.js'
+import { getIpalAcc } from '@/lib/company.js'
 import { MONTHS } from '@/lib/utils.js'
 
 const props = defineProps(['initialValues'])
@@ -187,7 +187,7 @@ const onUploadDocument = async (event, key) => {
 const loadIpals = async () => {
   const loader = $loading.show()
   try {
-    ipals.value = await getIpals()
+    ipals.value = await getIpalAcc()
   } catch (e) {
     console.error(e)
   } finally {
@@ -318,23 +318,11 @@ defineExpose({ setValues })
                       <tr v-for="(field, i) in fields" :key="field.key">
                         <td>{{ field.value.parameter }}</td>
                         <td>
-                          <Field
-                            :name="`details[${i}].ekspresi`"
-                            class="form-control"
-                            as="select"
-                          >
-                            <option value="=">=</option>
-                            <option value=">">></option>
-                            <option value="<"><</option>
-                          </Field>
-                          <ErrorMessage :name="`details[${i}].ekspresi`" />
-                        </td>
-                        <td>
                           <div
                             class="d-flex align-items-center"
                             style="gap: 1rem"
                           >
-                            <div class="col-4">
+                            <div class="col-6">
                               <Field
                                 :name="`details[${i}].hasil_pengukuran`"
                                 class="form-control"

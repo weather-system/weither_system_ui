@@ -86,44 +86,28 @@ onMounted(async () => {
     <div class="page-wrapper page-settings" v-if="!isUserIpalPending">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
-          <h5>
-            Pengendalian Pencemaran Air ({{
+          <h4>
+            Pemantauan Pencemaran Air ({{
               store.state.auth.user.company?.name
             }})
-          </h5>
-          <div class="list-btn">
+          </h4>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="list-btn">
             <ul>
               <li>
                 <RouterLink
                   class="btn btn-primary"
                   to="/Pengendalian/PencemaranAir/Create"
                 >
-                  <i class="fa fa-plus me-2"></i>Tambah
+                  <i class="fa fa-plus me-2"></i>Tambah Pemantauan
                 </RouterLink>
               </li>
             </ul>
           </div>
-        </div>
-
-        <div style="width: fit-content">
-          <div class="d-flex align-items-center" style="gap: 1rem">
-            <p class="m-0">Tahun/Bulan</p>
-            <select class="form-control">
-              <option value="">Semua</option>
-              <option v-for="y in YEARS" :key="y" :value="y">{{ y }}</option>
-            </select>
-            <select class="form-control">
-              <option value="">Semua</option>
-              <option v-for="(m, k) in MONTHS" :key="k" :value="m">{{ m }}</option>
-            </select>
-          </div>
-
-          <div class="mt-4 d-flex" style="gap: 1rem">
-            <input class="form-control" placeholder="Search..." />
-            <button class="btn btn-primary">Search</button>
           </div>
         </div>
-
         <div class="row">
           <div class="col-12">
             <div class="table-resposnive table-div">
@@ -141,6 +125,9 @@ onMounted(async () => {
                   </tr>
                 </thead>
                 <tbody>
+                  <tr v-if="pencemaranAir.length === 0">
+                    <td colspan="8" class="text-center">Data Tidak Ada</td>
+                  </tr>
                   <tr v-for="data in pencemaranAir" :key="data.id">
                     <td>{{ data.month }} {{ data.year }}</td>
                     <td>{{ data.tgl_pengambilan_contoh }}</td>

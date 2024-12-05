@@ -50,12 +50,11 @@ const submit = async payload => {
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <div>
-            <h5>
+            <h4>
               Form Pemantauan Pencemaran Air ({{
                 store.state.auth.user.company?.name
               }})
-            </h5>
-            <p>Usaha dan/atau Kegiatan : Industri Tekstil (Q<=100 m3/hari)</p>
+            </h4>
           </div>
         </div>
 

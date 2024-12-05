@@ -5,12 +5,14 @@ import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
 import { getPengelolaanLimbahB3, deletePengelolaanLimbahB3, getStatusPertek } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import { useStore } from 'vuex'
 
 const isUserIpalPending = ref(false)
 const $loading = useLoading()
 const dataEntries = ref([])
 const statuspertek = ref([])
 const selectedYear = ref('')
+const store = useStore()
 
 const filteredDataEntries = computed(() => {
   if (!selectedYear.value) return dataEntries.value;
@@ -75,19 +77,20 @@ const deleteEntry = async (id) => {
     <div class="" v-if="isUserIpalPending"></div>
     <div class="page-wrapper page-settings" v-if="!isUserIpalPending">
       <div class="content">
+        
+        <div class="content-page-header content-page-headersplit">
+          <h4>
+            Pemantauan Pencemaran Air ({{
+              store.state.auth.user.company?.name
+            }})
+          </h4>
+        </div>
         <div class="content-page-header d-flex align-items-center mb-4">
-            <!-- <select class="form-select" v-model="selectedYear" style="width: auto;">
-              <option value="">Pilih Tahun</option>
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-            </select> -->
-            <div class="col-md-12 d-flex justify-content-end">
+            <div class="col-md-12 d-flex justify-content-start">
               <ul>
                 <li>
                   <RouterLink class="btn btn-primary" to="/Pengendalian/PengelolaanLimbahB3/PengelolaanLimbahB3Create">
-                    <i class="fa fa-plus me-2"></i>Tambah
+                    <i class="fa fa-plus me-2"></i>Tambah Pemantauan
                   </RouterLink>
                 </li>
               </ul>
