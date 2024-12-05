@@ -45,7 +45,7 @@ const fetchAdminStatus = async () => {
       return Swal.fire('Error', 'User is not authenticated', 'error');
     }
 
-    const response = await axios.get('/api/status', {
+    const response = await axios.get('/api/user/status', {
         Authorization: `Bearer ${token}`, // Perbaikan header
     });
 
@@ -80,9 +80,6 @@ const fetchTicketDetail = async ticketId => {
     console.error('Error fetching ticket details:', error)
   }
 }
-
-console.log('Is Admin:', isAdmin.value); // Harus bernilai true jika role = 'ADMIN'
-console.log('Can Reply:', canReply.value); // Harus bernilai true jika status sesuai
 
 onMounted(() => {
   fetchTicketDetail(route.params.id)

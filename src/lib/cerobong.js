@@ -28,14 +28,11 @@ export const deleteCerobong = async (id) => {
   return resp.data
 }
 
-export const getAllCerobong = async () => {
-  const route = useRoute(); 
-  const companyId = route.query.company_id; 
-
+export const getAllCerobong = async (company_id) => {
   try {
     const response = await axios.get(`/api/master/cerobong`, {
       params: {
-        company_id: companyId
+        company_id:company_id
       }
     })
     console.log('Data cerobong:', response.data); 

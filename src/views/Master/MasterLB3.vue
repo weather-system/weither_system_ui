@@ -4,6 +4,9 @@ import { useLoading } from 'vue-loading-overlay'
 import { getAllForAdmin, deleteTpsB3 } from '@/lib/tpsb3'
 import MainWrapper from '@/components/MainWrapper.vue'
 import Swal from 'sweetalert2'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const tpsB3 = ref([])
 const $loading = useLoading()
@@ -11,11 +14,8 @@ const $loading = useLoading()
 const fetchData = async () => {
   const loader = $loading.show() 
   try {
-    const data = await getAllForAdmin() 
+    const data = await getAllForAdmin(route.query.company_id) 
     tpsB3.value = data 
-  } catch (error) {
-    console.error('Error fetching data:', error)
-    Swal.fire('Error', 'Gagal mengambil data TPS B3', 'error') 
   } finally {
     loader.hide()
   }
