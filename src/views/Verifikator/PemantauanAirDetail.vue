@@ -114,6 +114,7 @@ onMounted(async () => {
                 <thead>
                   <tr>
                     <th>Parameter</th>
+                    <th>Baku Mutu</th>
                     <th>Ekspresi</th>
                     <th>Hasil Pengukuran</th>
                   </tr>
@@ -121,6 +122,7 @@ onMounted(async () => {
                 <tbody>
                   <tr v-for="d in data.details" :key="d.id">
                     <td>{{ d.parameter }}</td>
+                    <td>{{ d.referensi_baku_mutu?.baku_mutu }}</td>
                     <td>{{ d.ekspresi }}</td>
                     <td>{{ d.hasil_pengukuran }} {{ d.satuan }}</td>
                   </tr>

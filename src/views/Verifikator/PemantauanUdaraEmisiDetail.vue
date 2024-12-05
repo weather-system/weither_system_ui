@@ -107,6 +107,7 @@ onMounted(async () => {
                   <tr>
                     <th>No</th>
                     <th>Parameter Udara Emisi</th>
+                    <th>Baku Mutu</th>
                     <th>Ekspresi</th>
                     <th>Hasil Pengujian</th>
                     <th>Satuan</th>
@@ -116,6 +117,7 @@ onMounted(async () => {
                   <tr v-for="(detail, index) in data.details" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ detail.parameter_udara }}</td>
+                    <td>{{ detail.referensi_baku_mutu?.baku_mutu }}</td>
                     <td>{{ detail.ekspresi1 }}</td>
                     <td>{{ detail.hasil_pengujian1 }}</td>
                     <td>{{ detail.satuan }}</td>

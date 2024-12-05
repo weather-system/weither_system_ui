@@ -75,6 +75,21 @@ const router = createRouter({
       component: () => import('@/views/PengawasView.vue'),
     },
     {
+      path: '/ReferensiBakuMutu',
+      name: 'ReferensiBakuMutu',
+      component: () => import('@/views/ReferensiBakuMutu.vue'),
+    },
+    {
+      path: '/ReferensiBakuMutu/Create',
+      name: 'ReferensiBakuMutuCreate',
+      component: () => import('@/views/ReferensiBakuMutu/Create.vue'),
+    },
+    {
+      path: '/ReferensiBakuMutu/:id',
+      name: 'ReferensiBakuMutuEdit',
+      component: () => import('@/views/ReferensiBakuMutu/Edit.vue'),
+    },
+    {
       path: '/Verifikator/PemantauanAir',
       name: 'VerifikatorPemantauanAir',
       component: () => import('@/views/Verifikator/PemantauanAir.vue'),
