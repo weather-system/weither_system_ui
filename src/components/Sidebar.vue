@@ -4,9 +4,31 @@ import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { getUserStatus, canCreatePemantauan } from '@/lib/company.js'
+import { getUserStatus, canCreatePemantauan, getStatusPertek } from '@/lib/company.js'
 import '@/assets/css/admin.css'
-
+import Swal from 'sweetalert2'
+const handleNavigation = (event) => {
+  if (isUserIpalPending.value) {
+    event.preventDefault() 
+    Swal.fire({
+      icon: 'warning',
+      title: 'Akses Ditolak',
+      text: 'Pertek IPAL Anda Statusnya Pending.',
+      confirmButtonText: 'OK'
+    })
+  }
+}
+const handleNavigationTpsb3 = (event) => {
+  if (isUserTpsb3Pending.value) {
+    event.preventDefault() 
+    Swal.fire({
+      icon: 'warning',
+      title: 'Akses Ditolak',
+      text: 'Rintek LB3 Anda Statusnya Pending.',
+      confirmButtonText: 'OK'
+    })
+  }
+}
 const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
@@ -14,6 +36,9 @@ const router = useRouter()
 const userRole = ref('EKSEKUTIF')
 
 const isUserPending = ref(false)
+const isUserIpalPending = ref(false)
+const isUserTpsb3Pending = ref(false)
+const isUserCerobongPending = ref(false)
 const canPemantauan = ref(false)
 
 const isPengendalianOpen = ref(false)
@@ -21,6 +46,7 @@ const isDataOpen = ref(false)
 const isEksekutifOpen = ref(false)
 
 const isperdasOpen = ref(false)
+const ispenudaraOpen = ref(false)
 const isMasterOpen = ref(false)
 const isOperatorOpen = ref(false)
 const isKontenOpen = ref(false)
@@ -113,20 +139,45 @@ const togglePerDas = () => {
     },
   })
 }
-watch(
-  () => route.query.sidebar,
-  (latest, _) => {
-    if (latest == 'perscompany') {
-      isDataOpen.value = true
-      isperdasOpen.value = true
-    } else {
-      isperdasOpen.value = false
-    }
-  },
-  {
-    immediate: true,
-  },
-)
+
+const togglePenUdara = (event) => {
+  if (isUserCerobongPending.value) {
+    event.preventDefault() 
+    Swal.fire({
+      icon: 'warning',
+      title: 'Akses Ditolak',
+      text: 'Pertek Emisi Anda Statusnya Pending.',
+      confirmButtonText: 'OK'
+    })
+  } else {
+    ispenudaraOpen.value = !ispenudaraOpen.value
+    console.log(ispenudaraOpen)
+    router.push({
+      path: '/Pengendalian/PencemaranUdara',
+      query: {
+        sidebar: 'PencemaranUdara'
+      }
+    });
+  }
+}
+watch(() => route.query.sidebar, (latest, _) => {
+  if (latest === 'perscompany') {
+    isDataOpen.value   = true;
+    isperdasOpen.value = true;
+  } else {
+    isperdasOpen.value = false;
+  }
+
+  if (latest === 'PencemaranUdara') {
+    isPengendalianOpen.value = true;
+    ispenudaraOpen.value = true;
+  } else {
+    ispenudaraOpen.value = false;
+  }
+}, {
+  immediate: true
+});
+
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
   isDataOpen.value = false
@@ -154,6 +205,17 @@ const toggleTiket = () => {
 onMounted(async () => {
   const loader = $loading.show()
   try {
+    const dataa = await getStatusPertek()
+    console.log(dataa);
+    if (dataa?.company_ipals?.includes('PENDING')) {
+      isUserIpalPending.value = true;
+    }
+    if (dataa?.company_cerobongs?.includes('PENDING')) {
+      isUserCerobongPending.value = true;
+    }
+    if (dataa?.company_tps_b3_s?.includes('PENDING')) {
+      isUserTpsb3Pending.value = true;
+    }
     const data = await getUserStatus()
     if (data.status === 'PENDING') {
       isUserPending.value = true
@@ -379,6 +441,12 @@ const fetchUserStatus = async () => {
               <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
+            </router-link>
+          </li>
+          <li v-if="store.state.auth.user.role === 'ADMIN'">
+            <router-link to="/ReferensiBakuMutu" activeClass="active"> <!-- GATAU INI ROLE APA -->
+              <i class="fas fa-eye"></i>
+              <span>Referensi Baku Mutu</span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
@@ -807,14 +875,12 @@ const fetchUserStatus = async () => {
                 </li>
                 <li>
                   <router-link to="/Data/PKKPR" activeClass="active">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    PKKPR</router-link
+                    <i class="fas fa-chevron-right me-2"></i>PKKPR</router-link
                   >
                 </li>
                 <li>
                   <router-link to="/Data/PKKPR" activeClass="active">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    PBG</router-link
+                    <i class="fas fa-chevron-right me-2"></i>PBG</router-link
                   >
                 </li>
                 <!-- <li>
@@ -877,26 +943,57 @@ const fetchUserStatus = async () => {
               <ul v-if="isPengendalianOpen" class="submenu d-block ms-0">
                 <li>
                   <router-link
-                    to="/Pengendalian/PencemaranAir"
-                    activeClass="active"
+                    :to="!isUserIpalPending ? '/Pengendalian/PencemaranAir' : ''"
+                    @click="handleNavigation"
+                    tag="span"
+                  >
+                    <i class="fas fa-chevron-right me-2"></i>Pencemaran Air
+                  </router-link>
+                </li>
+                <li>
+                  <a
+                    @click="togglePenUdara"
+                   
+                    :to="!isUserEmisiPending ? '/Pengendalian/PencemaranUdara' : ''"
+                    style="cursor:pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
-                    <!-- Panah ke kanan -->
-                    Pencemaran Air
-                  </router-link>
+                    <span>Pencemaran Udara</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !ispenudaraOpen,
+                        'fe-chevron-up': ispenudaraOpen,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul
+                      v-if="isPengendalianOpen && ispenudaraOpen"
+                      class="submenu d-block ms-3"
+                    >
+                      <li>
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi" activeClass="active">
+                          <i class="fas fa-chevron-right"></i>
+                          Emisi</router-link
+                        >
+                      </li>
+                      <li>
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien" activeClass="active">
+                          <i class="fas fa-chevron-right"></i>
+                          Ambien</router-link
+                        >
+                      </li>
+                    </ul>
+                  </transition>
                 </li>
+
                 <li>
-                  <router-link to="/Pengendalian/PencemaranUdara">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    <!-- Panah ke kanan -->
-                    Pencemaran Udara
-                  </router-link>
-                </li>
-                <li>
-                  <router-link to="/pengendalian/PengelolaanLimbahB3">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    <!-- Panah ke kanan -->
-                    Pengelolaan Limbah B3
+                  <router-link
+                    :to="!isUserTpsb3Pending ? '/pengendalian/PengelolaanLimbahB3' : ''"
+                    @click="handleNavigationTpsb3"
+                    tag="span">
+                    <i class="fas fa-chevron-right me-2"></i>Pengelolaan Limbah B3
                   </router-link>
                 </li>
               </ul>
@@ -924,45 +1021,9 @@ const fetchUserStatus = async () => {
             <transition name="slide-fade">
               <ul v-if="isLogbookOpen" class="submenu d-block ms-0">
                 <li>
-                  <router-link to="/logbook/produksisenyatanya">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Produksi Senyatanya</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/PemakaianBahanKimia">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Pemakaian Kimia</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/PemakaianAir">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Pemakaian Air</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/DebitOutletIPAL">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Debit Outlet IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/DebitPemakaianAir">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Debit Pemakaian Air</router-link
-                  >
-                </li>
-                <li>
                   <router-link to="/logbook/IPAL">
                     <i class="fas fa-chevron-right me-2"></i>
                     IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/logbook/PenggunaanB3">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Penggunaan B3</router-link
                   >
                 </li>
                 <li>

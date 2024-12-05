@@ -1,9 +1,11 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
 import { uploadFile } from '@/lib/filestorage.js'
+import { getIpals } from '@/lib/company.js'
+import { MONTHS } from '@/lib/utils.js'
 
 const props = defineProps(['initialValues'])
 const emit = defineEmits('uploaded-document')
@@ -12,68 +14,57 @@ const $loading = useLoading()
 
 const form = ref(null)
 const files = reactive({})
+const ipals = ref([])
 
 const initialData = {
   details: [
     {
       parameter: 'Temperatur Udara Sekitar',
-      satuan: 'C',
-      ekspresi: '='
+      satuan: 'C'
     },
     {
       parameter: 'BOD',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'COD',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'TSS',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Fenol Total',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Krom Total',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Amonia Total',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Sulfida',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Minyak dan Lemak',
-      satuan: 'mg/L',
-      ekspresi: '='
+      satuan: 'mg/L'
     },
     {
       parameter: 'Warna',
-      satuan: 'Pt-Co',
-      ekspresi: '='
+      satuan: 'Pt-Co'
     },
     {
       parameter: 'pH',
-      satuan: null,
-      ekspresi: '='
+      satuan: null
     },
     {
       parameter: 'Temperatur Air',
-      satuan: 'C',
-      ekspresi: '='
+      satuan: 'C'
     }
   ],
 };
@@ -87,7 +78,6 @@ const schema = yup.object({
   tgl_pengambilan_contoh: yup.string().required(),
   details: yup.array().of(yup.object({
     parameter: yup.string().required(),
-    ekspresi: yup.string().required(),
     hasil_pengukuran: yup.number().required(),
     satuan: yup.string().nullable()
   }))
@@ -194,6 +184,17 @@ const onUploadDocument = async (event, key) => {
   }
 }
 
+const loadIpals = async () => {
+  const loader = $loading.show()
+  try {
+    ipals.value = await getIpals()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+
 const setValues = (data) => {
   form.value.setValues(data)
 }
@@ -201,6 +202,10 @@ const setValues = (data) => {
 const onInvalidSubmit = (data) => {
   console.log('errro', data)
 }
+
+onMounted(async () => {
+  await loadIpals()
+})
 
 defineExpose({ setValues })
 </script>
@@ -213,25 +218,41 @@ defineExpose({ setValues })
           @invalid-submit="onInvalidSubmit"
         >
           <div class="row">
-            <div class="col-4">
-              <label class="form-label">Bulan</label>
-              <Field name="month" class="form-select" as="select">
+            <div class="col-8 mb-2">
+              <label class="form-label">IPAL</label>
+              <Field name="company_ipal_id" class="form-control" as="select">
                 <option value="">Pilih</option>
-                <option value="Januari">Januari</option>
-                <option value="Februari">Februari</option>
+                <option v-for="d in ipals" :key="d.id" :value="d.id">{{ d.type }} - {{ d.system_ipal }} - {{ d.year_of_manufacture_of_ipal }}</option>
+              </Field>
+              <ErrorMessage name="company_ipal_id" />
+            </div>
+            <div class="col-5">
+              <label class="form-label">Bulan</label>
+              <Field name="month" class="form-control" as="select">
+                <option value="">Pilih</option>
+                <option v-for="(m, k) in MONTHS" :value="m">{{ m }}</option>
               </Field>
               <ErrorMessage name="month" />
             </div>
-            <div class="col-4">
+            <div class="col-3">
               <label class="form-label">Tahun</label>
               <Field name="year" class="form-control" />
               <ErrorMessage name="year" />
             </div>
-            <div class="mt-2">
+            <div class="mt-2 row">
               <div class="col-4">
                 <label class="form-label">Debit Terukur</label>
                 <Field name="debit_terukur" class="form-control" />
                 <ErrorMessage name="debit_terukur" />
+              </div>
+              <div class="col-4">
+                <label class="form-label">Satuan</label>
+                <Field name="debit_terukur_satuan" class="form-control" as="select">
+                  <option value="">Pilih</option>
+                  <option value="m3/hari">m3/hari</option>
+                  <option value="m3/detik">m3/detik</option>
+                </Field>
+                <ErrorMessage name="debit_terukur_satuan" />
               </div>
             </div>
             <div class="mt-2">
@@ -284,11 +305,11 @@ defineExpose({ setValues })
 
             <div>
               <div class="table-resposnive table-div">
+                <p>NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,) Contoh: 123.32</p>
                 <table class="table datatable">
                   <thead>
                     <tr>
                       <th>Parameter</th>
-                      <th>Ekspresi</th>
                       <th>Hasil Pengukuran</th>
                     </tr>
                   </thead>
@@ -299,7 +320,7 @@ defineExpose({ setValues })
                         <td>
                           <Field
                             :name="`details[${i}].ekspresi`"
-                            class="form-select"
+                            class="form-control"
                             as="select"
                           >
                             <option value="=">=</option>

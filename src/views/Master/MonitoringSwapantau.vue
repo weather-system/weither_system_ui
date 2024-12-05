@@ -4,6 +4,6 @@ import MainWrapper from '@/components/MainWrapper.vue';
 
 <template>
     <MainWrapper>
-        
+
     </MainWrapper>
 </template>

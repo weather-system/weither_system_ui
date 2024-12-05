@@ -3,25 +3,29 @@ import { ref, onMounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
-import { getPencemaranAir, deletePencemaranAir } from '@/lib/pencemaranAir.js'
+import { getPencemaranAir, deletePencemaranAir, getStatusPertek } from '@/lib/pencemaranAir.js'
 import MainWrapper from '@/components/MainWrapper.vue' // Import MainWrapper
 import Swal from 'sweetalert2'
+import { MONTHS, YEARS } from '@/lib/utils.js'
+
 const $loading = useLoading()
+
+const isUserIpalPending = ref(false)
 const store = useStore()
 const router = useRouter()
-
+const statuspertek = ref([])
 const pencemaranAir = ref([])
-const fetchData = async () => {
-  const loader = $loading.show()
-  try {
-    pencemaranAir.value = await getPencemaranAir()
-  } catch (e) {
-    console.error('Error fetching data:', e)
-    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
-  } finally {
-    loader.hide()
-  }
-}
+// const fetchData = async () => {
+//   const loader = $loading.show()
+//   try {
+//     pencemaranAir.value = await getPencemaranAir()
+//   } catch (e) {
+//     console.error('Error fetching data:', e)
+//     Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+//   } finally {
+//     loader.hide()
+//   }
+// }
 
 const deleteData = async id => {
   const { isConfirmed } = await Swal.fire({
@@ -42,7 +46,7 @@ const deleteData = async id => {
     const loader = $loading.show()
     try {
       await deletePencemaranAir(id)
-      await fetchData() 
+      await fetchData()
       Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
     } catch (e) {
       console.error(e)
@@ -51,12 +55,35 @@ const deleteData = async id => {
     }
   }
 }
-onMounted(fetchData)
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    statuspertek.value = await getStatusPertek()
+    if (statuspertek.value?.company_ipals?.includes('PENDING')) {
+      isUserIpalPending.value = true
+    }
+    if (isUserIpalPending.value) {
+    Swal.fire({
+      title: 'Warning!',
+      text: 'Pertek IPAL Anda Statusnya Pending.',
+      icon: 'warning',
+    });
+  }
+
+    pencemaranAir.value = await getPencemaranAir()
+  } catch (e) {
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+  } finally {
+    loader.hide()
+  }
+})
 </script>
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper page-settings">
+    <div class="" v-if="isUserIpalPending"></div>
+    <div class="page-wrapper page-settings" v-if="!isUserIpalPending">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <h5>
@@ -81,15 +108,13 @@ onMounted(fetchData)
         <div style="width: fit-content">
           <div class="d-flex align-items-center" style="gap: 1rem">
             <p class="m-0">Tahun/Bulan</p>
-            <select class="form-select">
-              <option>Semua</option>
-              <option>2024</option>
-              <option>2023</option>
+            <select class="form-control">
+              <option value="">Semua</option>
+              <option v-for="y in YEARS" :key="y" :value="y">{{ y }}</option>
             </select>
-            <select class="form-select">
-              <option>Semua</option>
-              <option>Januari</option>
-              <option>Febuari</option>
+            <select class="form-control">
+              <option value="">Semua</option>
+              <option v-for="(m, k) in MONTHS" :key="k" :value="m">{{ m }}</option>
             </select>
           </div>
 
@@ -110,6 +135,7 @@ onMounted(fetchData)
                     <th>Debit Terukur (M3/BLN)</th>
                     <th>Produksi</th>
                     <th>Lab. Pengukur</th>
+                    <th>IPAL</th>
                     <th>Status</th>
                     <th>Aksi</th>
                   </tr>
@@ -121,9 +147,11 @@ onMounted(fetchData)
                     <td>{{ data.debit_terukur }}</td>
                     <td>{{ data.produksi_ton_bulan }}</td>
                     <td>{{ data.lab_penguji }}</td>
+                    <td>{{ data.company_ipal ? `${data.company_ipal.type} - ${data.company_ipal.system_ipal} - ${data.company_ipal.year_of_manufacture_of_ipal}` : '-' }}</td>
                     <td>{{ data.status }}</td>
                     <td class="d-flex" style="gap: 1rem">
                       <RouterLink
+                        v-if="data.status != 'Verifikasi LH'"
                         :to="{
                           path: '/Pengendalian/PencemaranAir/Edit',
                           query: { id: data.id },
@@ -132,12 +160,13 @@ onMounted(fetchData)
                         >Ubah</RouterLink
                       >
                       <button
+                        v-if="data.status != 'Verifikasi LH'"
                         @click="deleteData(data.id)"
                         class="btn btn-danger"
                       >
                         Hapus
                       </button>
-                      <button class="btn btn-primary">Cetak</button>
+                      <button v-if="data.status == 'Verifikasi LH'" class="btn btn-primary">Cetak</button>
                     </td>
                   </tr>
                 </tbody>

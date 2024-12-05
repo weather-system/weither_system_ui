@@ -111,6 +111,7 @@ onMounted(async () => {
                     <th>Merk Boiler</th>
                     <th>Sistem Pengendalian Emisi Cerobong</th>
                     <th>Lubang Sampling</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -125,6 +126,7 @@ onMounted(async () => {
                     <td>{{ data.merk_boiler }}</td>
                     <td>{{ data.pengendalian_emisi_cerobong }}</td>
                     <td>{{ data.lubang_sampling }}</td>
+                    <td>{{ data.status }}</td>
                     <td>
                       <router-link
                         :to="

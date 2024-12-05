@@ -14,6 +14,7 @@ const initialData = {
   satuan_tinggi_cerobong: 'm',
   satuan_diameter_cerobong: 'm',
   satuan_kedalaman_lubang_sampling: 'm2',
+  kedalaman_lubang_sampling: null,
 }
 
 const schema = yup.object({
@@ -28,9 +29,14 @@ const schema = yup.object({
   satuan_kapasitas_boiler: yup.string().required(),
   pengendalian_emisi_cerobong: yup.string().required(),
   lubang_sampling: yup.string().required(),
-  kedalaman_lubang_sampling: yup.number(),
+  kedalaman_lubang_sampling: yup.string()
+    .nullable(),
+  nrOfApples: yup
+    .number()
+    .nullable(true)
+    .transform((_, val) => val === Number(val) ? val : null),
   satuan_kedalaman_lubang_sampling: yup.string(),
-  stage: yup.string().required(),
+  stage: yup.string().nullable(),
   jenis_bahan_bakar: yup.string().required(),
 })
 
@@ -209,18 +215,23 @@ defineExpose({ setValues })
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="col-form-label">Longitude</label>
-                    <Field
-                      name="koordinat_x"
-                      class="form-control"
-                      type="number"
-                    />
+                    <label class="col-form-label"
+                    >Longitude (Ex. -123.21312)</label
+                  >
+                  <Field name="koordinat_x" class="form-control" />
+                  <a
+                    href="https://www.yogantara.info/"
+                    class="text-small"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Konvert dari derajat ke decimal Link</a
+                  >
                     <ErrorMessage name="koordinat_x" />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="col-form-label">Latitude</label>
+                    <label class="col-form-label">Latitude (Ex. -123.21312)</label>
                     <Field
                       name="koordinat_y"
                       class="form-control"
@@ -305,6 +316,9 @@ defineExpose({ setValues })
 
               <div class="mt-4">
                 <button class="btn btn-primary">Simpan</button>
+                <router-link to="/Data/Cerobong" class="btn btn-secondary m-2"
+                        >Kembali</router-link
+                      >
               </div>
             </div>
           </div>
