@@ -14,6 +14,7 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  const loader = $loading.show()
   try {
     delete data.id
     await createReferensiBakuMutu(data)

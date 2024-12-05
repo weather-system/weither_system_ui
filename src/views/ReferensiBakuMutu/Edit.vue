@@ -26,7 +26,6 @@ const submit = async (data) => {
 }
 
 const loadData = async () => {
-  console.log('hit')
   const loader = $loading.show()
   try {
     const data = await getReferensiBakuMutuDetail(route.params.id)
