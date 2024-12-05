@@ -97,7 +97,7 @@ export const getAllIpals = async (status) => {
 
 export const getIpalDetail = async (id) => {
   const response = await axios.get(`/api/company_ipals/${id}`)
-  const data = response.data.data
+  const data = response.data
   if (data) {
     data.ipalTypes = data.system_ipal
       ? data.system_ipal.split(',')

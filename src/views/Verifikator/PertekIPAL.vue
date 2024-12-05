@@ -111,7 +111,7 @@ watch(
                   <tr v-for="(ipal, index) in ipals" :key="ipal.id">
                     <td>{{ index + 1 }}</td>
                     <td>{{ ipal.year_of_manufacture_of_ipal }}</td>
-                    <td>{{ ipal.company_detail.company.name }}</td>
+                    <td>{{ ipal.company ? ipal.company.name : '-'}}</td>
                     <td>{{ ipal.system_ipal }}</td>
                     <td>{{ ipal.type }}</td>
                     <td>

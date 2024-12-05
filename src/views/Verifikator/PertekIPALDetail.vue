@@ -359,17 +359,16 @@ onMounted(async () => {
                   <tr>
                     <th style="width: 50px">No</th>
                     <th style="width: 200px">Upaya Pengelolaan</th>
-                    <th style="width: 100px">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="!formData.management_efforts.length">
-                    <td colspan="3" class="text-center">
+                  <tr v-if="!formData.itemz.length">
+                    <td colspan="2" class="text-center">
                       Data Tidak Ditemukan
                     </td>
                   </tr>
                   <tr
-                    v-for="(detail, index) in formData.management_efforts"
+                    v-for="(detail, index) in formData.itemz"
                     :key="index"
                   >
                     <td>{{ index + 1 }}</td>
@@ -382,14 +381,6 @@ onMounted(async () => {
                         style="word-wrap: break-word; overflow-wrap: break-word"
                         disabled
                       />
-                    </td>
-                    <td>
-                      <button
-                        @click="removeEffort(detail.id, index)"
-                        class="btn btn-danger"
-                      >
-                        -
-                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -412,17 +403,16 @@ onMounted(async () => {
                       <th>Bahan Kimia Yang Digunakan</th>
                       <th>Pemakaian Bahan Kimia</th>
                       <th>Satuan</th>
-                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-if="!formData.ipal_details.length">
-                      <td colspan="5" class="text-center">
+                    <tr v-if="!formData.items.length">
+                      <td colspan="4" class="text-center">
                         Data Tidak Ditemukan
                       </td>
                     </tr>
                     <tr
-                      v-for="(detail, index) in formData.ipal_details"
+                      v-for="(detail, index) in formData.items"
                       :key="index"
                     >
                       <td>{{ index + 1 }}</td>
@@ -453,14 +443,6 @@ onMounted(async () => {
                           placeholder="Masukkan Satuan"
                           style="min-width: 120px"
                         />
-                      </td>
-                      <td>
-                        <button
-                          @click="removeChemical(detail.id, index)"
-                          class="btn btn-danger"
-                        >
-                          -
-                        </button>
                       </td>
                     </tr>
                   </tbody>
