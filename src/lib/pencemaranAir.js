@@ -100,3 +100,7 @@ export const verifikasiPencemaranAir = async (id, data) => {
   return resp.data
 }
 
+export const getStatusPertek = async () => {
+  const resp = await axios.get(`/api/statusespertek`)
+  return resp.data
+}

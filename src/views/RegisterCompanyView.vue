@@ -349,6 +349,18 @@ const uploadPKPLHFile = async e => {
                       />
                       <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
                     </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label class="form-label"
+                          >Tanggal Terbit Persetujuan Lingkungan</label
+                        >
+                        <input
+                          name="terbit_persetujuan_lingkungan"
+                          type="date"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <!-- Kondisi untuk UKL/UPL dan DPLH -->
@@ -372,6 +384,18 @@ const uploadPKPLHFile = async e => {
                         @change="uploadPKPLHFile"
                       />
                       <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label class="form-label"
+                          >Tanggal Terbit Persetujuan Lingkungan</label
+                        >
+                        <input
+                          name="terbit_persetujuan_lingkungan"
+                          type="date"
+                          class="form-control"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div class="row mt-3">

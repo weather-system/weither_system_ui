@@ -23,6 +23,7 @@ export const parameters = [
   },
 ]
 
+
 export const createPengelolaanLimbahB3 = async data => {
   const resp = await axios.post('/api/pengelolaan-limbah-b3', data)
   return resp.data
@@ -45,5 +46,9 @@ export const updatePengelolaanLimbahB3 = async (id, data) => {
 
 export const deletePengelolaanLimbahB3 = async (id) => {
   const resp = await axios.delete(`/api/pengelolaan-limbah-b3/${id}`)
+  return resp.data
+}
+export const getStatusPertek = async () => {
+  const resp = await axios.get(`/api/statusespertek`)
   return resp.data
 }
