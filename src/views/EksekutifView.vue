@@ -1,66 +1,118 @@
 <script setup>
-import MainWrapper from '@/components/MainWrapper.vue'
+import MainWrapper from "@/components/MainWrapper.vue";
 import { onMounted, ref } from "vue";
-import { logout as authLogout } from '@/lib/auth.js';
+import { logout as authLogout } from "@/lib/auth.js";
 import Chart from "chart.js/auto";
+
+// Role User
 const userRole = "EKSEKUTIF";
 
+// Data Master
 const masterData = [
   { companyName: "Perusahaan A", businessType: "Manufaktur", status: "Aktif" },
   { companyName: "Perusahaan B", businessType: "Pertanian", status: "Non-Aktif" },
 ];
-const sebaranTPSB3 = ["-6.200, 106.800", "-6.300, 106.700"];
-const sebaranCerobong = ["-6.400, 106.900", "-6.500, 107.000"];
-const sebaranIPAL = ["-6.600, 107.100", "-6.700, 107.200"];
-const luasanRTHPrivat = 15.5;
 
+// Data Sebaran per Kecamatan
+const kecamatanLabels = [
+  "Kecamatan Cimahi Utara",
+  "Kecamatan Cimahi Tengah",
+  "Kecamatan Cimahi Selatan",
+];
+const dataTPSB3 = [5, 3, 7];
+const dataCerobong = [4, 6, 5];
+const dataIPAL = [3, 4, 8];
+
+// Data Luasan RTH Privat
+const luasKotaCimahi = 100; // Total Luas Kota Cimahi dalam persen
+const luasanRTHPrivat = 15.5; // Luas RTH Privat dalam persen
+
+// Fungsi Logout
 const logout = async () => {
   try {
     await authLogout();
-    alert('Logout berhasil');
+    alert("Logout berhasil");
     window.location.href = "/login";
   } catch (error) {
-    console.error('Logout gagal:', error);
+    console.error("Logout gagal:", error);
   }
 };
 
+// Inisialisasi Grafik
 onMounted(() => {
+  // Grafik Sebaran Titik (Bar Horizontal)
   const sebaranChartCtx = document.getElementById("sebaranChart").getContext("2d");
   new Chart(sebaranChartCtx, {
-    type: "pie",
+    type: "bar",
     data: {
-      labels: ['TPS B3', 'Cerobong', 'IPAL'],
+      labels: kecamatanLabels,
       datasets: [
         {
-          label: "Sebaran Titik",
-          data: [sebaranTPSB3.length, sebaranCerobong.length, sebaranIPAL.length],
-          backgroundColor: ["#FF5733", "#33FF57", "#3357FF"],
-          borderColor: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
-          borderWidth: 1
-        }
-      ]
-    }
+          label: "TPS B3",
+          data: dataTPSB3,
+          backgroundColor: "#FF5733",
+          borderColor: "#FFFFFF",
+          borderWidth: 1,
+        },
+        {
+          label: "Cerobong",
+          data: dataCerobong,
+          backgroundColor: "#33FF57",
+          borderColor: "#FFFFFF",
+          borderWidth: 1,
+        },
+        {
+          label: "IPAL",
+          data: dataIPAL,
+          backgroundColor: "#3357FF",
+          borderColor: "#FFFFFF",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      indexAxis: "x",
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        tooltip: { enabled: true },
+      },
+      scales: {
+        x: { title: { display: true, text: "" } },
+        y: {
+          title: { display: true, text: "Jumlah" },
+          beginAtZero: true,
+        },
+      },
+    },
   });
 
+  // Grafik Luasan RTH Privat
   const luasanChartCtx = document.getElementById("luasanChart").getContext("2d");
   new Chart(luasanChartCtx, {
     type: "doughnut",
     data: {
-      labels: ["RTH Privat", "Sisa Luas"],
+      labels: ["Luas RTH Privat", "Luas Kota Cimahi (Sisa)"],
       datasets: [
         {
           label: "Luasan RTH Privat",
-          data: [luasanRTHPrivat, 100 - luasanRTHPrivat],
+          data: [luasanRTHPrivat, luasKotaCimahi - luasanRTHPrivat],
           backgroundColor: ["#2D9CDB", "#E0E0E0"],
           borderColor: ["#FFFFFF", "#FFFFFF"],
-          borderWidth: 1
-        }
-      ]
-    }
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: { enabled: true },
+        legend: { position: "top" },
+      },
+    },
   });
 });
 </script>
-
 
 <template>
   <div>
@@ -81,7 +133,9 @@ onMounted(() => {
                         <i class="fas fa-database fa-2x mb-3 text-primary"></i>
                         <h5>Master Data</h5>
                         <p>{{ masterData.length }} Perusahaan</p>
-                        <a href="/master-data" class="btn btn-sm btn-primary">Lihat Detail</a>
+                        <a href="/master-data" class="btn btn-sm btn-primary"
+                          >Lihat Detail</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -92,8 +146,10 @@ onMounted(() => {
                       <div class="card-body text-center">
                         <i class="fas fa-map-marker-alt fa-2x mb-3 text-danger"></i>
                         <h5>Sebaran TPS B3</h5>
-                        <p>{{ sebaranTPSB3.length }} Titik</p>
-                        <a href="/sebaran-tpsb3" class="btn btn-sm btn-danger">Lihat Detail</a>
+                        <p>{{ dataTPSB3.reduce((a, b) => a + b, 0) }} Titik</p>
+                        <a href="/sebaran-tpsb3" class="btn btn-sm btn-danger"
+                          >Lihat Detail</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -104,8 +160,10 @@ onMounted(() => {
                       <div class="card-body text-center">
                         <i class="fas fa-industry fa-2x mb-3 text-success"></i>
                         <h5>Sebaran Cerobong</h5>
-                        <p>{{ sebaranCerobong.length }} Titik</p>
-                        <a href="/sebaran-cerobong" class="btn btn-sm btn-success">Lihat Detail</a>
+                        <p>{{ dataCerobong.reduce((a, b) => a + b, 0) }} Titik</p>
+                        <a href="/sebaran-cerobong" class="btn btn-sm btn-success"
+                          >Lihat Detail</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -117,7 +175,9 @@ onMounted(() => {
                         <i class="fas fa-tree fa-2x mb-3 text-success"></i>
                         <h5>Luasan RTH Privat</h5>
                         <p>{{ luasanRTHPrivat }}%</p>
-                        <a href="/rth-privat" class="btn btn-sm btn-success">Lihat Detail</a>
+                        <a href="/rth-privat" class="btn btn-sm btn-success"
+                          >Lihat Detail</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -132,7 +192,7 @@ onMounted(() => {
                         <h5>Grafik Sebaran Titik</h5>
                       </div>
                       <div class="card-body">
-                        <canvas id="sebaranChart"></canvas>
+                        <canvas id="sebaranChart" width="100%" height="117"></canvas>
                       </div>
                     </div>
                   </div>
@@ -141,14 +201,22 @@ onMounted(() => {
                   <div class="col-md-6">
                     <div class="card">
                       <div class="card-header">
-                        <h5>Persentase Luasan RTH Privat</h5>
+                        <h5>Persentase Luasan RTH Privat / Luas Kota Cimahi</h5>
                       </div>
                       <div class="card-body text-center">
                         <canvas id="luasanChart"></canvas>
+                        <p class="mt-3">
+                          Luas RTH Privat: {{ luasanRTHPrivat }}% dari Luas Kota Cimahi
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <!-- Logout Button -->
+              <div class="text-center mt-4">
+                <button class="btn btn-danger" @click="logout">Logout</button>
               </div>
             </div>
           </div>
