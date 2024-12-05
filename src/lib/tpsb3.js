@@ -25,9 +25,13 @@ export const deleteTpsB3 = async (id) => {
   return resp.data
 }
 
-export const getAllForAdmin = async () => {
+export const getAllForAdmin = async (company_id) => {
   try {
-    const response = await axios.get('/api/master/TpsB3');
+    const response = await axios.get('/api/master/TpsB3',{
+      params: {
+        company_id:company_id
+      },
+  });
     console.log(response.data); 
     return response.data;  
   } catch (error) {

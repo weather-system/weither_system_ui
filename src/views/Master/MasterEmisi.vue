@@ -4,6 +4,9 @@ import { useLoading } from 'vue-loading-overlay'
 import { getAllCerobong, deleteCerobong } from '@/lib/cerobong.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import Swal from 'sweetalert2'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const $loading = useLoading()
 const cerobong = ref([])
@@ -11,10 +14,8 @@ const cerobong = ref([])
 const fetchCerobong = async () => {
   const loader = $loading.show()
   try {
-    const data = await getAllCerobong()
+    const data = await getAllCerobong(route.query.company_id)
     cerobong.value = data
-  } catch (error) {
-    Swal.fire('Error', 'Gagal mengambil data cerobong', 'error')
   } finally {
     loader.hide()
   }
