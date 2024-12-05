@@ -12,7 +12,8 @@ export const usePemantauanFilter = () => {
   const filterParams = reactive({
     month: '',
     year: '',
-    company_id: ''
+    company_id: '',
+    search_query: ''
   })
 
   const loadYears = () => {

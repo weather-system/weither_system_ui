@@ -6,55 +6,13 @@ import moment from 'moment'
 import MainWrapper from '@/components/MainWrapper.vue'
 import { getPencemaranAirVerifikator } from '@/lib/pencemaranAir.js'
 import { getCompanies } from '@/lib/company.js'
+import { usePemantauanFilter } from '@/hooks/usePemantauan.js'
 
 const $loading = useLoading()
+const { years, months, companies, filterParams } = usePemantauanFilter()
 
 const data = ref([])
-
-const years = ref([])
-const months = ref(null)
-const companies = ref([])
-
-const filterParams = reactive({
-  month: '',
-  year: '',
-  company_id: ''
-})
-
-const loadYears = () => {
-  const currentYear = new Date().getFullYear();
-  for (let year = currentYear; year >= 2000; year--) {
-    years.value.push(year);
-  }
-}
-
-const loadMonths = () => {
-  months.value = {
-    1: "Januari",
-    2: "Februari",
-    3: "Maret",
-    4: "April",
-    5: "Mei",
-    6: "Juni",
-    7: "Juli",
-    8: "Agustus",
-    9: "September",
-    10: "Oktober",
-    11: "November",
-    12: "Desember"
-  }
-}
-
-const loadCompanies = async () => {
-  const loader = $loading.show()
-  try {
-    companies.value = await getCompanies()
-  } catch (e) {
-    console.error(e)
-  } finally {
-    loader.hide()
-  }
-}
+const searchQuery = ref('')
 
 const loadData = async () => {
   const loader = $loading.show()
@@ -72,9 +30,6 @@ watch(filterParams, async (latest, _) => {
 })
 
 onMounted(async () => {
-  loadYears()
-  loadMonths()
-  await loadCompanies()
   await loadData()
 })
 </script>
@@ -88,25 +43,34 @@ onMounted(async () => {
 
         </div>
 
-        <div style="width: fit-content">
-          <div class="d-flex align-items-center" style="gap: 1rem">
-            <p class="m-0">Tahun/Bulan</p>
-            <select class="form-control" v-model="filterParams.year">
-              <option value="">Semua</option>
-              <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-            </select>
-            <select v-if="months" class="form-control" v-model="filterParams.month">
-              <option value="">Semua</option>
-              <option v-for="(v, k) in months" :key="k" :value="v">{{ v }}</option>
-            </select>
+        <div class="d-flex align-items-end justify-content-between">
+          <div>
+            <div class="d-flex align-items-center" style="gap: 1rem">
+              <p class="m-0">Tahun/Bulan</p>
+              <select class="form-control" v-model="filterParams.year">
+                <option value="">Semua</option>
+                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+              </select>
+              <select v-if="months" class="form-control" v-model="filterParams.month">
+                <option value="">Semua</option>
+                <option v-for="(v, k) in months" :key="k" :value="v">{{ v }}</option>
+              </select>
+            </div>
+
+            <div class="mt-3">
+              <p class="m-0 mb-1">Perusahaan</p>
+              <select class="form-control" v-model="filterParams.company_id">
+                <option value="">Semua</option>
+                <option v-for="c in companies" :key="c.id" :value="c.id">{{ c.name }}</option>
+              </select>
+            </div>
           </div>
 
-          <div class="mt-3">
-            <p class="m-0 mb-1">Perusahaan</p>
-            <select class="form-control" v-model="filterParams.company_id">
-              <option value="">Semua</option>
-              <option v-for="c in companies" :key="c.id" :value="c.id">{{ c.name }}</option>
-            </select>
+          <div>
+            <div class="mt-4 d-flex" style="gap: 1rem">
+              <input v-model="searchQuery" class="form-control" placeholder="Search..." />
+              <button @click="filterParams.search_query = searchQuery" type="button" class="btn btn-primary">Search</button>
+            </div>
           </div>
         </div>
 
@@ -120,20 +84,28 @@ onMounted(async () => {
                     <th>Bulan</th>
                     <th>Tahun</th>
                     <th>Jenis Usaha</th>
+                    <th>IPAL</th>
                     <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="d in data" :key="d.id">
+                  <tr v-if="data.length == 0">
+                    <td colspan="7" class="text-center">
+                      Tidak ada data pemantauan air.
+                    </td>
+                  </tr>
+                  <tr v-else v-for="d in data" :key="d.id">
                     <td>{{ d.company.name }}</td>
                     <td>{{ d.month }}</td>
                     <td>{{ d.year }}</td>
                     <td>
-                      <ul style="list-style-type: disc;">
-                        <li v-for="ju in d.company.company_detail?.jenis_usaha">{{ ju.nama }}</li>
+                      <ul v-if="d.company.company_detail" style="list-style-type: disc;">
+                        <li v-for="ju in d.company.company_detail.jenis_usaha">{{ ju.nama }}</li>
                       </ul>
+                      <template v-else>-</template>
                     </td>
+                    <td>{{ d.company_ipal ? `${d.company_ipal.type} - ${d.company_ipal.system_ipal} - ${d.company_ipal.year_of_manufacture_of_ipal}` : '-' }}</td>
                     <td>{{ d.status }}</td>
                     <td>
                       <RouterLink
