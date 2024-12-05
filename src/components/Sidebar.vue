@@ -1,192 +1,194 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import axios from 'axios'
-import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router'
-import { useLoading } from 'vue-loading-overlay'
-import { getUserStatus, canCreatePemantauan } from '@/lib/company.js'
-import '@/assets/css/admin.css'
+import { ref, computed, onMounted, watch } from "vue";
+import axios from "axios";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
+import { useLoading } from "vue-loading-overlay";
+import { getUserStatus, canCreatePemantauan } from "@/lib/company.js";
+import "@/assets/css/admin.css";
 
-const store = useStore()
-const route = useRoute()
-const $loading = useLoading()
-const router = useRouter()
-const userRole = ref('EKSEKUTIF');
+const store = useStore();
+const route = useRoute();
+const $loading = useLoading();
+const router = useRouter();
+const userRole = ref("EKSEKUTIF");
 
-const isUserPending = ref(false)
-const canPemantauan = ref(false)
+const isUserPending = ref(false);
+const canPemantauan = ref(false);
 
+const isPengendalianOpen = ref(false);
+const isDataOpen = ref(false);
+const isEksekutifOpen = ref(false);
 
-const isPengendalianOpen = ref(false)
-const isDataOpen = ref(false)
-const isEksekutifOpen = ref(false)
-
-const isperdasOpen = ref(false)
-const isMasterOpen = ref(false)
-const isOperatorOpen = ref(false)
-const isKontenOpen = ref(false)
-const isReferensiOpen = ref(false)
-const isFiturOpen = ref(false)
-const isTiketzOpen = ref(false)
-const isLearningOpen = ref(false)
-const isLogbookOpen = ref(false)
-const isImportLogbookOpen = ref(false)
-const isTiketOpen = ref(false)
-const isVerifikasiOpen = ref(false)
-const isSwapantauOpen = ref(false)
-const isMonitoringOpen = ref(false)
-const isVerifikasiLogOpen = ref(false)
-const isReferensiMasterOpen = ref(false)
-const isPPUOpen = ref(false)
+const isperdasOpen = ref(false);
+const isMasterOpen = ref(false);
+const isOperatorOpen = ref(false);
+const isKontenOpen = ref(false);
+const isReferensiOpen = ref(false);
+const isFiturOpen = ref(false);
+const isTiketzOpen = ref(false);
+const isLearningOpen = ref(false);
+const isLogbookOpen = ref(false);
+const isImportLogbookOpen = ref(false);
+const isTiketOpen = ref(false);
+const isVerifikasiOpen = ref(false);
+const isSwapantauOpen = ref(false);
+const isMonitoringOpen = ref(false);
+const isVerifikasiLogOpen = ref(false);
+const isReferensiMasterOpen = ref(false);
+const isPPUOpen = ref(false);
 
 const dashboardRoute = computed(() => {
-  if (store.state.auth.user.role == 'ADMIN') {
-    return '/Admin';
-  } else if (store.state.auth.user.role == 'EKSEKUTIF') {
-    return '/Eksekutif';
-  } else if (store.state.auth.user.role == 'PENGAWAS') {
-    return '/Pengawas'
+  if (store.state.auth.user.role == "ADMIN") {
+    return "/Admin";
+  } else if (store.state.auth.user.role == "EKSEKUTIF") {
+    return "/Eksekutif";
+  } else if (store.state.auth.user.role == "PENGAWAS") {
+    return "/Pengawas";
   }
-  return '/MyCompany';
+  return "/MyCompany";
 });
 
 const togglePengendalian = () => {
-  console.log('Pengendalian clicked') // Debugging log
-  isPengendalianOpen.value = !isPengendalianOpen.value
-}
+  console.log("Pengendalian clicked"); // Debugging log
+  isPengendalianOpen.value = !isPengendalianOpen.value;
+};
 const toggleData = () => {
-  console.log('Data clicked') // Debugging log
-  isDataOpen.value = !isDataOpen.value
-}
+  console.log("Data clicked"); // Debugging log
+  isDataOpen.value = !isDataOpen.value;
+};
 
 const toggleEksekutif = () => {
-  console.log('Eksekutif clicked') // Debugging log
-  isEksekutifOpen.value = !isEksekutifOpen.value
-}
+  console.log("Eksekutif clicked"); // Debugging log
+  isEksekutifOpen.value = !isEksekutifOpen.value;
+};
 
 const toggleMaster = () => {
-  isMasterOpen.value = !isMasterOpen.value
-}
+  isMasterOpen.value = !isMasterOpen.value;
+};
 
 const toggleOperator = () => {
-  isOperatorOpen.value = !isOperatorOpen.value
-}
+  isOperatorOpen.value = !isOperatorOpen.value;
+};
 const toggleKonten = () => {
-  isKontenOpen.value = !isKontenOpen.value
-}
+  isKontenOpen.value = !isKontenOpen.value;
+};
 const toggleReferensi = () => {
-  isReferensiOpen.value = !isReferensiOpen.value
-}
+  isReferensiOpen.value = !isReferensiOpen.value;
+};
 const toggleLearning = () => {
-  isLearningOpen.value = !isLearningOpen.value
-}
+  isLearningOpen.value = !isLearningOpen.value;
+};
 const toggleFitur = () => {
-  isFiturOpen.value = !isFiturOpen.value
-}
+  isFiturOpen.value = !isFiturOpen.value;
+};
 const toggleTiketz = () => {
-  isTiketzOpen.value = !isTiketzOpen.value
-}
+  isTiketzOpen.value = !isTiketzOpen.value;
+};
 const toggleVerifikasi = () => {
-  isVerifikasiOpen.value = !isVerifikasiOpen.value
-}
+  isVerifikasiOpen.value = !isVerifikasiOpen.value;
+};
 const toggleSwapantau = () => {
-  isSwapantauOpen.value = !isSwapantauOpen.value
-}
+  isSwapantauOpen.value = !isSwapantauOpen.value;
+};
 const toggleMonitoring = () => {
-  isMonitoringOpen.value = !isMonitoringOpen.value
-}
+  isMonitoringOpen.value = !isMonitoringOpen.value;
+};
 const toggleVerifikasiLog = () => {
-  isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value
-}
+  isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value;
+};
 const toggleReferensiMaster = () => {
-  isReferensiMasterOpen.value = !isReferensiMasterOpen.value
-}
+  isReferensiMasterOpen.value = !isReferensiMasterOpen.value;
+};
 const togglePPU = () => {
-  isPPUOpen.value = !isPPUOpen.value
-}
+  isPPUOpen.value = !isPPUOpen.value;
+};
 const togglePerDas = () => {
-  console.log('Data clicked')
-  isperdasOpen.value = !isperdasOpen.value
+  console.log("Data clicked");
+  isperdasOpen.value = !isperdasOpen.value;
   router.push({
-    path: '/Data/PersLing',
+    path: "/Data/PersLing",
     query: {
-      sidebar: 'perscompany'
-    }
+      sidebar: "perscompany",
+    },
   });
-}
-watch(() => route.query.sidebar, (latest,_) =>{
-  if (latest=='perscompany'){
-    isDataOpen.value=true
-    isperdasOpen.value=true
+};
+watch(
+  () => route.query.sidebar,
+  (latest, _) => {
+    if (latest == "perscompany") {
+      isDataOpen.value = true;
+      isperdasOpen.value = true;
+    } else {
+      isperdasOpen.value = false;
+    }
+  },
+  {
+    immediate: true,
   }
-  else {
-    isperdasOpen.value=false
-  }
-}, {
-  immediate: true
-})
+);
 const toggleLogbook = () => {
-  isLogbookOpen.value = !isLogbookOpen.value
-  isDataOpen.value = false
-  isPengendalianOpen.value = false
-  isImportLogbookOpen.value = false
-  isTiketOpen.value = false
-}
+  isLogbookOpen.value = !isLogbookOpen.value;
+  isDataOpen.value = false;
+  isPengendalianOpen.value = false;
+  isImportLogbookOpen.value = false;
+  isTiketOpen.value = false;
+};
 
 const toggleImportLogbook = () => {
-  isImportLogbookOpen.value = !isImportLogbookOpen.value
-  isDataOpen.value = false
-  isPengendalianOpen.value = false
-  isLogbookOpen.value = false
-  isTiketOpen.value = false
-}
+  isImportLogbookOpen.value = !isImportLogbookOpen.value;
+  isDataOpen.value = false;
+  isPengendalianOpen.value = false;
+  isLogbookOpen.value = false;
+  isTiketOpen.value = false;
+};
 
 const toggleTiket = () => {
-  isTiketOpen.value = !isTiketOpen.value
-  isDataOpen.value = false
-  isPengendalianOpen.value = false
-  isLogbookOpen.value = false
-  isImportLogbookOpen.value = false
-}
+  isTiketOpen.value = !isTiketOpen.value;
+  isDataOpen.value = false;
+  isPengendalianOpen.value = false;
+  isLogbookOpen.value = false;
+  isImportLogbookOpen.value = false;
+};
 
 onMounted(async () => {
-  const loader = $loading.show()
+  const loader = $loading.show();
   try {
-    const data = await getUserStatus()
-    if (data.status === 'PENDING') {
-      isUserPending.value = true
+    const data = await getUserStatus();
+    if (data.status === "PENDING") {
+      isUserPending.value = true;
     }
 
-    await fetchUserStatus()
-    const canPemantauanResult = await canCreatePemantauan()
-    canPemantauan.value = canPemantauanResult.result
+    await fetchUserStatus();
+    const canPemantauanResult = await canCreatePemantauan();
+    canPemantauan.value = canPemantauanResult.result;
   } catch (e) {
-    console.error(e)
+    console.error(e);
   } finally {
-    loader.hide()
+    loader.hide();
   }
-})
+});
 
-const companyDetail = ref(false)
+const companyDetail = ref(false);
 const fetchUserStatus = async () => {
-  const token = localStorage.getItem('TOKEN')
-  if (!token) return
+  const token = localStorage.getItem("TOKEN");
+  if (!token) return;
 
   try {
-    const response = await axios.get('/api/user/status', {
+    const response = await axios.get("/api/user/status", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-    companyDetail.value = response.data.detail
+    });
+    companyDetail.value = response.data.detail;
   } catch (error) {
-    console.error('Error fetching user status:', error)
+    console.error("Error fetching user status:", error);
   }
-}
+};
 </script>
 
 <style scoped>
-@import '@/assets/css/admin.css';
+@import "@/assets/css/admin.css";
 </style>
 
 <template>
@@ -202,11 +204,7 @@ const fetchUserStatus = async () => {
           />
         </router-link>
         <router-link to="/MyCompany">
-          <img
-            src="@/assets/img/dlh2.png"
-            class="img-fluid logo-small"
-            alt=""
-          />
+          <img src="@/assets/img/dlh2.png" class="img-fluid logo-small" alt="" />
         </router-link>
       </div>
       <div class="siderbar-toggle">
@@ -254,10 +252,7 @@ const fetchUserStatus = async () => {
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <a
-              href="javascript:void(0);"
-              @click="toggleMaster"
-            >
+            <a href="javascript:void(0);" @click="toggleMaster">
               <i class="fas fa-book-bookmark"></i>
               <span>Data Master</span>
               <i
@@ -304,10 +299,7 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
           <li v-if="store.state.auth.user.role === 'ADMIN'">
-            <a
-              href="javascript:void(0);"
-              @click="toggleVerifikasi"
-            >
+            <a href="javascript:void(0);" @click="toggleVerifikasi">
               <i class="fas fa-check"></i>
               <span>Verifikasi</span>
               <i
@@ -338,34 +330,22 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isSwapantauOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/Bulanan"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/Bulanan" active-class="active">
                           <i class="fas fa-chevron-right"></i> Bulanan
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/PPA"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/PPA" active-class="active">
                           <i class="fas fa-chevron-right"></i> Swapantau PPA
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/PPU"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/PPU" active-class="active">
                           <i class="fas fa-chevron-right"></i> Swapantau PPU
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/B3"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/B3" active-class="active">
                           <i class="fas fa-chevron-right"></i> Swapantau LB3
                         </router-link>
                       </li>
@@ -389,18 +369,12 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isVerifikasiLogOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Verifikasi/pal"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Verifikasi/pal" active-class="active">
                           <i class="fas fa-chevron-right"></i> IPAL
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Verifikasi/lb"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Verifikasi/lb" active-class="active">
                           <i class="fas fa-chevron-right"></i> Limbah B3
                         </router-link>
                       </li>
@@ -409,8 +383,7 @@ const fetchUserStatus = async () => {
                           to="/Master/Verifikasi/Senyatanya"
                           active-class="active"
                         >
-                          <i class="fas fa-chevron-right"></i> Produksi
-                          Senyatanya
+                          <i class="fas fa-chevron-right"></i> Produksi Senyatanya
                         </router-link>
                       </li>
                       <li>
@@ -426,15 +399,11 @@ const fetchUserStatus = async () => {
                           to="/Master/Verifikasi/DebitAir"
                           active-class="active"
                         >
-                          <i class="fas fa-chevron-right"></i> Debit Pemakaian
-                          Air
+                          <i class="fas fa-chevron-right"></i> Debit Pemakaian Air
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Verifikasi/IPAL2"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Verifikasi/IPAL2" active-class="active">
                           <i class="fas fa-chevron-right"></i> IPAL
                         </router-link>
                       </li>
@@ -447,10 +416,7 @@ const fetchUserStatus = async () => {
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Verifikasi/TPSB3"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Verifikasi/TPSB3" active-class="active">
                           <i class="fas fa-chevron-right"></i> TPS LB3
                         </router-link>
                       </li>
@@ -482,18 +448,12 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isMonitoringOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Monitoring/IPAL"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Monitoring/IPAL" active-class="active">
                           <i class="fas fa-chevron-right"></i> IPAL
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Monitoring/LB3"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Monitoring/LB3" active-class="active">
                           <i class="fas fa-chevron-right"></i> Limbah B3
                         </router-link>
                       </li>
@@ -504,16 +464,14 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
           <li v-if="store.state.auth.user.role === 'ADMIN'">
-            <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
+            <router-link to="/Master/Monitoring" activeClass="active">
+              <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <a
-              href="javascript:void(0);"
-              @click="toggleReferensiMaster"
-            >
+            <a href="javascript:void(0);" @click="toggleReferensiMaster">
               <i class="fas fa-book"></i>
               <span>Referensi</span>
               <i
@@ -565,26 +523,17 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isPPUOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/Bulanan"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/Bulanan" active-class="active">
                           <i class="fas fa-chevron-right"></i> Contoh Uji
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/PPA"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/PPA" active-class="active">
                           <i class="fas fa-chevron-right"></i> Kelompok Uji
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Swapantau/PPU"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Swapantau/PPU" active-class="active">
                           <i class="fas fa-chevron-right"></i> Parameter PPU
                         </router-link>
                       </li>
@@ -642,26 +591,17 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isKontenOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Operator/Berita"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Berita" active-class="active">
                           <i class="fas fa-chevron-right"></i> Berita
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Artikel"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Artikel" active-class="active">
                           <i class="fas fa-chevron-right"></i> Artikel
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Agenda"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Agenda" active-class="active">
                           <i class="fas fa-chevron-right"></i> Agenda
                         </router-link>
                       </li>
@@ -674,10 +614,7 @@ const fetchUserStatus = async () => {
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Halaman"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Halaman" active-class="active">
                           <i class="fas fa-chevron-right"></i> Halaman
                         </router-link>
                       </li>
@@ -701,18 +638,12 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isReferensiOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Operator/Kategori"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Kategori" active-class="active">
                           <i class="fas fa-chevron-right"></i> Kategori Tiket
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Status"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Status" active-class="active">
                           <i class="fas fa-chevron-right"></i> Status Tiket
                         </router-link>
                       </li>
@@ -744,18 +675,12 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isLearningOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Operator/EBook"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/EBook" active-class="active">
                           <i class="fas fa-chevron-right"></i> E-Book
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Video"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Video" active-class="active">
                           <i class="fas fa-chevron-right"></i> Video
                         </router-link>
                       </li>
@@ -779,42 +704,27 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isFiturOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Operator/Download"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Download" active-class="active">
                           <i class="fas fa-chevron-right"></i> Download
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Link"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Link" active-class="active">
                           <i class="fas fa-chevron-right"></i> Link Terkait
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Sosmed"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Sosmed" active-class="active">
                           <i class="fas fa-chevron-right"></i> Link Sosmed
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Slide"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Slide" active-class="active">
                           <i class="fas fa-chevron-right"></i> Slide
                         </router-link>
                       </li>
                       <li>
-                        <router-link
-                          to="/Master/Operator/Banner"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Banner" active-class="active">
                           <i class="fas fa-chevron-right"></i> Banner
                         </router-link>
                       </li>
@@ -838,10 +748,7 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isTiketzOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link
-                          to="/Master/Operator/Tiket"
-                          active-class="active"
-                        >
+                        <router-link to="/Master/Operator/Tiket" active-class="active">
                           <i class="fas fa-chevron-right"></i> Daftar Tiket
                         </router-link>
                       </li>
@@ -851,10 +758,7 @@ const fetchUserStatus = async () => {
 
                 <!-- Galeri -->
                 <li>
-                  <router-link
-                    to="/Master/Operator/Galeri"
-                    activeClass="active"
-                  >
+                  <router-link to="/Master/Operator/Galeri" activeClass="active">
                     <i class="fas fa-chevron-right me-2"></i>
                     Galeri</router-link
                   >
@@ -863,7 +767,9 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail"
+          >
             <a
               href="javascript:void(0);"
               @click="toggleData"
@@ -892,7 +798,7 @@ const fetchUserStatus = async () => {
                   <a
                     @click="togglePerDas"
                     :class="{ active: route.path.startsWith('/Data/Persling') }"
-                    style="cursor:pointer"
+                    style="cursor: pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
                     <span>Pers. Lingkungan</span>
@@ -905,10 +811,7 @@ const fetchUserStatus = async () => {
                     ></i>
                   </a>
                   <transition name="slide-fade">
-                    <ul
-                      v-if="isDataOpen && isperdasOpen"
-                      class="submenu d-block ms-3"
-                    >
+                    <ul v-if="isDataOpen && isperdasOpen" class="submenu d-block ms-3">
                       <li>
                         <router-link to="/Data/Ipal" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
@@ -978,9 +881,7 @@ const fetchUserStatus = async () => {
 
           <li
             v-if="
-              !isUserPending &&
-              store.state.auth.user.role !== 'ADMIN' &&
-              canPemantauan
+              !isUserPending && store.state.auth.user.role !== 'ADMIN' && canPemantauan
             "
           >
             <a
@@ -1001,10 +902,7 @@ const fetchUserStatus = async () => {
             <transition name="slide-fade">
               <ul v-if="isPengendalianOpen" class="submenu d-block ms-0">
                 <li>
-                  <router-link
-                    to="/Pengendalian/PencemaranAir"
-                    activeClass="active"
-                  >
+                  <router-link to="/Pengendalian/PencemaranAir" activeClass="active">
                     <i class="fas fa-chevron-right me-2"></i>
                     <!-- Panah ke kanan -->
                     Pencemaran Air
@@ -1028,7 +926,9 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail"
+          >
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -1058,7 +958,9 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail"
+          >
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
@@ -1093,7 +995,10 @@ const fetchUserStatus = async () => {
               <span>Master Data</span>
               <i
                 class="fe"
-                :class="{ 'fe-chevron-down': !isMasterOpen, 'fe-chevron-up': isMasterOpen }"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
               ></i>
             </a>
             <transition name="slide-fade">
@@ -1111,10 +1016,13 @@ const fetchUserStatus = async () => {
           <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
             <a href="javascript:void(0);" @click="toggleEksekutif">
               <i class="fas fa-map-marker-alt"></i>
-              <span>Sebaran Titik</span>
+              <span>Peta</span>
               <i
                 class="fe"
-                :class="{ 'fe-chevron-down': !isEksekutifOpen, 'fe-chevron-up': isEksekutifOpen }"
+                :class="{
+                  'fe-chevron-down': !isEksekutifOpen,
+                  'fe-chevron-up': isEksekutifOpen,
+                }"
               ></i>
             </a>
             <transition name="slide-fade">
@@ -1122,25 +1030,25 @@ const fetchUserStatus = async () => {
                 <li>
                   <router-link to="/Eksekutif/TPSB3" activeClass="active">
                     <i class="fas fa-map-pin"></i>
-                    Titik TPS B3
+                    <span>Sebaran TPS LB3</span>
                   </router-link>
                 </li>
                 <li>
                   <router-link to="/Eksekutif/Cerobong" activeClass="active">
                     <i class="fas fa-smog"></i>
-                    Titik Cerobong
+                    <span>Sebaran Cerobong</span>
                   </router-link>
                 </li>
                 <li>
                   <router-link to="/Eksekutif/PenaatanIPAL" activeClass="active">
                     <i class="fas fa-water"></i>
-                    Titik Penaatan IPAL
+                    <span>Sebaran Titik Penaatan IPAL</span>
                   </router-link>
                 </li>
                 <li>
                   <router-link to="/Eksekutif/RTH" activeClass="active">
                     <i class="fas fa-tree"></i>
-                    Luasan RTH Privat
+                    <span>Sebaran RTH Privat</span>
                   </router-link>
                 </li>
               </ul>
@@ -1151,3 +1059,21 @@ const fetchUserStatus = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.submenu li {
+  display: flex;
+  align-items: center;
+  padding: 0px 0;
+}
+
+.submenu li i {
+  margin-right: 10px;
+  font-size: 2px;
+}
+
+.submenu li span {
+  font-size: 15px;
+  color: #ffffff;
+}
+</style>
