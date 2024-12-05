@@ -11,11 +11,10 @@ const store = useStore()
 const route = useRoute()
 const $loading = useLoading()
 const router = useRouter()
-const userRole = ref('EKSEKUTIF');
+const userRole = ref('EKSEKUTIF')
 
 const isUserPending = ref(false)
 const canPemantauan = ref(false)
-
 
 const isPengendalianOpen = ref(false)
 const isDataOpen = ref(false)
@@ -41,14 +40,14 @@ const isPPUOpen = ref(false)
 
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
-    return '/Admin';
+    return '/Admin'
   } else if (store.state.auth.user.role == 'EKSEKUTIF') {
-    return '/Eksekutif';
+    return '/Eksekutif'
   } else if (store.state.auth.user.role == 'PENGAWAS') {
     return '/Pengawas'
   }
-  return '/MyCompany';
-});
+  return '/MyCompany'
+})
 
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
@@ -110,21 +109,24 @@ const togglePerDas = () => {
   router.push({
     path: '/Data/PersLing',
     query: {
-      sidebar: 'perscompany'
-    }
-  });
+      sidebar: 'perscompany',
+    },
+  })
 }
-watch(() => route.query.sidebar, (latest,_) =>{
-  if (latest=='perscompany'){
-    isDataOpen.value=true
-    isperdasOpen.value=true
-  }
-  else {
-    isperdasOpen.value=false
-  }
-}, {
-  immediate: true
-})
+watch(
+  () => route.query.sidebar,
+  (latest, _) => {
+    if (latest == 'perscompany') {
+      isDataOpen.value = true
+      isperdasOpen.value = true
+    } else {
+      isperdasOpen.value = false
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 const toggleLogbook = () => {
   isLogbookOpen.value = !isLogbookOpen.value
   isDataOpen.value = false
@@ -236,13 +238,19 @@ const fetchUserStatus = async () => {
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
-            <router-link to="/Verifikator/PemantauanUdaraAmbien" activeClass="active">
+            <router-link
+              to="/Verifikator/PemantauanUdaraAmbien"
+              activeClass="active"
+            >
               <i class="fas fa-tachometer-alt"></i>
               <span>Pem. Udara Ambien</span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
-            <router-link to="/Verifikator/PemantauanUdaraEmisi" activeClass="active">
+            <router-link
+              to="/Verifikator/PemantauanUdaraEmisi"
+              activeClass="active"
+            >
               <i class="fas fa-tachometer-alt"></i>
               <span>Pem. Udara Emisi</span>
             </router-link>
@@ -254,10 +262,7 @@ const fetchUserStatus = async () => {
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <a
-              href="javascript:void(0);"
-              @click="toggleMaster"
-            >
+            <a href="javascript:void(0);" @click="toggleMaster">
               <i class="fas fa-book-bookmark"></i>
               <span>Data Master</span>
               <i
@@ -283,18 +288,6 @@ const fetchUserStatus = async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Perusahaan DPMPTSP</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Izin DPMPTSP</router-link
-                  >
-                </li>
-                <li>
                   <router-link to="/Master/Ipal" activeClass="active">
                     <i class="fas fa-chevron-right"></i>
                     Pertek Ipal</router-link
@@ -316,12 +309,9 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
           <li v-if="store.state.auth.user.role === 'ADMIN'">
-            <a
-              href="javascript:void(0);"
-              @click="toggleVerifikasi"
-            >
+            <a href="javascript:void(0);" @click="toggleVerifikasi">
               <i class="fas fa-check"></i>
-              <span>Verifikasi</span>
+              <span>Referensi Baku Mutu</span>
               <i
                 class="fe"
                 :class="{
@@ -331,201 +321,68 @@ const fetchUserStatus = async () => {
               ></i>
             </a>
 
-            <!-- Transisi Submenu -->
             <transition name="slide-fade">
               <ul v-if="isVerifikasiOpen" class="submenu d-block">
-                <!-- Swapantau -->
                 <li>
-                  <a href="javascript:void(0);" @click="toggleSwapantau">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    <span>Swapantau</span>
-                    <i
-                      class="fe"
-                      :class="{
-                        'fe-chevron-down': !isSwapantauOpen,
-                        'fe-chevron-up': isSwapantauOpen,
-                      }"
-                    ></i>
-                  </a>
-                  <transition name="slide-fade">
-                    <ul v-if="isSwapantauOpen" class="submenu d-block ms-3">
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/Bulanan"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Bulanan
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/PPA"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Swapantau PPA
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/PPU"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Swapantau PPU
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/B3"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Swapantau LB3
-                        </router-link>
-                      </li>
-                    </ul>
-                  </transition>
+                  <router-link
+                    to="/Master/Swapantau/Bulanan"
+                    active-class="active"
+                  >
+                    <i class="fas fa-chevron-right"></i> Limbah Domestik
+                  </router-link>
                 </li>
-
-                <!-- VerifikasiLog -->
                 <li>
-                  <a href="javascript:void(0);" @click="toggleVerifikasiLog">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    <span>Verifikasi Logbook</span>
-                    <i
-                      class="fe"
-                      :class="{
-                        'fe-chevron-down': !isVerifikasiLogOpen,
-                        'fe-chevron-up': isVerifikasiLogOpen,
-                      }"
-                    ></i>
-                  </a>
-                  <transition name="slide-fade">
-                    <ul v-if="isVerifikasiLogOpen" class="submenu d-block ms-3">
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/pal"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> IPAL
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/lb"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Limbah B3
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/Senyatanya"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Produksi
-                          Senyatanya
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/DebitIPAL"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Debit Outlet IPAL
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/DebitAir"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Debit Pemakaian
-                          Air
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/IPAL2"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> IPAL
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/PenggunaanB3"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Penggunaan B3
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/TPSB3"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> TPS LB3
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Verifikasi/PengolaB3"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Pengelolaan LB3
-                        </router-link>
-                      </li>
-                    </ul>
-                  </transition>
+                  <router-link
+                    to="/Master/Swapantau/Bulanan"
+                    active-class="active"
+                  >
+                    <i class="fas fa-chevron-right"></i> Limbah Industri
+                  </router-link>
                 </li>
-
-                <!-- Monitoring Logbook -->
                 <li>
-                  <a href="javascript:void(0);" @click="toggleMonitoring">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    <span>Monitoring Logbook</span>
-                    <i
-                      class="fe"
-                      :class="{
-                        'fe-chevron-down': !isMonitoringOpen,
-                        'fe-chevron-up': isMonitoringOpen,
-                      }"
-                    ></i>
-                  </a>
-                  <transition name="slide-fade">
-                    <ul v-if="isMonitoringOpen" class="submenu d-block ms-3">
-                      <li>
-                        <router-link
-                          to="/Master/Monitoring/IPAL"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> IPAL
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Monitoring/LB3"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Limbah B3
-                        </router-link>
-                      </li>
-                    </ul>
-                  </transition>
+                  <router-link
+                    to="/Master/Swapantau/Bulanan"
+                    active-class="active"
+                  >
+                    <i class="fas fa-chevron-right"></i> Limbah Integrasi
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    to="/Master/Swapantau/Bulanan"
+                    active-class="active"
+                  >
+                    <i class="fas fa-chevron-right"></i> Udara Ambien
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    to="/Master/Swapantau/Bulanan"
+                    active-class="active"
+                  >
+                    <i class="fas fa-chevron-right"></i> Udara Emisi 
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    to="/Master/Swapantau/Bulanan"
+                    active-class="active"
+                  >
+                    <i class="fas fa-chevron-right"></i> Kebisingan 
+                  </router-link>
                 </li>
               </ul>
             </transition>
           </li>
           <li v-if="store.state.auth.user.role === 'ADMIN'">
-            <router-link to="/Master/Monitoring" activeClass="active"> <!-- GATAU INI ROLE APA -->
+            <router-link to="/Master/Monitoring" activeClass="active">
+              <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <a
-              href="javascript:void(0);"
-              @click="toggleReferensiMaster"
-            >
+            <a href="javascript:void(0);" @click="toggleReferensiMaster">
               <i class="fas fa-book"></i>
               <span>Referensi</span>
               <i
@@ -875,7 +732,13 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="
+              !isUserPending &&
+              store.state.auth.user.role == 'USER' &&
+              companyDetail
+            "
+          >
             <a
               href="javascript:void(0);"
               @click="toggleData"
@@ -904,7 +767,7 @@ const fetchUserStatus = async () => {
                   <a
                     @click="togglePerDas"
                     :class="{ active: route.path.startsWith('/Data/Persling') }"
-                    style="cursor:pointer"
+                    style="cursor: pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
                     <span>Pers. Lingkungan</span>
@@ -1040,7 +903,13 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="
+              !isUserPending &&
+              store.state.auth.user.role == 'USER' &&
+              companyDetail
+            "
+          >
             <a href="javascript:void(0);" @click="toggleLogbook">
               <i class="fas fa-book"></i>
               <span>Logbook</span>
@@ -1106,7 +975,13 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="
+              !isUserPending &&
+              store.state.auth.user.role == 'USER' &&
+              companyDetail
+            "
+          >
             <a href="javascript:void(0);" @click="toggleImportLogbook">
               <i class="fas fa-file-import"></i>
               <span>Import Logbook</span>
@@ -1136,7 +1011,13 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
 
-          <li v-if="!isUserPending && store.state.auth.user.role == 'USER' && companyDetail">
+          <li
+            v-if="
+              !isUserPending &&
+              store.state.auth.user.role == 'USER' &&
+              companyDetail
+            "
+          >
             <a href="javascript:void(0);" @click="toggleTiket">
               <i class="fas fa-ticket-alt"></i>
               <span>Tiket</span>
@@ -1171,7 +1052,10 @@ const fetchUserStatus = async () => {
               <span>Master Data</span>
               <i
                 class="fe"
-                :class="{ 'fe-chevron-down': !isMasterOpen, 'fe-chevron-up': isMasterOpen }"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
               ></i>
             </a>
             <transition name="slide-fade">
@@ -1192,7 +1076,10 @@ const fetchUserStatus = async () => {
               <span>Sebaran Titik</span>
               <i
                 class="fe"
-                :class="{ 'fe-chevron-down': !isEksekutifOpen, 'fe-chevron-up': isEksekutifOpen }"
+                :class="{
+                  'fe-chevron-down': !isEksekutifOpen,
+                  'fe-chevron-up': isEksekutifOpen,
+                }"
               ></i>
             </a>
             <transition name="slide-fade">
@@ -1210,7 +1097,10 @@ const fetchUserStatus = async () => {
                   </router-link>
                 </li>
                 <li>
-                  <router-link to="/Eksekutif/PenaatanIPAL" activeClass="active">
+                  <router-link
+                    to="/Eksekutif/PenaatanIPAL"
+                    activeClass="active"
+                  >
                     <i class="fas fa-water"></i>
                     Titik Penaatan IPAL
                   </router-link>

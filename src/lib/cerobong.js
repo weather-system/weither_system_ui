@@ -1,4 +1,7 @@
 import axios from 'axios'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 export const getCerobong = async () => {
   const resp = await axios.get('/api/companyCerobong')
@@ -26,11 +29,20 @@ export const deleteCerobong = async (id) => {
 }
 
 export const getAllCerobong = async () => {
+  const route = useRoute(); 
+  const companyId = route.query.company_id; 
+
   try {
-    const response = await axios.get(`/api/master/cerobong`)
-    return response.data
+    const response = await axios.get(`/api/master/cerobong`, {
+      params: {
+        company_id: companyId
+      }
+    })
+    console.log('Data cerobong:', response.data); 
+    return response.data;
   } catch (error) {
-    console.error('Gagal mengambil data cerobong:', error)
-    throw error
+    console.error('Gagal mengambil data cerobong:', error);
+    throw error;
   }
 }
+
