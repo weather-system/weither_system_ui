@@ -24,7 +24,7 @@ defineExpose({ setValues })
     <div class="row">
       <div class="col-4">
           <label class="form-label">Parameter</label>
-          <Field name="parameter" class="form-control" />
+          <Field name="parameter" class="form-control" disabled />
           <ErrorMessage name="parameter" />
       </div>
       <div class="row mt-2">
@@ -41,7 +41,7 @@ defineExpose({ setValues })
       </div>
       <div class="col-4 mt-2">
           <label class="form-label">Jenis Uji</label>
-          <Field name="jenis_uji" class="form-control" />
+          <Field name="jenis_uji" class="form-control" disabled />
           <ErrorMessage name="jenis_uji" />
       </div>
       <div class="mt-4">

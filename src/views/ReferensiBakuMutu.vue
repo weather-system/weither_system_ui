@@ -31,18 +31,6 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <h5>Referensi Baku Mutu</h5>
-          <div class="list-btn">
-            <ul>
-              <li>
-                <RouterLink
-                  class="btn btn-primary"
-                  to="/ReferensiBakuMutu/Create"
-                >
-                  <i class="fa fa-plus me-2"></i>Tambah
-                </RouterLink>
-              </li>
-            </ul>
-          </div>
         </div>
 
         <div class="row">
