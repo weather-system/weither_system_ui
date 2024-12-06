@@ -22,9 +22,9 @@ const fetchIpals = async () => {
     ipals.value = response.data.data.map(ipal => ({
       id: ipal.id,
       year_of_manufacture_of_ipal: ipal.year_of_manufacture_of_ipal || 'N/A',
-      applicant_name: ipal.company_detail.pic_name || 'N/A',
-      company_name: ipal.company_detail.company.name || 'N/A',
-      address: ipal.company_detail.company.address || 'N/A',
+      applicant_name: ipal.company?.pic_name || 'N/A',
+      company_name: ipal.company?.name || 'N/A',
+      address: ipal.company?.address || 'N/A',
       business_type: ipal.type || 'N/A',
     }))
   } catch (error) {

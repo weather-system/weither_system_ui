@@ -388,7 +388,7 @@ const fetchUserStatus = async () => {
               </ul>
             </transition>
           </li>
-          <li v-if="store.state.auth.user.role === 'ADMIN'">
+          <!-- <li v-if="store.state.auth.user.role === 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleVerifikasi">
               <i class="fas fa-check"></i>
               <span>Referensi Baku Mutu</span>
@@ -453,7 +453,7 @@ const fetchUserStatus = async () => {
                 </li>
               </ul>
             </transition>
-          </li>
+          </li> -->
           <li v-if="store.state.auth.user.role === 'ADMIN'">
             <router-link to="/Master/Monitoring" activeClass="active">
               <!-- GATAU INI ROLE APA -->
