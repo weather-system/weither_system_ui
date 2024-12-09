@@ -18,6 +18,7 @@ const form = ref(null)
 
 const submit = async data => {
   const detailMap = {
+    id: null,
     parameter: null,
     baku_mutu: null,
     sistem_pengukuran: null,
