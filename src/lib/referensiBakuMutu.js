@@ -5,13 +5,23 @@ export const getReferensiBakuMutu = async () => {
   return resp.data
 }
 
-export const getReferensiBakuMutuDetail = async (id) => {
+export const getReferensiBakuMutuDetail = async id => {
   const resp = await axios.get(`/api/referensiBakuMutu/${id}`)
   return resp.data
 }
 
-export const createReferensiBakuMutu = async (data) => {
+export const createReferensiBakuMutu = async data => {
   const resp = await axios.post('/api/referensiBakuMutu', data)
+  return resp.data
+}
+
+export const deleteReferensiBakuMutu = async id => {
+  const resp = await axios.delete(`/api/referensiBakuMutu/${id}`)
+  return resp.data
+}
+
+export const deleteReferensiBakuMutuDetail = async id => {
+  const resp = await axios.delete(`/api/referensiBakuMutu/deleteDetail/${id}`)
   return resp.data
 }
 

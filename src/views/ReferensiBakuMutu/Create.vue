@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router';
-import { useLoading } from 'vue-loading-overlay';
+import { useRouter, useRoute } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 import ReferensiBakuMutuForm from '@/components/ReferensiBakuMutuForm.vue'
@@ -13,10 +13,9 @@ const route = useRoute()
 
 const form = ref(null)
 
-const submit = async (data) => {
+const submit = async data => {
   const loader = $loading.show()
   try {
-    delete data.id
     await createReferensiBakuMutu(data)
     router.push('/ReferensiBakuMutu')
   } catch (e) {
@@ -25,10 +24,6 @@ const submit = async (data) => {
     loader.hide()
   }
 }
-
-onMounted(() => {
-  form.value.setValues(route.query)
-})
 </script>
 
 <template>

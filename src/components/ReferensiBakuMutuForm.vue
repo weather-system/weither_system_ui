@@ -1,52 +1,326 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
+import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
+import Swal from 'sweetalert2'
+import { deleteReferensiBakuMutuDetail } from '@/lib/referensiBakuMutu.js'
+
+const props = defineProps(['isEdit'])
+
+const $loading = useLoading()
 
 const form = ref(null)
+const formData = reactive({})
+
+const defaultValues = {
+  details: [{}],
+}
 
 const schema = yup.object({
-    parameter: yup.string().required(),
-    baku_mutu: yup.number().required(),
-    satuan: yup.string().required(),
-    jenis_uji: yup.string().required()
+  jenis: yup.string().required(),
+  referensi: yup.string().required(),
 })
 
-const setValues = (data) => {
+const deleteDetail = async (cb, i, data) => {
+  if (data.id) {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Apa kamu yakin ?',
+      text: 'Kamu tidak akan bisa mengembalikan ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Tidak',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
+      },
+      buttonsStyling: false,
+    })
+
+    if (isConfirmed) {
+      const loader = $loading.show()
+      try {
+        await deleteReferensiBakuMutuDetail(data.id)
+        Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+      } catch (e) {
+        console.error(e)
+      } finally {
+        loader.hide()
+        cb(i)
+      }
+    }
+  } else {
+    cb(i)
+  }
+}
+
+const setValues = data => {
   form.value.setValues(data)
+
+  if (data.jenis == 'Kebisingan') {
+    formData.jenis_kebisingan = data.jenis_kebisingan
+    formData.jenis_kebisingan_detail = data.jenis_kebisingan_detail
+  }
 }
 
 defineExpose({ setValues })
 </script>
 
 <template>
-  <Form ref="form" :validation-schema="schema">
+  <Form ref="form" :validation-schema="schema" :initial-values="defaultValues">
     <div class="row">
-      <div class="col-4">
-          <label class="form-label">Parameter</label>
-          <Field name="parameter" class="form-control" disabled />
-          <ErrorMessage name="parameter" />
+      <div class="col-6">
+        <label class="form-label">Jenis</label>
+        <Field
+          v-model="formData.jenis"
+          name="jenis"
+          class="form-control"
+          as="select"
+          :disabled="props.isEdit"
+        >
+          <option value="">Pilih</option>
+          <option value="Udara Ambien">Udara Ambien</option>
+          <option value="Udara Emisi">Udara Emisi</option>
+          <option value="Kebisingan">Kebisingan</option>
+          <option value="Limbah Domestik Tersendiri">
+            Limbah Domestik Tersendiri
+          </option>
+        </Field>
+        <ErrorMessage name="jenis" />
       </div>
-      <div class="row mt-2">
-        <div class="col-2">
-            <label class="form-label">Baku Mutu</label>
-            <Field name="baku_mutu" type="number" class="form-control" />
-            <ErrorMessage name="baku_mutu" />
-        </div>
-        <div class="col-2">
-            <label class="form-label">Satuan</label>
-            <Field name="satuan" class="form-control" />
-            <ErrorMessage name="satuan" />
-        </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-6">
+        <label class="form-label">Referensi</label>
+        <Field name="referensi" class="form-control" />
+        <ErrorMessage name="referensi" />
       </div>
-      <div class="col-4 mt-2">
-          <label class="form-label">Jenis Uji</label>
-          <Field name="jenis_uji" class="form-control" disabled />
-          <ErrorMessage name="jenis_uji" />
+    </div>
+
+    <div class="row mt-2" v-if="formData.jenis == 'Udara Ambien'">
+      <div class="col-6">
+        <label class="form-label">Waktu Pengukuran</label>
+        <Field name="waktu_pengukuran" class="form-control" as="select">
+          <option value="">Pilih</option>
+          <option value="1 Jam">1 Jam</option>
+          <option value="3 Jam">3 Jam</option>
+          <option value="8 Jam">8 Jam</option>
+          <option value="24 Jam">24 Jam</option>
+          <option value="1 Hari">1 Hari</option>
+        </Field>
+        <ErrorMessage name="waktu_pengukuran" />
       </div>
-      <div class="mt-4">
-          <button class="btn btn-primary">Simpan</button>
-        </div>
+    </div>
+
+    <div class="row mt-2" v-if="formData.jenis == 'Udara Emisi'">
+      <div class="col-6">
+        <label class="form-label">Bahan Bakar</label>
+        <Field name="bahan_bakar" class="form-control" as="select">
+          <option value="">Pilih</option>
+          <option value="Biomassa berupa serabut dan/atau Cangkang">
+            Biomassa beruapa serabut dan/atau Cangkang
+          </option>
+          <option value="Biomassa berupa ampas dan/atau daun tebu kering">
+            Biomassa berupa ampas dan/atau daun tebu kering
+          </option>
+          <option value="Biomassa selain poin 1 & 2">
+            Biomassa selain poin 1 & 2
+          </option>
+          <option value="Batu Bara">Batu Bara</option>
+          <option value="Minyak">Minyak</option>
+          <option value="Gas">Gas</option>
+          <option value="Gabungan">Gabungan</option>
+        </Field>
+        <ErrorMessage name="bahan_bakar" />
       </div>
+    </div>
+
+    <div class="row mt-2" v-if="formData.jenis == 'Kebisingan'">
+      <div class="col-3">
+        <label class="form-label">Jenis Kebisingan</label>
+        <Field
+          v-model="formData.jenis_kebisingan"
+          name="jenis_kebisingan"
+          class="form-control"
+          as="select"
+        >
+          <option value="">Pilih</option>
+          <option value="Peruntukan Kawasan">Peruntukan Kawasan</option>
+          <option value="Lingkungan Kegiatan">Lingkungan Kegiatan</option>
+        </Field>
+        <ErrorMessage name="jenis_kebisingan" />
+      </div>
+      <div class="col-3" v-if="formData.jenis_kebisingan">
+        <label class="form-label">Detail</label>
+        <Field name="jenis_kebisingan_detail" class="form-control" as="select">
+          <option value="">Pilih</option>
+          <template v-if="formData.jenis_kebisingan == 'Peruntukan Kawasan'">
+            <option value="Perumahan & Pemukiman">Perumahan & Pemukiman</option>
+            <option value="Perdagangan & Jasa">Perdagangan & Jasa</option>
+            <option value="Perkantoran & Perdagangan">
+              Perkantoran & Perdagangan
+            </option>
+            <option value="Ruang Terbuka Hijau">Ruang Terbuka Hijau</option>
+            <option value="Industri">Industri</option>
+            <option value="Pemerintahan & Fasilitas Umum">
+              Pemerintahan & Fasilitas Umum
+            </option>
+            <option value="Stasiun Kereta">Stasiun Kereta</option>
+          </template>
+          <template v-if="formData.jenis_kebisingan == 'Lingkungan Kegiatan'">
+            <option value="Rumah Sakit atau sejenisnya">
+              Rumah Sakit atau sejenisnya
+            </option>
+            <option value="Sekolah atau sejenisnya">
+              Sekolah atau sejenisnya
+            </option>
+            <option value="Tempat ibadah atau sejenisnya">
+              Tempat ibadah atau sejenisnya
+            </option>
+          </template>
+        </Field>
+        <ErrorMessage name="jenis_kebisingan_detail" />
+      </div>
+    </div>
+
+    <div v-if="formData.jenis">
+      <div class="table-resposnive table-div">
+        <FieldArray name="details" v-slot="{ fields, push, remove }">
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th
+                  v-if="
+                    [
+                      'Udara Emisi',
+                      'Udara Ambien',
+                      'Limbah Domestik Tersendiri',
+                    ].includes(formData.jenis)
+                  "
+                >
+                  Parameter
+                </th>
+                <th v-if="formData.jenis == 'Kebisingan'">
+                  Tingkat Kebisingan (dbA)
+                </th>
+                <th
+                  v-if="
+                    ['Udara Emisi', 'Limbah Domestik Tersendiri'].includes(
+                      formData.jenis,
+                    )
+                  "
+                >
+                  Satuan
+                </th>
+                <th
+                  v-if="
+                    ['Udara Emisi', 'Udara Ambien'].includes(formData.jenis)
+                  "
+                >
+                  Baku Mutu
+                </th>
+                <th v-if="formData.jenis == 'Udara Ambien'">
+                  Sistem Pengukuran
+                </th>
+                <th v-if="formData.jenis == 'Limbah Domestik Tersendiri'">
+                  Kadar Maksimum
+                </th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(field, i) in fields" :key="field.key">
+                <td>{{ i + 1 }}</td>
+                <td
+                  v-if="
+                    [
+                      'Udara Emisi',
+                      'Udara Ambien',
+                      'Limbah Domestik Tersendiri',
+                    ].includes(formData.jenis)
+                  "
+                >
+                  <Field
+                    :name="`details[${i}].parameter`"
+                    class="form-control"
+                  />
+                  <ErrorMessage :name="`details[${i}].parameter`" />
+                </td>
+                <td v-if="formData.jenis == 'Kebisingan'">
+                  <Field
+                    :name="`details[${i}].tingkat_kebisingan`"
+                    class="form-control"
+                    type="number"
+                  />
+                  <ErrorMessage :name="`details[${i}].tingkat_kebisingan`" />
+                </td>
+                <td
+                  v-if="
+                    ['Udara Emisi', 'Limbah Domestik Tersendiri'].includes(
+                      formData.jenis,
+                    )
+                  "
+                >
+                  <Field :name="`details[${i}].satuan`" class="form-control" />
+                  <ErrorMessage :name="`details[${i}].satuan`" />
+                </td>
+                <td
+                  v-if="
+                    ['Udara Emisi', 'Udara Ambien'].includes(formData.jenis)
+                  "
+                >
+                  <Field
+                    :name="`details[${i}].baku_mutu`"
+                    class="form-control"
+                    type="number"
+                  />
+                  <ErrorMessage :name="`details[${i}].baku_mutu`" />
+                </td>
+                <td v-if="formData.jenis == 'Udara Ambien'">
+                  <Field
+                    :name="`details[${i}].sistem_pengukuran`"
+                    class="form-control"
+                    as="select"
+                  >
+                    <option value="">Pilih</option>
+                    <option value="Aktif Manual">Aktif Manual</option>
+                    <option value="Aktif Kontinu">Aktif Kontinu</option>
+                  </Field>
+                  <ErrorMessage :name="`details[${i}].sistem_pengukuran`" />
+                </td>
+                <td v-if="formData.jenis == 'Limbah Domestik Tersendiri'">
+                  <Field
+                    :name="`details[${i}].kadar_maksimum`"
+                    class="form-control"
+                    type="number"
+                  />
+                  <ErrorMessage :name="`details[${i}].kadar_maksimum`" />
+                </td>
+                <td>
+                  <button
+                    @click="deleteDetail(remove, i, field.value)"
+                    type="button"
+                    class="btn btn-danger"
+                  >
+                    Hapus
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-2 d-flex justify-content-end">
+            <button @click="push({})" type="button" class="btn btn-success">
+              Tambah
+            </button>
+          </div>
+        </FieldArray>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button class="btn btn-primary">Simpan</button>
+    </div>
   </Form>
 </template>
