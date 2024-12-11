@@ -991,13 +991,13 @@ const fetchUserStatus = async () => {
                       class="submenu d-block ms-3"
                     >
                       <li>
-                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi" activeClass="active">
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi?sidebar=PencemaranUdara" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Emisi</router-link
                         >
                       </li>
                       <li>
-                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien" activeClass="active">
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien?sidebar=PencemaranUdara" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Ambien</router-link
                         >

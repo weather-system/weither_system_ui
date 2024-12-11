@@ -5,8 +5,11 @@ import MainWrapper from '@/components/MainWrapper.vue';
 const router = useRouter(); // Inisialisasi router
 
 // Fungsi untuk mengarahkan ke halaman /tiket/pengaduancreate
-const goToPengaduanCreate = () => {
-  router.push('/tiket/pengaduancreate'); // Mengarahkan ke halaman yang dituju
+const goToPengaduanCreate = (ticketType) => {
+  router.push({ 
+    path: '/tiket/pengaduancreate', 
+    query: { ticketType } 
+  }); // Mengarahkan ke halaman dengan query parameter
 };
 </script>
 
@@ -32,7 +35,7 @@ const goToPengaduanCreate = () => {
                   <a
                     href="javascript:void(0);"
                     class="btn btn-choose"
-                    @click="goToPengaduanCreate"
+                    @click="goToPengaduanCreate('administrasi')"
                     >Choose</a
                   >
                 </div>
@@ -55,7 +58,7 @@ const goToPengaduanCreate = () => {
                   <a
                     href="javascript:void(0);"
                     class="btn btn-choose"
-                    @click="goToPengaduanCreate"
+                    @click="goToPengaduanCreate('administrasi')"
                     >Choose</a
                   >
                 </div>
@@ -78,7 +81,7 @@ const goToPengaduanCreate = () => {
                   <a
                     href="javascript:void(0);"
                     class="btn btn-choose"
-                    @click="goToPengaduanCreate"
+                    @click="goToPengaduanCreate('permohonan_informasi_dan_dokumentasi')"
                     >Choose</a
                   >
                 </div>
@@ -101,7 +104,7 @@ const goToPengaduanCreate = () => {
                   <a
                     href="javascript:void(0);"
                     class="btn btn-choose"
-                    @click="goToPengaduanCreate"
+                    @click="goToPengaduanCreate('pembayaran_biaya_penggandaan')"
                     >Choose</a
                   >
                 </div>
