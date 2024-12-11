@@ -102,6 +102,7 @@ onMounted(async () => {
                     <td>{{ data.status }}</td>
                     <td>
                       <router-link
+                        v-if="data.status !== 'DITERIMA'"
                         :to="data.id ? `/Data/IPAL/Edit/${data.id}` : '/Data/IPAL/Tambah'"
                         class="btn btn-primary"
                         >Edit</router-link
