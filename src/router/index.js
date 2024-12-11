@@ -321,7 +321,7 @@ const router = createRouter({
       component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahCreate.vue'),
     },
     {
-      path: '/Logbook/TPSLimbahB3Edit',
+      path: '/Logbook/TPSLimbahB3/TPSLimbahB3Edit/:id',
       name: 'TPSLimbahB3Edit',
       component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahEdit.vue'),
     },
