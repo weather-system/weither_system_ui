@@ -14,6 +14,7 @@ const ticketTitle = ref('')
 const ticketType = ref('')
 const ticketPriority = ref('')
 const ticketMessage = ref('')
+const ticketReply = ref('')
 const filePengaduan = ref(null)
 const adminReply = ref('')
 const isAdmin = computed(() => store.state.auth.user.role === 'ADMIN')
@@ -37,27 +38,42 @@ const getCompanyData = async () => {
 
 const fetchAdminStatus = async () => {
   try {
-    const token = store.state.auth.token || localStorage.getItem('token');
-    console.log('Token:', token);
-
-    if (!token) {
-      console.error('Token is missing!');
-      return Swal.fire('Error', 'User is not authenticated', 'error');
-    }
-
+    const token = store.state.auth.token || localStorage.getItem('token')
     const response = await axios.get('/api/user/status', {
-        Authorization: `Bearer ${token}`, // Perbaikan header
-    });
+      Authorization: `Bearer ${token}`,
+    })
 
-    console.log('Status Admin:', response.data.status);
-    canReply.value = response.data.status === 'can_reply';
+    isAdmin.value = response.data.role === 'ADMIN' // Cek apakah user adalah admin
+    canReply.value = response.data.status === 'can_reply'
   } catch (error) {
-    console.error('Error fetching admin status:', error);
+    console.error('Error fetching admin status:', error)
     if (error.response && error.response.status === 401) {
-      Swal.fire('Error', 'Unauthorized. Please login again.', 'error');
+      Swal.fire('Error', 'Unauthorized. Please login again.', 'error')
     }
   }
-};
+}
+
+const sendReply = async () => {
+  try {
+    if (!adminReply.value.trim()) {
+      alert('Balasan tidak boleh kosong!')
+      return
+    }
+
+    // Simpan balasan ke database menggunakan metode PUT
+    await axios.put(`/api/tikets/${route.params.id}/balasan`, {
+      balasan: adminReply.value, // Pastikan menggunakan nama field yang sesuai
+    })
+
+    // Perbarui ticketReply dengan balasan yang baru
+    ticketReply.value = adminReply.value
+    adminReply.value = '' // Reset input setelah berhasil
+    Swal.fire('Sukses', 'Balasan berhasil dikirim!', 'success')
+  } catch (error) {
+    console.error('Error sending reply:', error.response.data)
+    Swal.fire('Error', 'Gagal mengirim balasan: ' + (error.response.data.message || 'Terjadi kesalahan'), 'error')
+  }
+}
 
 // Fungsi untuk mengambil detail tiket
 const fetchTicketDetail = async ticketId => {
@@ -75,6 +91,7 @@ const fetchTicketDetail = async ticketId => {
     ticketType.value = ticket.jenissuportticket
     ticketPriority.value = ticket.prioritas
     ticketMessage.value = ticket.pesan
+    ticketReply.value = ticket.balasan || ''
     filePengaduan.value = ticket.file_pengaduan || null
   } catch (error) {
     console.error('Error fetching ticket details:', error)
@@ -84,7 +101,7 @@ const fetchTicketDetail = async ticketId => {
 onMounted(() => {
   fetchTicketDetail(route.params.id)
   getCompanyData()
-  fetchAdminStatus() // Cek status admin saat halaman dimuat
+  fetchAdminStatus()
 })
 </script>
 
@@ -146,22 +163,36 @@ onMounted(() => {
                 </div>
               </div>
 
-              <div v-if="isAdmin && canReply">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="col-form-label">Pesan Balasan</label>
-                    <textarea
-                      v-model="adminReply"
-                      class="form-control message-reply"
-                      rows="4"
-                    ></textarea>
-                  </div>
+              <div
+                v-if="ticketReply && ticketReply.trim() !== ''"
+                class="col-md-12"
+              >
+                <div class="form-group">
+                  <label class="col-form-label">Pesan Balasan</label>
+                  <textarea
+                    class="form-control message-reply"
+                    rows="4"
+                    readonly
+                    >{{ ticketReply }}</textarea
+                  >
                 </div>
               </div>
-              <div v-else>
-                <p class="text-muted">Belum ada balasan dari admin.</p>
-              </div>
 
+              <!-- Admin bisa mengirim balasan jika belum ada balasan -->
+              <div v-else-if="isAdmin" class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">Balasan Admin</label>
+                  <textarea
+                    v-model="adminReply"
+                    class="form-control"
+                    rows="4"
+                    placeholder="Tulis balasan untuk tiket ini"
+                  ></textarea>
+                </div>
+                <button @click="sendReply" class="btn btn-primary">
+                  Kirim Balasan
+                </button>
+              </div>
               <!-- Lampiran File -->
               <div class="col-md-4">
                 <div class="form-group">

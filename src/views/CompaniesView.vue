@@ -103,7 +103,7 @@ watch(
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
-          <h5>{{ title }}</h5>
+          <h3>{{ title }}</h3>
           <div class="list-btn">
             <ul>
               <li>
