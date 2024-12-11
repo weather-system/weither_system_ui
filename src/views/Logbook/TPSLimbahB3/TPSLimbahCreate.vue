@@ -1,10 +1,11 @@
 <script setup>
 import { ref } from "vue";
+import { createTpsLimbahB3 } from "@/lib/tpslimbahb3";
 import MainWrapper from "@/components/MainWrapper.vue";
 
 const tpsForm = ref({
-  tanggal: "",
-  jenisLimbahB3: "",
+  tgl_input: "",
+  jenis_lb3: "",
   kemasan: "",
   jumlah: "",
   satuan: "",
@@ -21,9 +22,13 @@ const jenisOptions = [
   "Masuk",
 ];
 
-const saveForm = () => {
-  console.log("Data yang akan disimpan:", tpsForm.value);
-  // Tambahkan logic untuk menyimpan data ke database
+const saveForm = async () => {
+  try {
+    const response = await createTpsLimbahB3(tpsForm.value);
+    console.log("Data berhasil disimpan:", response.data);
+  } catch (error) {
+    console.error("Error menyimpan data:", error);
+  }
 };
 </script>
 
@@ -40,9 +45,9 @@ const saveForm = () => {
             <label for="tanggal" class="form-label">Tanggal</label>
             <input
               type="date"
-              id="tanggal"
+              id="tgl_input"
               class="form-control"
-              v-model="tpsForm.tanggal"
+              v-model="tpsForm.tgl_input"
             />
           </div>
 
@@ -52,7 +57,7 @@ const saveForm = () => {
               type="text"
               id="jenis-limbah"
               class="form-control"
-              v-model="tpsForm.jenisLimbahB3"
+              v-model="tpsForm.jenis_lb3"
             />
           </div>
 

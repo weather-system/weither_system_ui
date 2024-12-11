@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
 import MainWrapper from "@/components/MainWrapper.vue";
 
 const tpsForm = ref({
-  tanggal: "",
-  jenisLimbahB3: "",
+  tgl_input: "",
+  jenis_lb3: "",
   kemasan: "",
   jumlah: "",
   satuan: "",
@@ -21,21 +22,28 @@ const jenisOptions = [
   "Masuk",
 ];
 
-// Simulasi data dari API
-onMounted(() => {
-  tpsForm.value = {
-    tanggal: "2024-12-03",
-    jenisLimbahB3: "Limbah A",
-    kemasan: "Drum",
-    jumlah: "100",
-    satuan: "Kg",
-    jenis: "Dimanfaatkan",
-  };
+// Mengambil data awal (Simulasi atau panggil API)
+onMounted(async () => {
+  try {
+    const response = await axios.get("/api/tps-limbah-b3/1"); // ganti 1 dengan id yang sesuai
+    tpsForm.value = response.data;
+  } catch (error) {
+    console.error("Error mengambil data:", error);
+  }
 });
 
-const updateForm = () => {
-  console.log("Data yang akan diperbarui:", tpsForm.value);
-  // Tambahkan logic untuk memperbarui data
+const updateForm = async () => {
+  try {
+    const response = await axios.put(
+      `/api/tps-limbah-b3/${tpsForm.value.id}`,
+      tpsForm.value
+    );
+    console.log("Data berhasil diperbarui:", response.data);
+    // Tambahkan logic untuk feedback kepada user setelah data diperbarui
+  } catch (error) {
+    console.error("Error memperbarui data:", error);
+    // Tambahkan logic untuk feedback jika terjadi error
+  }
 };
 </script>
 
@@ -52,9 +60,9 @@ const updateForm = () => {
             <label for="tanggal" class="form-label">Tanggal</label>
             <input
               type="date"
-              id="tanggal"
+              id="tgl_input"
               class="form-control"
-              v-model="tpsForm.tanggal"
+              v-model="tpsForm.tgl_input"
             />
           </div>
 
@@ -64,7 +72,7 @@ const updateForm = () => {
               type="text"
               id="jenis-limbah"
               class="form-control"
-              v-model="tpsForm.jenisLimbahB3"
+              v-model="tpsForm.jenis_lb3"
             />
           </div>
 

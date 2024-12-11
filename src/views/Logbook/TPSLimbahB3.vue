@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import MainWrapper from "@/components/MainWrapper.vue";
 
 const $loading = useLoading();
-
 const tpsLimbahB3Data = ref([]);
 const selectedMonth = ref("");
 const selectedYear = ref("");
@@ -13,28 +13,8 @@ const selectedYear = ref("");
 onMounted(async () => {
   const loader = $loading.show();
   try {
-    // Dummy data, ganti dengan panggilan API Anda
-    tpsLimbahB3Data.value = [
-      {
-        id: 1,
-        company: "PT ALLINSTUDIO",
-        jenis_lb3: "Limbah A",
-        jumlah: "50",
-        kemasan: "Drum",
-        jenis_transaksi: "Pengiriman",
-        tgl_input: "2023-11-20 08:30:00",
-      },
-      {
-        id: 2,
-        company: "PT XYZ",
-        jenis_lb3: "Limbah B",
-        jumlah: "30",
-        kemasan: "Kantong",
-        jenis_transaksi: "Penerimaan",
-        tgl_input: "2023-11-25 14:15:00",
-      },
-      // Tambahkan data dummy lainnya sesuai kebutuhan
-    ];
+    const response = await axios.get("/api/tpslimbahb3");
+    tpsLimbahB3Data.value = response.data;
   } catch (e) {
     console.error(e);
   } finally {
@@ -66,32 +46,8 @@ onMounted(async () => {
         </div>
 
         <div class="row mb-4">
-          <div class="col-md-4">
-            <select class="form-select" v-model="selectedMonth">
-              <option value="">Pilih Bulan</option>
-              <option value="Januari">Januari</option>
-              <option value="Februari">Februari</option>
-              <option value="Maret">Maret</option>
-              <option value="April">April</option>
-              <option value="Mei">Mei</option>
-              <option value="Juni">Juni</option>
-              <option value="Juli">Juli</option>
-              <option value="Agustus">Agustus</option>
-              <option value="September">September</option>
-              <option value="Oktober">Oktober</option>
-              <option value="November">November</option>
-              <option value="Desember">Desember</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <select class="form-select" v-model="selectedYear">
-              <option value="">Pilih Tahun</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-              <!-- Tambahkan opsi tahun lainnya jika diperlukan -->
-            </select>
-          </div>
+          <!-- Filter bulan dan tahun -->
+          <!-- ... -->
         </div>
 
         <div class="row mt-4">
@@ -118,8 +74,14 @@ onMounted(async () => {
                     <td>{{ data.kemasan }}</td>
                     <td>{{ data.jenis_transaksi }}</td>
                     <td class="d-flex" style="gap: 1rem">
-                      <button class="btn btn-success">Edit</button>
-                      <button class="btn btn-danger">Hapus</button>
+                      <RouterLink
+                        :to="`/Logbook/TPSLimbahB3/TPSLimbahB3Edit/${data.id}`"
+                        class="btn btn-success"
+                        >Edit</RouterLink
+                      >
+                      <button class="btn btn-danger" @click="deleteData(data.id)">
+                        Hapus
+                      </button>
                     </td>
                   </tr>
                 </tbody>
