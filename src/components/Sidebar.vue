@@ -41,9 +41,9 @@ const isUserTpsb3Pending = ref(false)
 const isUserCerobongPending = ref(false)
 const canPemantauan = ref(false)
 
-const isPengendalianOpen = ref(false);
-const isDataOpen = ref(false);
-const isEksekutifOpen = ref(false);
+const isPengendalianOpen = ref(false)
+const isDataOpen = ref(false)
+const isEksekutifOpen = ref(false)
 
 const isperdasOpen = ref(false)
 const ispenudaraOpen = ref(false)
@@ -72,68 +72,68 @@ const dashboardRoute = computed(() => {
   } else if (store.state.auth.user.role == 'PENGAWAS') {
     return '/Pengawas'
   }
-  return '/MyCompany';
-});
+  return '/MyCompany'
+})
 
 const togglePengendalian = () => {
-  console.log("Pengendalian clicked"); // Debugging log
-  isPengendalianOpen.value = !isPengendalianOpen.value;
-};
+  console.log('Pengendalian clicked') // Debugging log
+  isPengendalianOpen.value = !isPengendalianOpen.value
+}
 const toggleData = () => {
-  console.log("Data clicked"); // Debugging log
-  isDataOpen.value = !isDataOpen.value;
-};
+  console.log('Data clicked') // Debugging log
+  isDataOpen.value = !isDataOpen.value
+}
 
 const toggleEksekutif = () => {
-  console.log("Eksekutif clicked"); // Debugging log
-  isEksekutifOpen.value = !isEksekutifOpen.value;
-};
+  console.log('Eksekutif clicked') // Debugging log
+  isEksekutifOpen.value = !isEksekutifOpen.value
+}
 
 const toggleMaster = () => {
-  isMasterOpen.value = !isMasterOpen.value;
-};
+  isMasterOpen.value = !isMasterOpen.value
+}
 
 const toggleOperator = () => {
-  isOperatorOpen.value = !isOperatorOpen.value;
-};
+  isOperatorOpen.value = !isOperatorOpen.value
+}
 const toggleKonten = () => {
-  isKontenOpen.value = !isKontenOpen.value;
-};
+  isKontenOpen.value = !isKontenOpen.value
+}
 const toggleReferensi = () => {
-  isReferensiOpen.value = !isReferensiOpen.value;
-};
+  isReferensiOpen.value = !isReferensiOpen.value
+}
 const toggleLearning = () => {
-  isLearningOpen.value = !isLearningOpen.value;
-};
+  isLearningOpen.value = !isLearningOpen.value
+}
 const toggleFitur = () => {
-  isFiturOpen.value = !isFiturOpen.value;
-};
+  isFiturOpen.value = !isFiturOpen.value
+}
 const toggleTiketz = () => {
-  isTiketzOpen.value = !isTiketzOpen.value;
-};
+  isTiketzOpen.value = !isTiketzOpen.value
+}
 const toggleVerifikasi = () => {
-  isVerifikasiOpen.value = !isVerifikasiOpen.value;
-};
+  isVerifikasiOpen.value = !isVerifikasiOpen.value
+}
 const toggleSwapantau = () => {
-  isSwapantauOpen.value = !isSwapantauOpen.value;
-};
+  isSwapantauOpen.value = !isSwapantauOpen.value
+}
 const toggleMonitoring = () => {
-  isMonitoringOpen.value = !isMonitoringOpen.value;
-};
+  isMonitoringOpen.value = !isMonitoringOpen.value
+}
 const toggleVerifikasiLog = () => {
-  isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value;
-};
+  isVerifikasiLogOpen.value = !isVerifikasiLogOpen.value
+}
 const toggleReferensiMaster = () => {
-  isReferensiMasterOpen.value = !isReferensiMasterOpen.value;
-};
+  isReferensiMasterOpen.value = !isReferensiMasterOpen.value
+}
 const togglePPU = () => {
-  isPPUOpen.value = !isPPUOpen.value;
-};
+  isPPUOpen.value = !isPPUOpen.value
+}
 const togglePerDas = () => {
-  console.log("Data clicked");
-  isperdasOpen.value = !isperdasOpen.value;
+  console.log('Data clicked')
+  isperdasOpen.value = !isperdasOpen.value
   router.push({
-    path: "/Data/PersLing",
+    path: '/Data/PersLing',
     query: {
       sidebar: 'perscompany',
     },
@@ -179,31 +179,31 @@ watch(() => route.query.sidebar, (latest, _) => {
 });
 
 const toggleLogbook = () => {
-  isLogbookOpen.value = !isLogbookOpen.value;
-  isDataOpen.value = false;
-  isPengendalianOpen.value = false;
-  isImportLogbookOpen.value = false;
-  isTiketOpen.value = false;
-};
+  isLogbookOpen.value = !isLogbookOpen.value
+  isDataOpen.value = false
+  isPengendalianOpen.value = false
+  isImportLogbookOpen.value = false
+  isTiketOpen.value = false
+}
 
 const toggleImportLogbook = () => {
-  isImportLogbookOpen.value = !isImportLogbookOpen.value;
-  isDataOpen.value = false;
-  isPengendalianOpen.value = false;
-  isLogbookOpen.value = false;
-  isTiketOpen.value = false;
-};
+  isImportLogbookOpen.value = !isImportLogbookOpen.value
+  isDataOpen.value = false
+  isPengendalianOpen.value = false
+  isLogbookOpen.value = false
+  isTiketOpen.value = false
+}
 
 const toggleTiket = () => {
-  isTiketOpen.value = !isTiketOpen.value;
-  isDataOpen.value = false;
-  isPengendalianOpen.value = false;
-  isLogbookOpen.value = false;
-  isImportLogbookOpen.value = false;
-};
+  isTiketOpen.value = !isTiketOpen.value
+  isDataOpen.value = false
+  isPengendalianOpen.value = false
+  isLogbookOpen.value = false
+  isImportLogbookOpen.value = false
+}
 
 onMounted(async () => {
-  const loader = $loading.show();
+  const loader = $loading.show()
   try {
     const dataa = await getStatusPertek()
     console.log(dataa);
@@ -221,36 +221,36 @@ onMounted(async () => {
       isUserPending.value = true
     }
 
-    await fetchUserStatus();
-    const canPemantauanResult = await canCreatePemantauan();
-    canPemantauan.value = canPemantauanResult.result;
+    await fetchUserStatus()
+    const canPemantauanResult = await canCreatePemantauan()
+    canPemantauan.value = canPemantauanResult.result
   } catch (e) {
-    console.error(e);
+    console.error(e)
   } finally {
-    loader.hide();
+    loader.hide()
   }
-});
+})
 
-const companyDetail = ref(false);
+const companyDetail = ref(false)
 const fetchUserStatus = async () => {
-  const token = localStorage.getItem("TOKEN");
-  if (!token) return;
+  const token = localStorage.getItem('TOKEN')
+  if (!token) return
 
   try {
-    const response = await axios.get("/api/user/status", {
+    const response = await axios.get('/api/user/status', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
-    companyDetail.value = response.data.detail;
+    })
+    companyDetail.value = response.data.detail
   } catch (error) {
-    console.error("Error fetching user status:", error);
+    console.error('Error fetching user status:', error)
   }
-};
+}
 </script>
 
 <style scoped>
-@import "@/assets/css/admin.css";
+@import '@/assets/css/admin.css';
 </style>
 
 <template>
@@ -266,7 +266,11 @@ const fetchUserStatus = async () => {
           />
         </router-link>
         <router-link to="/MyCompany">
-          <img src="@/assets/img/dlh2.png" class="img-fluid logo-small" alt="" />
+          <img
+            src="@/assets/img/dlh2.png"
+            class="img-fluid logo-small"
+            alt=""
+          />
         </router-link>
       </div>
       <div class="siderbar-toggle">
@@ -516,17 +520,26 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isPPUOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link to="/Master/Swapantau/Bulanan" active-class="active">
+                        <router-link
+                          to="/Master/Swapantau/Bulanan"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Contoh Uji
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Swapantau/PPA" active-class="active">
+                        <router-link
+                          to="/Master/Swapantau/PPA"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Kelompok Uji
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Swapantau/PPU" active-class="active">
+                        <router-link
+                          to="/Master/Swapantau/PPU"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Parameter PPU
                         </router-link>
                       </li>
@@ -584,17 +597,26 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isKontenOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link to="/Master/Operator/Berita" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Berita"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Berita
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Artikel" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Artikel"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Artikel
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Agenda" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Agenda"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Agenda
                         </router-link>
                       </li>
@@ -607,7 +629,10 @@ const fetchUserStatus = async () => {
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Halaman" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Halaman"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Halaman
                         </router-link>
                       </li>
@@ -631,12 +656,18 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isReferensiOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link to="/Master/Operator/Kategori" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Kategori"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Kategori Tiket
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Status" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Status"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Status Tiket
                         </router-link>
                       </li>
@@ -668,12 +699,18 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isLearningOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link to="/Master/Operator/EBook" active-class="active">
+                        <router-link
+                          to="/Master/Operator/EBook"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> E-Book
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Video" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Video"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Video
                         </router-link>
                       </li>
@@ -697,27 +734,42 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isFiturOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link to="/Master/Operator/Download" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Download"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Download
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Link" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Link"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Link Terkait
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Sosmed" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Sosmed"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Link Sosmed
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Slide" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Slide"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Slide
                         </router-link>
                       </li>
                       <li>
-                        <router-link to="/Master/Operator/Banner" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Banner"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Banner
                         </router-link>
                       </li>
@@ -741,7 +793,10 @@ const fetchUserStatus = async () => {
                   <transition name="slide-fade">
                     <ul v-if="isTiketzOpen" class="submenu d-block ms-3">
                       <li>
-                        <router-link to="/Master/Operator/Tiket" active-class="active">
+                        <router-link
+                          to="/Master/Operator/Tiket"
+                          active-class="active"
+                        >
                           <i class="fas fa-chevron-right"></i> Daftar Tiket
                         </router-link>
                       </li>
@@ -751,7 +806,10 @@ const fetchUserStatus = async () => {
 
                 <!-- Galeri -->
                 <li>
-                  <router-link to="/Master/Operator/Galeri" activeClass="active">
+                  <router-link
+                    to="/Master/Operator/Galeri"
+                    activeClass="active"
+                  >
                     <i class="fas fa-chevron-right me-2"></i>
                     Galeri</router-link
                   >
@@ -808,21 +866,24 @@ const fetchUserStatus = async () => {
                     ></i>
                   </a>
                   <transition name="slide-fade">
-                    <ul v-if="isDataOpen && isperdasOpen" class="submenu d-block ms-3">
+                    <ul
+                      v-if="isDataOpen && isperdasOpen"
+                      class="submenu d-block ms-3"
+                    >
                       <li>
-                        <router-link to="/Data/Ipal" activeClass="active">
+                        <router-link to="/Data/Ipal?sidebar=perscompany" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Pertek IPAL</router-link
                         >
                       </li>
                       <li>
-                        <router-link to="/Data/Cerobong" activeClass="active">
+                        <router-link to="/Data/Cerobong?sidebar=perscompany" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Pertek Emisi</router-link
                         >
                       </li>
                       <li>
-                        <router-link to="/Data/TPSB3" activeClass="active">
+                        <router-link to="/Data/TPSB3?sidebar=perscompany" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Rintek LB3</router-link
                         >
@@ -876,7 +937,9 @@ const fetchUserStatus = async () => {
 
           <li
             v-if="
-              !isUserPending && store.state.auth.user.role !== 'ADMIN' && canPemantauan
+              !isUserPending &&
+              store.state.auth.user.role !== 'ADMIN' &&
+              canPemantauan
             "
           >
             <a
@@ -1062,7 +1125,7 @@ const fetchUserStatus = async () => {
           <li v-if="store.state.auth.user.role === 'EKSEKUTIF'">
             <a href="javascript:void(0);" @click="toggleEksekutif">
               <i class="fas fa-map-marker-alt"></i>
-              <span>Peta</span>
+              <span>Sebaran Titik</span>
               <i
                 class="fe"
                 :class="{
@@ -1076,13 +1139,13 @@ const fetchUserStatus = async () => {
                 <li>
                   <router-link to="/Eksekutif/TPSB3" activeClass="active">
                     <i class="fas fa-map-pin"></i>
-                    <span>Sebaran TPS LB3</span>
+                    Titik TPS B3
                   </router-link>
                 </li>
                 <li>
                   <router-link to="/Eksekutif/Cerobong" activeClass="active">
                     <i class="fas fa-smog"></i>
-                    <span>Sebaran Cerobong</span>
+                    Titik Cerobong
                   </router-link>
                 </li>
                 <li>
@@ -1091,13 +1154,13 @@ const fetchUserStatus = async () => {
                     activeClass="active"
                   >
                     <i class="fas fa-water"></i>
-                    <span>Sebaran Titik Penaatan IPAL</span>
+                    Titik Penaatan IPAL
                   </router-link>
                 </li>
                 <li>
                   <router-link to="/Eksekutif/RTH" activeClass="active">
                     <i class="fas fa-tree"></i>
-                    <span>Sebaran RTH Privat</span>
+                    Luasan RTH Privat
                   </router-link>
                 </li>
               </ul>
@@ -1108,21 +1171,3 @@ const fetchUserStatus = async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.submenu li {
-  display: flex;
-  align-items: center;
-  padding: 0px 0;
-}
-
-.submenu li i {
-  margin-right: 10px;
-  font-size: 2px;
-}
-
-.submenu li span {
-  font-size: 15px;
-  color: #ffffff;
-}
-</style>
