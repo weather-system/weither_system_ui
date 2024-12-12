@@ -14,6 +14,25 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async data => {
+  if (data.jenis == 'Udara Emisi') {
+    data.details = [
+      ...data.details,
+      ...data.details1,
+      ...data.details2,
+      ...data.details3,
+      ...data.details4,
+      ...data.details5,
+      ...data.details6,
+    ]
+  }
+
+  delete data.details1
+  delete data.details2
+  delete data.details3
+  delete data.details4
+  delete data.details5
+  delete data.details6
+
   const loader = $loading.show()
   try {
     await createReferensiBakuMutu(data)

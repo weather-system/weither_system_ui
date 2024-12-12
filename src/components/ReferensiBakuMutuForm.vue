@@ -4,6 +4,7 @@ import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
 import Swal from 'sweetalert2'
+import BakuMutuUdaraEmisiForm from '@/components/BakuMutuUdaraEmisiForm.vue'
 import { deleteReferensiBakuMutuDetail } from '@/lib/referensiBakuMutu.js'
 
 const props = defineProps(['isEdit'])
@@ -15,6 +16,12 @@ const formData = reactive({})
 
 const defaultValues = {
   details: [{}],
+  details1: [{}],
+  details2: [{}],
+  details3: [{}],
+  details4: [{}],
+  details5: [{}],
+  details6: [{}],
 }
 
 const schema = yup.object({
@@ -113,13 +120,13 @@ defineExpose({ setValues })
       </div>
     </div>
 
-    <div class="row mt-2" v-if="formData.jenis == 'Udara Emisi'">
+    <!-- <div class="row mt-2" v-if="formData.jenis == 'Udara Emisi'">
       <div class="col-6">
         <label class="form-label">Bahan Bakar</label>
         <Field name="bahan_bakar" class="form-control" as="select">
           <option value="">Pilih</option>
           <option value="Biomassa berupa serabut dan/atau Cangkang">
-            Biomassa beruapa serabut dan/atau Cangkang
+            Biomassa berupa serabut dan/atau Cangkang
           </option>
           <option value="Biomassa berupa ampas dan/atau daun tebu kering">
             Biomassa berupa ampas dan/atau daun tebu kering
@@ -134,7 +141,7 @@ defineExpose({ setValues })
         </Field>
         <ErrorMessage name="bahan_bakar" />
       </div>
-    </div>
+    </div> -->
 
     <div class="row mt-2" v-if="formData.jenis == 'Kebisingan'">
       <div class="col-3">
@@ -186,6 +193,9 @@ defineExpose({ setValues })
 
     <div v-if="formData.jenis">
       <div class="table-resposnive table-div">
+        <p v-if="formData.jenis == 'Udara Emisi'">
+          Bahan Bakar: Biomassa berupa serabut dan/atau Cangkang
+        </p>
         <FieldArray name="details" v-slot="{ fields, push, remove }">
           <table class="table datatable">
             <thead>
@@ -278,6 +288,14 @@ defineExpose({ setValues })
                   />
                   <ErrorMessage :name="`details[${i}].baku_mutu`" />
                 </td>
+                <td v-if="formData.jenis == 'Udara Emisi'" class="d-none">
+                  <Field
+                    :name="`details[${i}].bahan_bakar`"
+                    class="form-control"
+                    value="Biomassa berupa serabut dan/atau Cangkang"
+                  />
+                  <ErrorMessage :name="`details[${i}].baku_mutu`" />
+                </td>
                 <td v-if="formData.jenis == 'Udara Ambien'">
                   <Field
                     :name="`details[${i}].sistem_pengukuran`"
@@ -311,12 +329,55 @@ defineExpose({ setValues })
             </tbody>
           </table>
           <div class="mt-2 d-flex justify-content-end">
-            <button @click="push({})" type="button" class="btn btn-success">
+            <button
+              @click="
+                formData.jenis == 'Udara Emisi'
+                  ? push({
+                      bahan_bakar: 'Biomassa berupa serabut dan/atau Cangkang',
+                    })
+                  : push({})
+              "
+              type="button"
+              class="btn btn-success"
+            >
               Tambah
             </button>
           </div>
         </FieldArray>
       </div>
+    </div>
+
+    <div v-if="formData.jenis == 'Udara Emisi'">
+      <BakuMutuUdaraEmisiForm
+        name="details1"
+        :delete-detail="deleteDetail"
+        bahan-bakar="Biomassa berupa ampas dan/atau daun tebu kering"
+      />
+      <BakuMutuUdaraEmisiForm
+        name="details2"
+        :delete-detail="deleteDetail"
+        bahan-bakar="Biomassa selain poin 1 & 2"
+      />
+      <BakuMutuUdaraEmisiForm
+        name="details3"
+        :delete-detail="deleteDetail"
+        bahan-bakar="Batu Bara"
+      />
+      <BakuMutuUdaraEmisiForm
+        name="details4"
+        :delete-detail="deleteDetail"
+        bahan-bakar="Minyak"
+      />
+      <BakuMutuUdaraEmisiForm
+        name="details5"
+        :delete-detail="deleteDetail"
+        bahan-bakar="Gas"
+      />
+      <BakuMutuUdaraEmisiForm
+        name="details6"
+        :delete-detail="deleteDetail"
+        bahan-bakar="Gabungan"
+      />
     </div>
 
     <div class="mt-4">

@@ -17,6 +17,25 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async data => {
+  if (data.jenis == 'Udara Emisi') {
+    data.details = [
+      ...data.details,
+      ...data.details1,
+      ...data.details2,
+      ...data.details3,
+      ...data.details4,
+      ...data.details5,
+      ...data.details6,
+    ]
+  }
+
+  delete data.details1
+  delete data.details2
+  delete data.details3
+  delete data.details4
+  delete data.details5
+  delete data.details6
+
   const detailMap = {
     id: null,
     parameter: null,
@@ -52,6 +71,22 @@ const loadData = async () => {
   const loader = $loading.show()
   try {
     const data = await getReferensiBakuMutuDetail(route.params.id)
+    if (data.jenis == 'Udara Emisi') {
+      const orig = data.details
+      data.details = orig.filter(
+        d => d.bahan_bakar == 'Biomassa berupa serabut dan/atau Cangkang',
+      )
+      data.details1 = orig.filter(
+        d => d.bahan_bakar == 'Biomassa berupa ampas dan/atau daun tebu kering',
+      )
+      data.details2 = orig.filter(
+        d => d.bahan_bakar == 'Biomassa selain poin 1 & 2',
+      )
+      data.details3 = orig.filter(d => d.bahan_bakar == 'Batu Bara')
+      data.details4 = orig.filter(d => d.bahan_bakar == 'Minyak')
+      data.details5 = orig.filter(d => d.bahan_bakar == 'Gas')
+      data.details6 = orig.filter(d => d.bahan_bakar == 'Gabungan')
+    }
     form.value.setValues(data)
   } catch (e) {
     console.error(e)
