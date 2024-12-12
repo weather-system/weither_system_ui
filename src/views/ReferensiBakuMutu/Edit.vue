@@ -44,6 +44,9 @@ const submit = async data => {
     satuan: null,
     tingkat_kebisingan: null,
     kadar_maksimum: null,
+    bahan_bakar: null,
+    jenis_kebisingan: null,
+    detail_kebisingan: null,
   }
   data.details = data.details.map(d => {
     delete d.created_at

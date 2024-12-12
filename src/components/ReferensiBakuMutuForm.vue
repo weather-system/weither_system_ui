@@ -143,7 +143,7 @@ defineExpose({ setValues })
       </div>
     </div> -->
 
-    <div class="row mt-2" v-if="formData.jenis == 'Kebisingan'">
+    <!-- <div class="row mt-2" v-if="formData.jenis == 'Kebisingan'">
       <div class="col-3">
         <label class="form-label">Jenis Kebisingan</label>
         <Field
@@ -189,7 +189,7 @@ defineExpose({ setValues })
         </Field>
         <ErrorMessage name="jenis_kebisingan_detail" />
       </div>
-    </div>
+    </div> -->
 
     <div v-if="formData.jenis">
       <div class="table-resposnive table-div">
@@ -215,6 +215,8 @@ defineExpose({ setValues })
                 <th v-if="formData.jenis == 'Kebisingan'">
                   Tingkat Kebisingan (dbA)
                 </th>
+                <th v-if="formData.jenis == 'Kebisingan'">Jenis Kebisingan</th>
+                <th v-if="formData.jenis == 'Kebisingan'">Detail</th>
                 <th
                   v-if="
                     [
@@ -267,6 +269,70 @@ defineExpose({ setValues })
                     type="number"
                   />
                   <ErrorMessage :name="`details[${i}].tingkat_kebisingan`" />
+                </td>
+                <td v-if="formData.jenis == 'Kebisingan'">
+                  <Field
+                    :name="`details[${i}].jenis_kebisingan`"
+                    class="form-control"
+                    as="select"
+                  >
+                    <option value="">Pilih</option>
+                    <option value="Peruntukan Kawasan">
+                      Peruntukan Kawasan
+                    </option>
+                    <option value="Lingkungan Kegiatan">
+                      Lingkungan Kegiatan
+                    </option>
+                  </Field>
+                  <ErrorMessage :name="`details[${i}].jenis_kebisingan`" />
+                </td>
+                <td v-if="formData.jenis == 'Kebisingan'">
+                  <Field
+                    :name="`details[${i}].detail_kebisingan`"
+                    class="form-control"
+                    as="select"
+                  >
+                    <option value="">Pilih</option>
+                    <template
+                      v-if="
+                        field.value.jenis_kebisingan == 'Peruntukan Kawasan'
+                      "
+                    >
+                      <option value="Perumahan & Pemukiman">
+                        Perumahan & Pemukiman
+                      </option>
+                      <option value="Perdagangan & Jasa">
+                        Perdagangan & Jasa
+                      </option>
+                      <option value="Perkantoran & Perdagangan">
+                        Perkantoran & Perdagangan
+                      </option>
+                      <option value="Ruang Terbuka Hijau">
+                        Ruang Terbuka Hijau
+                      </option>
+                      <option value="Industri">Industri</option>
+                      <option value="Pemerintahan & Fasilitas Umum">
+                        Pemerintahan & Fasilitas Umum
+                      </option>
+                      <option value="Stasiun Kereta">Stasiun Kereta</option>
+                    </template>
+                    <template
+                      v-if="
+                        field.value.jenis_kebisingan == 'Lingkungan Kegiatan'
+                      "
+                    >
+                      <option value="Rumah Sakit atau sejenisnya">
+                        Rumah Sakit atau sejenisnya
+                      </option>
+                      <option value="Sekolah atau sejenisnya">
+                        Sekolah atau sejenisnya
+                      </option>
+                      <option value="Tempat ibadah atau sejenisnya">
+                        Tempat ibadah atau sejenisnya
+                      </option>
+                    </template>
+                  </Field>
+                  <ErrorMessage :name="`details[${i}].detail_kebisingan`" />
                 </td>
                 <td
                   v-if="
