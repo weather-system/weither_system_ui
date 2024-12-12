@@ -217,9 +217,11 @@ defineExpose({ setValues })
                 </th>
                 <th
                   v-if="
-                    ['Udara Emisi', 'Limbah Domestik Tersendiri'].includes(
-                      formData.jenis,
-                    )
+                    [
+                      'Udara Emisi',
+                      'Udara Ambien',
+                      'Limbah Domestik Tersendiri',
+                    ].includes(formData.jenis)
                   "
                 >
                   Satuan
@@ -268,9 +270,11 @@ defineExpose({ setValues })
                 </td>
                 <td
                   v-if="
-                    ['Udara Emisi', 'Limbah Domestik Tersendiri'].includes(
-                      formData.jenis,
-                    )
+                    [
+                      'Udara Emisi',
+                      'Udara Ambien',
+                      'Limbah Domestik Tersendiri',
+                    ].includes(formData.jenis)
                   "
                 >
                   <Field :name="`details[${i}].satuan`" class="form-control" />
