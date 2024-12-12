@@ -4,72 +4,56 @@ import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import { createPengelolaanLimbahB3 } from '@/lib/pengelolaanLimbahB3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import { useStore } from 'vuex'
+import { useLoading } from 'vue-loading-overlay'
+import { uploadFile } from '@/lib/filestorage.js'
 
 const router = useRouter()
-const companyDetailId = ref('')
 const triwulan = ref('')
 const tahun = ref('')
+const currentYear = new Date().getFullYear()
+const recentYears = Array.from({ length: 4 }, (_, i) => currentYear - i)
 const fileUpload = ref(null)
 const status = ref('Ajuan Baru')
-
-// Fetch the company detail ID
-const fetchCompanyDetailId = async () => {
-  const userId = '1'
-
-  try {
-    const response = await fetch(`http://localhost:8080/api/company_details/${userId}`)
-    if (response.ok) {
-      const data = await response.json()
-      companyDetailId.value = data.company_detail_id
-    } else {
-      console.error('Failed to fetch company detail ID')
-    }
-  } catch (error) {
-    console.error('Error fetching company detail ID:', error)
-  }
-}
-
-onMounted(() => {
-  fetchCompanyDetailId()
-})
-
-// Handle form submission
+const store = useStore()
+const companyDetailId = ref(store.state.auth.user.company.company_detail.id)
 const handleSubmit = async () => {
   const formData = new FormData()
   formData.append('company_detail_id', companyDetailId.value)
   formData.append('triwulan', triwulan.value)
   formData.append('tahun', tahun.value)
-  if (fileUpload.value) {
-    formData.append('file_upload', fileUpload.value)
-  }
+  formData.append('file_upload', urlNIB.value)
   formData.append('status', status.value)
 
   try {
-    const response = await createPengelolaanLimbahB3(formData)
-
-    if (response.status === 201) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Data successfully submitted!',
-      }).then(() => {
-        router.push('/PengelolaanLimbahB3')
-      })
-    } else {
-      const errorData = await response.json()
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: errorData.message || 'Data submission failed. Please try again.',
-      })
-    }
+    await createPengelolaanLimbahB3(formData)
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Data successfully submitted!',
+    }).then(() => {
+      router.push('/pengendalian/PengelolaanLimbahB3')
+    })
   } catch (error) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'An error occurred while submitting the data. Please try again.',
+      text: 'Gagal Menambahkan Data.',
     })
-    console.error('Submission error:', error)
+  }
+}
+const $loading = useLoading()
+const urlNIB = ref('')
+const uploadNIB = async e => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    urlNIB.value = url
+    console.log('Uploaded URL:', urlNIB.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
   }
 }
 </script>
@@ -78,54 +62,52 @@ const handleSubmit = async () => {
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
-        <h3>Create Pengelolaan Limbah B3</h3>
+        <h4>Tambah Pengelolaan Limbah B3</h4>
         <form @submit.prevent="handleSubmit">
-          <div class="mb-3">
-            <label for="companyDetailId">Company Detail ID</label>
-            <input
-              type="text"
-              id="companyDetailId"
-              v-model="companyDetailId"
-              class="form-control"
-              readonly
-            />
+          <div class="row mt-5">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="triwulan">Triwulan</label>
+                <select id="triwulan" v-model="triwulan" class="form-control">
+                  <option value="">Pilih Triwulan</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="tahun">Tahun</label>
+              <select id="tahun" v-model="tahun" class="form-control">
+                <option value="" disabled>Pilih Tahun</option>
+                <option v-for="year in recentYears" :key="year" :value="year">
+                  {{ year }}
+                </option>
+              </select>
+            </div>
           </div>
-
-          <div class="mb-3">
-            <label for="triwulan">Triwulan</label>
-            <select id="triwulan" v-model="triwulan" class="form-select">
-              <option value="">Pilih Triwulan</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
+          <div class="form-group">
+            <div class="col-md-5">
+              <label for="photo">Upload File</label>
+              <input type="file" @change="uploadNIB" class="form-control" />
+              <small class="form-text text-muted"
+                >Maksimal ukuran file: 20MB</small
+              ><br /><img
+                v-if="urlNIB"
+                :src="urlNIB"
+                style="max-width: 200px; max-height: auto; object-fit: contain"
+              />
+            </div>
           </div>
+          <div class="text-right">
+            <button type="submit" class="btn btn-primary">Simpan</button>
 
-          <div class="mb-3">
-            <label for="tahun">Tahun</label>
-            <select id="tahun" v-model="tahun" class="form-select">
-              <option value="">Pilih Tahun</option>
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="fileUpload">File Upload</label>
-            <input
-              type="file"
-              id="fileUpload"
-              @change="(e) => (fileUpload.value = e.target.files[0])"
-              class="form-control"
-            />
-          </div>
-
-          <div class="d-flex gap-2">
-            <button type="button" @click="router.go(-1)" class="btn btn-secondary">Kembali</button>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <router-link
+              to="/pengendalian/PengelolaanLimbahB3"
+              class="btn btn-secondary m-2"
+              >Kembali</router-link
+            >
           </div>
         </form>
       </div>

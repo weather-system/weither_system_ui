@@ -34,7 +34,7 @@ export const getPengelolaanLimbahB3 = async () => {
   return resp.data
 }
 
-export const getPengelolaanLimbahB3Detail = async (id) => {
+export const getPengelolaanLimbahB3ById = async (id) => {
   const resp = await axios.get(`/api/pengelolaan-limbah-b3/${id}`)
   return resp.data
 }
