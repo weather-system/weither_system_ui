@@ -27,6 +27,7 @@ const route = useRoute()
 const router = useRouter()
 const id = route.params.id
 onMounted(async () => {
+  fetchJenisLimbah()
   try {
     const response = await axios.get(`api/tpslimbahb3/${id}/edit`)
     tpsForm.value = response.data
@@ -59,6 +60,15 @@ const updateForm = async () => {
     })
   }
 }
+const jenisLb3Options = ref([])
+const fetchJenisLimbah = async () => {
+  try {
+    const response = await axios.get('/api/getItemstpsb3')
+    jenisLb3Options.value = response.data.map(item => item.jenis) 
+  } catch (error) {
+    console.error('Gagal mengambil data Jenis Limbah B3:', error)
+  }
+}
 </script>
 
 <template>
@@ -85,15 +95,17 @@ const updateForm = async () => {
 
             <div class="col-md-5">
               <div class="form-group">
-                <label for="jenis-limbah" class="form-label"
-                  >Jenis Limbah B3</label
-                >
-                <input
-                  type="text"
+                <label for="jenis-limbah" class="form-label">Jenis Limbah B3</label>
+                <select
                   id="jenis-limbah"
                   class="form-control"
                   v-model="tpsForm.jenis_lb3"
-                />
+                >
+                  <option value="" disabled>Pilih Jenis Limbah B3</option>
+                  <option v-for="jenis in jenisLb3Options" :key="jenis" :value="jenis">
+                    {{ jenis }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>

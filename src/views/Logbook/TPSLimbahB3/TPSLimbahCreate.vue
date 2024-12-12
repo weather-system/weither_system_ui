@@ -1,9 +1,10 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { createTpsLimbahB3 } from '@/lib/tpslimbahb3'
 import MainWrapper from '@/components/MainWrapper.vue'
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const tpsForm = ref({
   tgl_input: '',
@@ -47,7 +48,18 @@ const saveForm = async () => {
     })
   }
 }
-
+const jenisLb3Options = ref([])
+const fetchJenisLimbah = async () => {
+  try {
+    const response = await axios.get('/api/getItemstpsb3')
+    jenisLb3Options.value = response.data.map(item => item.jenis) 
+  } catch (error) {
+    console.error('Gagal mengambil data Jenis Limbah B3:', error)
+  }
+}
+onMounted(() => {
+  fetchJenisLimbah()
+})
 </script>
 
 <template>
@@ -74,16 +86,17 @@ const saveForm = async () => {
 
             <div class="col-md-5">
               <div class="form-group">
-                <label for="jenis-limbah" class="form-label"
-                  >Jenis Limbah B3</label
-                >
-                <input
-                  type="text"
+                <label for="jenis-limbah" class="form-label">Jenis Limbah B3</label>
+                <select
                   id="jenis-limbah"
                   class="form-control"
                   v-model="tpsForm.jenis_lb3"
-                  placeholder="Masukkan Jenis Limbah B3"
-                />
+                >
+                  <option value="" disabled>Pilih Jenis Limbah B3</option>
+                  <option v-for="jenis in jenisLb3Options" :key="jenis" :value="jenis">
+                    {{ jenis }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
