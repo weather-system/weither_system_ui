@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router';
-import { useLoading } from 'vue-loading-overlay';
+import { useRouter, useRoute } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
 import ReferensiBakuMutuForm from '@/components/ReferensiBakuMutuForm.vue'
@@ -13,10 +13,28 @@ const route = useRoute()
 
 const form = ref(null)
 
-const submit = async (data) => {
+const submit = async data => {
+  if (data.jenis == 'Udara Emisi') {
+    data.details = [
+      ...data.details,
+      ...data.details1,
+      ...data.details2,
+      ...data.details3,
+      ...data.details4,
+      ...data.details5,
+      ...data.details6,
+    ]
+  }
+
+  delete data.details1
+  delete data.details2
+  delete data.details3
+  delete data.details4
+  delete data.details5
+  delete data.details6
+
   const loader = $loading.show()
   try {
-    delete data.id
     await createReferensiBakuMutu(data)
     router.push('/ReferensiBakuMutu')
   } catch (e) {
@@ -25,10 +43,6 @@ const submit = async (data) => {
     loader.hide()
   }
 }
-
-onMounted(() => {
-  form.value.setValues(route.query)
-})
 </script>
 
 <template>
