@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import * as yup from 'yup'
 import { useLoading } from 'vue-loading-overlay'
@@ -14,6 +14,7 @@ const form = ref(null)
 const inletChecked = ref(false)
 const outletChecked = ref(false)
 const selectedIPALSystems = ref([])
+const referensiBakuMutu = ref([]);
 console.log("dataaa",selectedIPALSystems )
 const getCombinedIPALSystems = () => selectedIPALSystems.value.join(', ')
 console.log("testttt",getCombinedIPALSystems.value)
@@ -88,7 +89,6 @@ const deleteupayapengelolaan = async id => {
 const schema = yup.object({
   type: yup.string().required(),
   no_izin_perusahaan: yup.string().required(),
-  acuan_baku_mutu: yup.string().required(),
   longitude: yup.string().required(),
   latitude: yup.string().required(),
   year_of_manufacture_of_ipal: yup.string().required(),
@@ -104,6 +104,7 @@ const schema = yup.object({
   amount_of_mud_sludge: yup.number().required(),
   unit_in_amount_of_mud_sludge: yup.string().required(),
   further_sludge_handling: yup.string().required(),
+  referensi_baku_mutu_id: yup.string().required(),
   items: yup.array(
     yup.object({
       chemicals_used: yup.string().required(),
@@ -152,6 +153,16 @@ watch(selectedIPALSystems,(latest,_) => {
     form.value.setFieldValue('system_ipal',latest.join(', '))
   
 })
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/referensiBakuMutu');
+    referensiBakuMutu.value = response.data
+  } catch (error) {
+    Swal.fire('Error!', 'Gagal memuat data Sumber Limbah.', 'error')
+  } finally {
+    loader.hide()
+  }
+});
 </script>
 
 <template>
@@ -183,13 +194,6 @@ watch(selectedIPALSystems,(latest,_) => {
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label class="col-form-label">No. Izin Perusahaan</label>
-                <Field name="no_izin_perusahaan" class="form-control" placeholder="Masukkan No. Izin Perusahaan"/>
-                <ErrorMessage name="no_izin_perusahaan" />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
                 <label class="col-form-label">File Izin Perusahaan</label>
                 <Field
                   name="file_izin_perusahaan"
@@ -198,7 +202,7 @@ watch(selectedIPALSystems,(latest,_) => {
                   <input
                     @change="uploadDoc ($event, handleChange)"
                     type="file"
-                    class="form-control"
+                    class="form-control mb-2"
                   />
                   <img
                     :src="field.value"
@@ -216,35 +220,29 @@ watch(selectedIPALSystems,(latest,_) => {
                 <ErrorMessage name="file_izin_perusahaan" />
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="col-form-label">No. Izin Perusahaan</label>
+                <Field name="no_izin_perusahaan" class="form-control" placeholder="Masukkan No. Izin Perusahaan"/>
+                <ErrorMessage name="no_izin_perusahaan" />
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label class="col-form-label">Acuan Buku Mutu</label>
-                <Field
-                name="acuan_baku_mutu"
-                as="select"
-                class="form-control"
-              >
-                    <option value="" disabled>Masukkan Acuan Buku Mutu</option>
-                    <option
-                      value="Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah"
-                    >
-                      Permen LHK No. 5 Tahun 2014 Tentang Baku Mutu Air Limbah
-                    </option>
-                    <option
-                      value="Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah Domestik"
-                    >
-                      Permen LHK No. 68 Tahun 2016 Tentang Baku Mutu Air Limbah
-                      Domestik
-                    </option>
-                    <option
-                      value="Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah"
-                    >
-                      Permen LHK No. 16 Tahun 2019 Tentang Baku Mutu Air Limbah
-                    </option>
-              </Field>
-              <ErrorMessage name="acuan_baku_mutu" />
+                <Field as="select" name="referensi_baku_mutu_id" class="form-control">
+                  <option value="" disabled>Acuan Buku Mutu</option>
+                  <option
+                    v-for="referensi_baku_mutus in referensiBakuMutu"
+                    :key="referensi_baku_mutus.id"
+                    :value="referensi_baku_mutus.id"
+                  >
+                    Type : {{ referensi_baku_mutus.jenis }}, {{ referensi_baku_mutus.referensi }}
+                  </option>
+                </Field>
+                <ErrorMessage name="referensi_baku_mutu_id" />
               </div>
             </div>
           </div>
@@ -752,7 +750,7 @@ watch(selectedIPALSystems,(latest,_) => {
         <div class="col-md-12">
           <div class="field-btns d-flex justify-content-between">
             <div>
-              <button class="btn btn-primary">Update</button>
+              <button class="btn btn-primary">Simpan</button>
               <router-link to="/Data/IPAL" class="btn btn-secondary m-2"
                 >Kembali</router-link
               >

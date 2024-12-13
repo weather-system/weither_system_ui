@@ -625,7 +625,7 @@ defineExpose({ setValues })
         <div class="col-md-12">
           <div class="field-btns d-flex justify-content-between">
             <div>
-              <button class="btn btn-primary next_btn">Update</button>
+              <button class="btn btn-primary next_btn">Simpan</button>
               <router-link to="/Data/TPSB3" class="btn btn-secondary m-2"
                 >Kembali</router-link
               >

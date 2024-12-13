@@ -17,6 +17,7 @@ const submit = async (data) => {
   delete data.unit_permissible_waste_water_discharge;
   data.items = data.items.map((v) => {
     delete v.company_tps_b3_id;
+    delete v.referensi_baku_mutu_id;
     delete v.created_at;
     delete v.updated_at;
     return v;
