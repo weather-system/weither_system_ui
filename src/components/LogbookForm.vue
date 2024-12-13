@@ -103,7 +103,7 @@ defineExpose({ setValues })
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-10">
               <div class="form-group">
                 <label class="col-form-label">Sumber Limbah</label>
                 <Field as="select" name="company_ipal_id" class="form-control">
@@ -113,7 +113,7 @@ defineExpose({ setValues })
                     :key="company.id"
                     :value="company.id"
                   >
-                    Type : {{ company.type }}, Nomor Izin : {{ company.no_izin_perusahaan }}, Pembuatan IPAL : {{ company.year_of_manufacture_of_ipal }}, Kapasitas IPAL : {{ company.capacity_ipal }}
+                    Type : {{ company.type }}, Nomor Izin : {{ company.no_izin_perusahaan }}, Tahun Pembuatan IPAL : {{ company.year_of_manufacture_of_ipal }}, Kapasitas IPAL : {{ company.capacity_ipal }}
                   </option>
                 </Field>
                 <ErrorMessage name="company_ipal_id" />

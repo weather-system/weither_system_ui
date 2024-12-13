@@ -1,42 +1,74 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import MainWrapper from "@/components/MainWrapper.vue";
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRoute, useRouter } from 'vue-router'
+import MainWrapper from '@/components/MainWrapper.vue'
+import Swal from 'sweetalert2'
 
 const tpsForm = ref({
-  tanggal: "",
-  jenisLimbahB3: "",
-  kemasan: "",
-  jumlah: "",
-  satuan: "",
-  jenis: "",
-});
+  tgl_input: '',
+  jenis_lb3: '',
+  kemasan: '',
+  jumlah: '',
+  satuan: '',
+  jenis: '',
+})
 
 const jenisOptions = [
-  "Disimpan",
-  "Dimanfaatkan",
-  "Diolah",
-  "Ditimbun",
-  "Diserahkan ke pihak ke tiga",
-  "Lainnya",
-  "Masuk",
-];
+  'Disimpan',
+  'Dimanfaatkan',
+  'Diolah',
+  'Ditimbun',
+  'Diserahkan ke pihak ke tiga',
+  'Lainnya',
+  'Masuk',
+]
+const route = useRoute()
+const router = useRouter()
+const id = route.params.id
+onMounted(async () => {
+  fetchJenisLimbah()
+  try {
+    const response = await axios.get(`api/tpslimbahb3/${id}/edit`)
+    tpsForm.value = response.data
+  } catch (error) {
+    console.error('Error mengambil data:', error)
+  }
+})
 
-// Simulasi data dari API
-onMounted(() => {
-  tpsForm.value = {
-    tanggal: "2024-12-03",
-    jenisLimbahB3: "Limbah A",
-    kemasan: "Drum",
-    jumlah: "100",
-    satuan: "Kg",
-    jenis: "Dimanfaatkan",
-  };
-});
-
-const updateForm = () => {
-  console.log("Data yang akan diperbarui:", tpsForm.value);
-  // Tambahkan logic untuk memperbarui data
-};
+const updateForm = async () => {
+  try {
+    const response = await axios.put(
+      `api/tpslimbahb3/${tpsForm.value.id}`,
+      tpsForm.value,
+    ); 
+      await Swal.fire({
+      title: 'Success!',
+      text: 'Data berhasil diperbaharui!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    })
+    router.push('/logbook/TPSLimbahB3')
+  } catch (error) {
+    Swal.close()
+    console.error('Error while saving form:', error)
+    await Swal.fire({
+      title: 'Error!',
+      text: error.message || 'Gagal menambahkan Data.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    })
+  }
+}
+const jenisLb3Options = ref([])
+const fetchJenisLimbah = async () => {
+  try {
+    const response = await axios.get('/api/getItemstpsb3')
+    jenisLb3Options.value = response.data.map(item => item.jenis) 
+  } catch (error) {
+    console.error('Gagal mengambil data Jenis Limbah B3:', error)
+  }
+}
 </script>
 
 <template>
@@ -44,74 +76,104 @@ const updateForm = () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
-          <h5>Form Edit TPS Limbah B3</h5>
+          <h3>Edit Logbook TPS Limbah B3</h3>
         </div>
 
         <form @submit.prevent="updateForm">
-          <div class="mb-3">
-            <label for="tanggal" class="form-label">Tanggal</label>
-            <input
-              type="date"
-              id="tanggal"
-              class="form-control"
-              v-model="tpsForm.tanggal"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label for="jenis-limbah" class="form-label">Jenis Limbah B3</label>
-            <input
-              type="text"
-              id="jenis-limbah"
-              class="form-control"
-              v-model="tpsForm.jenisLimbahB3"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label for="kemasan" class="form-label">Kemasan</label>
-            <input
-              type="text"
-              id="kemasan"
-              class="form-control"
-              v-model="tpsForm.kemasan"
-            />
-          </div>
-
-          <div class="mb-3 d-flex gap-3">
-            <div>
-              <label for="jumlah" class="form-label">Jumlah Limbah</label>
-              <input
-                type="number"
-                id="jumlah"
-                class="form-control"
-                v-model="tpsForm.jumlah"
-              />
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="tanggal" class="form-label">Tanggal</label>
+                <input
+                  type="date"
+                  id="tgl_input"
+                  class="form-control"
+                  v-model="tpsForm.tgl_input"
+                />
+              </div>
             </div>
-            <div>
-              <label for="satuan" class="form-label">Satuan</label>
-              <input
-                type="text"
-                id="satuan"
-                class="form-control"
-                v-model="tpsForm.satuan"
-              />
+
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="jenis-limbah" class="form-label">Jenis Limbah B3</label>
+                <select
+                  id="jenis-limbah"
+                  class="form-control"
+                  v-model="tpsForm.jenis_lb3"
+                >
+                  <option value="" disabled>Pilih Jenis Limbah B3</option>
+                  <option v-for="jenis in jenisLb3Options" :key="jenis" :value="jenis">
+                    {{ jenis }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="jenis" class="form-label">Jenis</label>
-            <select id="jenis" class="form-select" v-model="tpsForm.jenis">
-              <option value="" disabled>Pilih Jenis</option>
-              <option v-for="jenis in jenisOptions" :key="jenis" :value="jenis">
-                {{ jenis }}
-              </option>
-            </select>
+          <div class="row">
+            <div class="form-group">
+              <div class="col-md-9">
+                <label for="kemasan" class="form-label">Kemasan</label>
+                <input
+                  type="text"
+                  id="kemasan"
+                  class="form-control"
+                  v-model="tpsForm.kemasan"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <div>
+                  <label for="jumlah" class="form-label">Jumlah Limbah</label>
+                  <input
+                    type="number"
+                    id="jumlah"
+                    class="form-control"
+                    v-model="tpsForm.jumlah"
+                  />
+                </div>
+              </div>
+            </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="satuan" class="form-label">Satuan</label>
+                  <input
+                    type="text"
+                    id="satuan"
+                    class="form-control"
+                    v-model="tpsForm.satuan"
+                  />
+                </div>
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-9">
+              <div class="form-group">
+                <label for="jenis" class="form-label">Jenis</label>
+                <select id="jenis" class="form-control" v-model="tpsForm.jenis">
+                  <option value="" disabled>Pilih Jenis</option>
+                  <option
+                    v-for="jenis in jenisOptions"
+                    :key="jenis"
+                    :value="jenis"
+                  >
+                    {{ jenis }}
+                  </option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div class="mt-4">
-            <button type="submit" class="btn btn-success">Perbarui</button>
-            <button type="reset" class="btn btn-warning">Batal</button>
+            <button type="submit" class="btn btn-primary next_btn">Update</button>
+            <router-link to="/logbook/TPSLimbahB3" class="btn btn-secondary m-2"
+                >Kembali</router-link
+              >
           </div>
         </form>
       </div>

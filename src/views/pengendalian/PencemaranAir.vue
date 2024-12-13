@@ -143,13 +143,13 @@ onMounted(async () => {
                           path: '/Pengendalian/PencemaranAir/Edit',
                           query: { id: data.id },
                         }"
-                        class="btn btn-success"
+                        class="btn btn-primary"
                         >Ubah</RouterLink
                       >
                       <button
                         v-if="data.status != 'Verifikasi LH'"
                         @click="deleteData(data.id)"
-                        class="btn btn-danger"
+                        class="btn btn-primary"
                       >
                         Hapus
                       </button>

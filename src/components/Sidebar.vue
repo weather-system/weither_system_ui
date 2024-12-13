@@ -871,19 +871,19 @@ const fetchUserStatus = async () => {
                       class="submenu d-block ms-3"
                     >
                       <li>
-                        <router-link to="/Data/Ipal" activeClass="active">
+                        <router-link to="/Data/Ipal?sidebar=perscompany" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Pertek IPAL</router-link
                         >
                       </li>
                       <li>
-                        <router-link to="/Data/Cerobong" activeClass="active">
+                        <router-link to="/Data/Cerobong?sidebar=perscompany" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Pertek Emisi</router-link
                         >
                       </li>
                       <li>
-                        <router-link to="/Data/TPSB3" activeClass="active">
+                        <router-link to="/Data/TPSB3?sidebar=perscompany" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Rintek LB3</router-link
                         >
@@ -991,13 +991,13 @@ const fetchUserStatus = async () => {
                       class="submenu d-block ms-3"
                     >
                       <li>
-                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi" activeClass="active">
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi?sidebar=PencemaranUdara" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Emisi</router-link
                         >
                       </li>
                       <li>
-                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien" activeClass="active">
+                        <router-link to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien?sidebar=PencemaranUdara" activeClass="active">
                           <i class="fas fa-chevron-right"></i>
                           Ambien</router-link
                         >
@@ -1061,33 +1061,6 @@ const fetchUserStatus = async () => {
               companyDetail
             "
           >
-            <a href="javascript:void(0);" @click="toggleImportLogbook">
-              <i class="fas fa-file-import"></i>
-              <span>Import Logbook</span>
-              <i
-                class="fe"
-                :class="{
-                  'fe-chevron-down': !isImportLogbookOpen,
-                  'fe-chevron-up': isImportLogbookOpen,
-                }"
-              ></i>
-            </a>
-            <transition name="slide-fade">
-              <ul v-if="isImportLogbookOpen" class="submenu d-block ms-0">
-                <li>
-                  <router-link to="/import-logbook/ipal">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Logbook IPAL</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/import-logbook/limbah-b3">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    Logbook Limbah B3</router-link
-                  >
-                </li>
-              </ul>
-            </transition>
           </li>
 
           <li

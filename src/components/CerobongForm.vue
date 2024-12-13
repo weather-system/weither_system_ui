@@ -92,6 +92,14 @@ defineExpose({ setValues })
                         type="file"
                         class="form-control"
                       />
+                  <img
+                    :src="field.value"
+                    style="
+                      max-width: 500px;
+                      max-height: auto;
+                      object-fit: contain;
+                    "
+                  />
                     </Field>
                     <ErrorMessage name="file_pertek_emisi" />
                   </div>

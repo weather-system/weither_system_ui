@@ -80,7 +80,7 @@ const deleteEntry = async (id) => {
         
         <div class="content-page-header content-page-headersplit">
           <h4>
-            Pemantauan Pencemaran Air ({{
+            Pemantauan Pengelolaan Limbah B3 ({{
               store.state.auth.user.company?.name
             }})
           </h4>
@@ -103,7 +103,6 @@ const deleteEntry = async (id) => {
               <tr>
                 <th>Tahun</th>
                 <th>Triwulan</th>
-                <th>URL</th>
                 <th>Status</th>
                 <th>Aksi</th>
               </tr>
@@ -115,17 +114,16 @@ const deleteEntry = async (id) => {
               <tr v-for="entry in filteredDataEntries" :key="entry.id">
                 <td>{{ entry.tahun }}</td>
                 <td>{{ entry.triwulan }}</td>
-                <td><a :href="entry.file_upload" target="_blank">{{ entry.file_upload }}</a></td>
                 <td>{{ entry.status }}</td>
                 <td>
                   <div class="d-flex gap-2">
                     <RouterLink
                       :to="{ name: 'PengendalianPengelolaanLimbahB3Edit', params: { id: entry.id } }"
-                      class="btn btn-success"
+                      class="btn btn-primary"
                     >
                       Edit
                     </RouterLink>
-                    <button class="btn btn-danger" @click="deleteEntry(entry.id)">Hapus</button>
+                    <button class="btn btn-primary" @click="deleteEntry(entry.id)">Hapus</button>
                   </div>
                 </td>
               </tr>

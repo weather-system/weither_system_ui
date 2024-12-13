@@ -1,55 +1,98 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 import MainWrapper from '@/components/MainWrapper.vue'
+import { useLoading } from 'vue-loading-overlay'
+import { uploadFile } from '@/lib/filestorage.js'
 
 const router = useRouter()
 const route = useRoute()
-
-const companyDetailId = ref('')
-const triwulan = ref('')
-const tahun = ref('')
-const fileUpload = ref(null)
-const status = ref('Ajuan Baru')
-
-onMounted(async () => {
-  const id = route.params.id
+const currentYear = new Date().getFullYear()
+const recentYears = Array.from({ length: 4 }, (_, i) => currentYear - i)
+const urlNIB = ref('')
+const $loading = useLoading()
+const form = ref({
+  triwulan: '',
+  tahun: '',
+  file_upload: '',
+  status: '',
+  company_detail_id: '',
+})
+const licenceId = route.params.id
+const fetchLicenceDetails = async () => {
   try {
-    const response = await fetch(`/api/pengelolaan-limbah-b3/${id}`)
-    if (response.ok) {
-      const data = await response.json()
-      companyDetailId.value = data.company_detail_id
-      triwulan.value = data.triwulan
-      tahun.value = data.tahun
-      status.value = data.status
-    } else {
-      console.error('Gagal memuat data')
-    }
+    const response = await axios.get(`/api/pengelolaan-limbah-b3/${licenceId}`)
+    Object.assign(form.value, response.data)
   } catch (error) {
-    console.error('Terjadi kesalahan:', error)
+    console.error('Error fetching license details:', error)
+    await Swal.fire({
+      title: 'Error!',
+      text: 'Gagal mengambil detail perizinan.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    })
   }
+}
+
+const submitForm = async () => {
+  try {
+    console.log('Data yang akan dikirim:', form.value)
+
+    await axios.put(`/api/pengelolaan-limbah-b3/${licenceId}`, form.value, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    await Swal.fire({
+      title: 'Success!',
+      text: 'Data berhasil diperbarui!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    })
+    router.push('/pengendalian/PengelolaanLimbahB3')
+  } catch (error) {
+    console.error('Error updating license:', error)
+    if (error.response && error.response.data) {
+      const errors = error.response.data
+      let errorMessages = ''
+      for (const key in errors) {
+        if (errors.hasOwnProperty(key)) {
+          errorMessages += `${errors[key].join(', ')}\n`
+        }
+      }
+      await Swal.fire({
+        title: 'Error!',
+        text: `Gagal memperbarui data:\n${errorMessages}`,
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    } else {
+      await Swal.fire({
+        title: 'Error!',
+        text: 'Gagal memperbarui data.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      })
+    }
+  }
+}
+onMounted(() => {
+  fetchLicenceDetails()
 })
 
-const handleUpdate = async () => {
-  const formData = new FormData()
-  formData.append('company_detail_id', companyDetailId.value)
-  formData.append('triwulan', triwulan.value)
-  formData.append('tahun', tahun.value)
-  formData.append('file_upload', fileUpload.value)
-  formData.append('status', status.value)
-
+const uploadNIB = async e => {
+  const loader = $loading.show()
   try {
-    const response = await fetch(`/api/pengelolaan-limbah-b3/${route.params.id}`, {
-      method: 'PUT',
-      body: formData
-    })
-    if (response.ok) {
-      router.push('/pengelolaan-limbah-b3')
-    } else {
-      console.error('Gagal memperbarui data')
-    }
-  } catch (error) {
-    console.error('Terjadi kesalahan:', error)
+    const url = await uploadFile(e.target.files[0])
+    urlNIB.value = url
+    form.value.file_upload = urlNIB.value
+    console.log('Uploaded URL:', urlNIB.value)
+  } catch (e) {
+    console.error('File upload error:', e)
+  } finally {
+    loader.hide()
   }
 }
 </script>
@@ -58,54 +101,65 @@ const handleUpdate = async () => {
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
-        <h3>Edit Pengelolaan Limbah B3</h3>
-        <form @submit.prevent="handleUpdate">
-          <div class="mb-3">
-            <label for="companyDetailId">Company Detail ID</label>
-            <input
-              type="text"
-              id="companyDetailId"
-              v-model="companyDetailId"
-              class="form-control"
-              readonly
-            />
+        <h4>Edit Pengelolaan Limbah B3</h4>
+        <form @submit.prevent="submitForm">
+          <div class="row mt-5">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="triwulan">Triwulan</label>
+                <select v-model="form.triwulan" class="form-control">
+                  <option value="">Pilih Triwulan</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="tahun">Tahun</label>
+              <select v-model="form.tahun" class="form-control">
+                <option value="" disabled>Pilih Tahun</option>
+                <option v-for="year in recentYears" :key="year" :value="year">
+                  {{ year }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-5">
+              <label for="photo">Upload File</label>
+              <input type="file" @change="uploadNIB" class="form-control" />
+              <small class="form-text text-muted"
+                >Maksimal ukuran file: 20MB</small
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label></label>
+                <img
+                  :src="form.file_upload"
+                  alt="Uploaded Photo"
+                  class="img-thumbnail mt-2"
+                  style="
+                    max-width: 200px;
+                    max-height: auto;
+                    object-fit: contain;
+                  "
+                />
+              </div>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label for="triwulan">Triwulan</label>
-            <select id="triwulan" v-model="triwulan" class="form-select">
-              <option value="">Pilih Triwulan</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="tahun">Tahun</label>
-            <select id="tahun" v-model="tahun" class="form-select">
-              <option value="">Pilih Tahun</option>
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="fileUpload">File Upload</label>
-            <input
-              type="file"
-              id="fileUpload"
-              @change="(e) => fileUpload.value = e.target.files[0]"
-              class="form-control"
-            />
-          </div>
-
-          <div class="d-flex gap-2">
-            <button type="button" @click="router.go(-1)" class="btn btn-secondary">Kembali</button>
-            <button type="submit" class="btn btn-primary">Update</button>
+          <div class="text-right">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+            <router-link
+              to="/pengendalian/PengelolaanLimbahB3"
+              class="btn btn-secondary m-2"
+              >Kembali</router-link
+            >
           </div>
         </form>
       </div>

@@ -1,40 +1,60 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import MainWrapper from "@/components/MainWrapper.vue";
+import { deleteTpsB3, getTpsB3 } from '@/lib/tpslimbahb3'
+import Swal from "sweetalert2";
 
 const $loading = useLoading();
-
 const tpsLimbahB3Data = ref([]);
-const selectedMonth = ref("");
-const selectedYear = ref("");
 
+const fetchData = async () => {
+  const loader = $loading.show()
+  try {
+    const response = await axios.get("/api/tpslimbahb3");
+    tpsLimbahB3Data.value = response.data;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loader.hide();
+  }
+}
+
+const deleteData = async (id) => {
+  const { isConfirmed } = await Swal.fire({
+    title: 'Apa kamu yakin ?',
+    text: 'Kamu tidak akan bisa mengembalikan ini!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Tidak',
+    customClass: {
+      confirmButton: 'btn btn-primary',
+      cancelButton: 'btn btn-secondary',
+    },
+    buttonsStyling: false,
+  })
+
+  if (isConfirmed) {
+    const loader = $loading.show()
+  try {
+    await deleteTpsB3(id)
+    await fetchData()
+    Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+}
 onMounted(async () => {
   const loader = $loading.show();
   try {
-    // Dummy data, ganti dengan panggilan API Anda
-    tpsLimbahB3Data.value = [
-      {
-        id: 1,
-        company: "PT ALLINSTUDIO",
-        jenis_lb3: "Limbah A",
-        jumlah: "50",
-        kemasan: "Drum",
-        jenis_transaksi: "Pengiriman",
-        tgl_input: "2023-11-20 08:30:00",
-      },
-      {
-        id: 2,
-        company: "PT XYZ",
-        jenis_lb3: "Limbah B",
-        jumlah: "30",
-        kemasan: "Kantong",
-        jenis_transaksi: "Penerimaan",
-        tgl_input: "2023-11-25 14:15:00",
-      },
-      // Tambahkan data dummy lainnya sesuai kebutuhan
-    ];
+    const response = await axios.get("/api/tpslimbahb3");
+    tpsLimbahB3Data.value = response.data;
   } catch (e) {
     console.error(e);
   } finally {
@@ -47,10 +67,8 @@ onMounted(async () => {
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
-        <div v-if="$loading.isLoading" class="loading-overlay">Loading...</div>
-
-        <div class="content-page-header content-page-headersplit">
-          <h5>TPS Limbah B3</h5>
+        <div class="content-page-header content-page-headersplit mb-2">
+          <h3>Data Logbook TPS Limbah B3</h3>
           <div class="list-btn">
             <ul>
               <li>
@@ -58,69 +76,48 @@ onMounted(async () => {
                   class="btn btn-primary"
                   to="/Logbook/TPSLimbahB3/TPSLimbahB3Create"
                 >
-                  <i class="fa fa-plus me-2"></i>Tambah
+                  <i class="fa fa-plus me-3"></i>Tambah
                 </RouterLink>
               </li>
             </ul>
           </div>
         </div>
-
-        <div class="row mb-4">
-          <div class="col-md-4">
-            <select class="form-select" v-model="selectedMonth">
-              <option value="">Pilih Bulan</option>
-              <option value="Januari">Januari</option>
-              <option value="Februari">Februari</option>
-              <option value="Maret">Maret</option>
-              <option value="April">April</option>
-              <option value="Mei">Mei</option>
-              <option value="Juni">Juni</option>
-              <option value="Juli">Juli</option>
-              <option value="Agustus">Agustus</option>
-              <option value="September">September</option>
-              <option value="Oktober">Oktober</option>
-              <option value="November">November</option>
-              <option value="Desember">Desember</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <select class="form-select" v-model="selectedYear">
-              <option value="">Pilih Tahun</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-              <!-- Tambahkan opsi tahun lainnya jika diperlukan -->
-            </select>
-          </div>
-        </div>
-
-        <div class="row mt-4">
+        <div class="row mt-2">
           <div class="col-12">
             <div class="table-responsive table-div">
               <table class="table datatable">
                 <thead>
                   <tr>
                     <th>Tanggal Input</th>
-                    <th>Perusahaan</th>
                     <th>Jenis LB3</th>
                     <th>Jumlah</th>
+                    <th>Satuan</th>
                     <th>Kemasan</th>
-                    <th>Jenis Transaksi</th>
+                    <th>Jenis</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="data in tpsLimbahB3Data" :key="data.id">
+                  <tr v-if="tpsLimbahB3Data.length > 0" v-for="data in tpsLimbahB3Data" :key="data.id">
                     <td>{{ data.tgl_input }}</td>
-                    <td>{{ data.company }}</td>
                     <td>{{ data.jenis_lb3 }}</td>
                     <td>{{ data.jumlah }}</td>
+                    <td>{{ data.satuan }}</td>
                     <td>{{ data.kemasan }}</td>
-                    <td>{{ data.jenis_transaksi }}</td>
+                    <td>{{ data.jenis }}</td>
                     <td class="d-flex" style="gap: 1rem">
-                      <button class="btn btn-success">Edit</button>
-                      <button class="btn btn-danger">Hapus</button>
+                      <RouterLink
+                        :to="`/Logbook/TPSLimbahB3/TPSLimbahB3Edit/${data.id}`"
+                        class="btn btn-primary"
+                        >Edit</RouterLink
+                      >
+                      <button class="btn btn-primary" @click="deleteData(data.id)">
+                        Hapus
+                      </button>
                     </td>
+                  </tr>
+                  <tr v-else>
+                    <td colspan="7" class="text-center">Tidak ada data</td>
                   </tr>
                 </tbody>
               </table>

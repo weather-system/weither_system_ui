@@ -214,14 +214,14 @@ onMounted(async () => {
                       <RouterLink
                         v-if="item.status != 'Verifikasi LH'"
                         :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
-                        class="btn btn-success m-2"
+                        class="btn btn-primary m-2"
                       >
                         Edit
                       </RouterLink>
                       <RouterLink
                         v-else-if="item.status != 'Verifikasi LH'"
                         :to="`/Pengendalian/PencemaranUdara/Edit/${item.id}`"
-                        class="btn btn-success m-2"
+                        class="btn btn-primary m-2"
                       >
                         Edit
                       </RouterLink>

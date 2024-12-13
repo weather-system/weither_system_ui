@@ -1,7 +1,7 @@
 <script setup>
 import MainWrapper from '@/components/MainWrapper.vue'
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute  } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -16,6 +16,7 @@ const ticketPriority = ref('')
 const ticketMessage = ref('')
 const filePengaduan = ref(null)
 const router = useRouter()
+const route = useRoute();
 
 const handleFileChange = async e => {
   const loader = $loading.show() // Menampilkan loader
@@ -54,9 +55,15 @@ const getCompanyData = async () => {
   }
 }
 
+const ticketTypeDisabled = ref(false);
 onMounted(() => {
-  getCompanyData()
-})
+  getCompanyData();
+  const queryTicketType = route.query.ticketType;
+  if (queryTicketType) {
+    ticketType.value = queryTicketType;
+    ticketTypeDisabled.value = true;
+  }
+});
 
 // Fungsi untuk kirim tiket
 const submitTicket = async () => {
@@ -152,7 +159,7 @@ const submitTicket = async () => {
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-form-label">Jenis Support Ticket</label>
-                  <select class="form-control" v-model="ticketType">
+                  <select class="form-control" v-model="ticketType" :disabled="ticketTypeDisabled">
                     <option value="" disabled selected>
                       Pilih Jenis Support Ticket
                     </option>
