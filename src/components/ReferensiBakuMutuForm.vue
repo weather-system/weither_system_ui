@@ -105,7 +105,7 @@ defineExpose({ setValues })
       </div>
     </div>
 
-    <div class="row mt-2" v-if="formData.jenis == 'Udara Ambien'">
+    <!-- <div class="row mt-2" v-if="formData.jenis == 'Udara Ambien'">
       <div class="col-6">
         <label class="form-label">Waktu Pengukuran</label>
         <Field name="waktu_pengukuran" class="form-control" as="select">
@@ -118,7 +118,7 @@ defineExpose({ setValues })
         </Field>
         <ErrorMessage name="waktu_pengukuran" />
       </div>
-    </div>
+    </div> -->
 
     <!-- <div class="row mt-2" v-if="formData.jenis == 'Udara Emisi'">
       <div class="col-6">
@@ -212,6 +212,9 @@ defineExpose({ setValues })
                 >
                   Parameter
                 </th>
+                <th v-if="formData.jenis == 'Udara Ambien'">
+                  Waktu Pengukuran
+                </th>
                 <th v-if="formData.jenis == 'Kebisingan'">
                   Tingkat Kebisingan (dbA)
                 </th>
@@ -261,6 +264,21 @@ defineExpose({ setValues })
                     class="form-control"
                   />
                   <ErrorMessage :name="`details[${i}].parameter`" />
+                </td>
+                <td v-if="formData.jenis == 'Udara Ambien'">
+                  <Field
+                    :name="`details[${i}].waktu_pengukuran`"
+                    class="form-control"
+                    as="select"
+                  >
+                    <option value="">Pilih</option>
+                    <option value="1 Jam">1 Jam</option>
+                    <option value="3 Jam">3 Jam</option>
+                    <option value="8 Jam">8 Jam</option>
+                    <option value="24 Jam">24 Jam</option>
+                    <option value="1 Hari">1 Hari</option>
+                  </Field>
+                  <ErrorMessage :name="`details[${i}].waktu_pengukuran`" />
                 </td>
                 <td v-if="formData.jenis == 'Kebisingan'">
                   <Field
