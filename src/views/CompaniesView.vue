@@ -104,54 +104,6 @@ watch(
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <h3>{{ title }}</h3>
-          <div class="list-btn">
-            <ul>
-              <li>
-                <a class="btn-filters active" href="services.html"
-                  ><i class="fe fe-list"></i>
-                </a>
-              </li>
-              <li>
-                <a class="btn-filters" href="localization.html"
-                  ><i class="fe fe-settings"></i>
-                </a>
-              </li>
-              <li>
-                <div class="filter-sorting">
-                  <ul>
-                    <li>
-                      <a href="javascript:void(0);" class="filter-sets"
-                        ><img
-                          src="@/assets/img/icons/filter1.svg"
-                          class="me-2"
-                          alt="img"
-                        />Filter</a
-                      >
-                    </li>
-                    <li>
-                      <span
-                        ><img
-                          src="@/assets/img/icons/sort.svg"
-                          class="me-2"
-                          alt="img"
-                      /></span>
-                      <div class="review-sort">
-                        <select class="select">
-                          <option>A -> Z</option>
-                          <option>Z -> A</option>
-                        </select>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li>
-                <a class="btn btn-primary" href="add-service.html"
-                  ><i class="fa fa-plus me-2"></i>Tambah Perusahaan
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
         <div class="row">
           <div class="col-12">
@@ -190,9 +142,6 @@ watch(
                     >
                   </li>
                 </ul>
-              </div>
-              <div class="tab-contents-count">
-                <h6>Showing 8-10 of 84 results</h6>
               </div>
             </div>
           </div>

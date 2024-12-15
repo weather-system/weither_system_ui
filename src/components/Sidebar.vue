@@ -64,6 +64,8 @@ const isVerifikasiLogOpen = ref(false)
 const isReferensiMasterOpen = ref(false)
 const isPPUOpen = ref(false)
 
+const toggleSidebarType = ref('')
+
 const dashboardRoute = computed(() => {
   if (store.state.auth.user.role == 'ADMIN') {
     return '/Admin'
@@ -74,6 +76,14 @@ const dashboardRoute = computed(() => {
   }
   return '/MyCompany'
 })
+
+const toggleSidebar = (v) => {
+  if (v == toggleSidebarType.value) {
+    toggleSidebarType.value = ''
+  } else {
+    toggleSidebarType.value = v
+  }
+}
 
 const togglePengendalian = () => {
   console.log('Pengendalian clicked') // Debugging log
@@ -335,12 +345,12 @@ const fetchUserStatus = async () => {
               <span>Pem. Udara Emisi</span>
             </router-link>
           </li>
-          <li v-if="store.state.auth.user.role == 'ADMIN'">
+          <!-- <li v-if="store.state.auth.user.role == 'ADMIN'">
             <router-link to="/Companies" activeClass="active">
               <i class="fas fa-user-tie"></i>
               <span>Perusahaan Pemohon</span>
             </router-link>
-          </li>
+          </li> -->
           <li v-if="store.state.auth.user.role == 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleMaster">
               <i class="fas fa-book-bookmark"></i>
@@ -383,6 +393,124 @@ const fetchUserStatus = async () => {
                   <router-link to="/Master/LB3" activeClass="active">
                     <i class="fas fa-chevron-right"></i>
                     Rintek LB3</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a href="javascript:void(0);" @click="toggleSidebar('Data Pelaku Usaha')">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Data Pelaku Usaha</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="toggleSidebarType == 'Data Pelaku Usaha'" class="submenu d-block">
+                <li>
+                  <router-link :to="{
+                      path: '/Companies',
+                      query: {
+                        status: 'diterima'
+                      }
+                    }" :class="{'active': route.path == '/Companies' && route.query.status == 'diterima'}">
+                    <i class="fas fa-chevron-right"></i>
+                    Pelaku Usaha Terverifikasi</router-link
+                  >
+                </li>
+                <li>
+                  <router-link :to="{
+                      path: '/Companies',
+                      query: {
+                        status: 'pending'
+                      }
+                      }" :class="{'active': route.path == '/Companies' && route.query.status == 'pending'}">
+                    <i class="fas fa-chevron-right"></i>
+                    Permohonan Akun Perusahaan</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a href="javascript:void(0);" @click="toggleSidebar('Rincian Teknis Limbah B3')">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Rincian Teknis Limbah B3</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="toggleSidebarType == 'Rincian Teknis Limbah B3'" class="submenu d-block">
+                <li>
+                  <router-link to="/" active-class="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Jenis Limbah B3</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a href="javascript:void(0);" @click="toggleSidebar('Persetujuan Teknis IPAL')">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Persetujuan Teknis IPAL</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="toggleSidebarType == 'Persetujuan Teknis IPAL'" class="submenu d-block">
+                <li>
+                  <router-link :to="{
+                      path: '/ReferensiBakuMutu',
+                      query: {
+                        jenis_baku_mutu: 'IPAL'
+                      }
+                    }" active-class="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Referensi Baku Mutu IPAL</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <a href="javascript:void(0);" @click="toggleSidebar('Persetujuan Teknis Emisi')">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Persetujuan Teknis Emisi</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
+              ></i>
+            </a>
+            <transition name="slide-fade">
+              <ul v-if="toggleSidebarType == 'Persetujuan Teknis Emisi'" class="submenu d-block">
+                <li>
+                  <router-link :to="{
+                      path: '/ReferensiBakuMutu',
+                      query: {
+                        jenis_baku_mutu: 'Emisi'
+                      }
+                    }" active-class="active">
+                    <i class="fas fa-chevron-right"></i>
+                    Referensi Baku Mutu Emisi</router-link
                   >
                 </li>
               </ul>
@@ -454,114 +582,13 @@ const fetchUserStatus = async () => {
               </ul>
             </transition>
           </li> -->
-          <li v-if="store.state.auth.user.role === 'ADMIN'">
+          <!-- <li v-if="store.state.auth.user.role === 'ADMIN'">
             <router-link to="/Master/Monitoring" activeClass="active">
-              <!-- GATAU INI ROLE APA -->
               <i class="fas fa-eye"></i>
               <span>Monitoring Swapantau</span>
             </router-link>
-          </li>
-          <li v-if="store.state.auth.user.role === 'ADMIN'">
-            <router-link to="/ReferensiBakuMutu" activeClass="active"> <!-- GATAU INI ROLE APA -->
-              <i class="fas fa-eye"></i>
-              <span>Referensi Baku Mutu</span>
-            </router-link>
-          </li>
-          <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <a href="javascript:void(0);" @click="toggleReferensiMaster">
-              <i class="fas fa-book"></i>
-              <span>Referensi</span>
-              <i
-                class="fe"
-                :class="{
-                  'fe-chevron-down': !isReferensiMasterOpen,
-                  'fe-chevron-up': isReferensiMasterOpen,
-                }"
-              ></i>
-            </a>
-            <transition name="slide-fade">
-              <ul v-if="isReferensiMasterOpen" class="submenu d-block">
-                <li>
-                  <router-link to="/Master/User" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Bidang</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/Master/Companies" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Jenis Izin</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/Master/Companies" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Jenis Usaha/Kegiatan</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/Master/Companies" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Parameter PPA</router-link
-                  >
-                </li>
-                <li>
-                  <a href="javascript:void(0);" @click="togglePPU">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    <span>Parameter PPU</span>
-                    <i
-                      class="fe"
-                      :class="{
-                        'fe-chevron-down': !isPPUOpen,
-                        'fe-chevron-up': isPPUOpen,
-                      }"
-                    ></i>
-                  </a>
-                  <transition name="slide-fade">
-                    <ul v-if="isPPUOpen" class="submenu d-block ms-3">
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/Bulanan"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Contoh Uji
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/PPA"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Kelompok Uji
-                        </router-link>
-                      </li>
-                      <li>
-                        <router-link
-                          to="/Master/Swapantau/PPU"
-                          active-class="active"
-                        >
-                          <i class="fas fa-chevron-right"></i> Parameter PPU
-                        </router-link>
-                      </li>
-                    </ul>
-                  </transition>
-                </li>
-                <li>
-                  <router-link to="/Master/Ipal" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Jenis Produksi</router-link
-                  >
-                </li>
-                <li>
-                  <router-link to="/Master/Ipal" activeClass="active">
-                    <i class="fas fa-chevron-right"></i>
-                    Produk</router-link
-                  >
-                </li>
-              </ul>
-            </transition>
-          </li>
-          <li v-if="store.state.auth.user.role === 'ADMIN'">
+          </li> -->
+          <!-- <li v-if="store.state.auth.user.role === 'ADMIN'">
             <a
               href="javascript:void(0);"
               @click="toggleOperator"
@@ -578,10 +605,8 @@ const fetchUserStatus = async () => {
               ></i>
             </a>
 
-            <!-- Transisi Submenu -->
             <transition name="slide-fade">
               <ul v-if="isOperatorOpen" class="submenu d-block">
-                <!-- Konten -->
                 <li>
                   <a href="javascript:void(0);" @click="toggleKonten">
                     <i class="fas fa-chevron-right me-2"></i>
@@ -640,7 +665,6 @@ const fetchUserStatus = async () => {
                   </transition>
                 </li>
 
-                <!-- Referensi Tiket -->
                 <li>
                   <a href="javascript:void(0);" @click="toggleReferensi">
                     <i class="fas fa-chevron-right me-2"></i>
@@ -683,7 +707,6 @@ const fetchUserStatus = async () => {
                   </transition>
                 </li>
 
-                <!-- E Learning -->
                 <li>
                   <a href="javascript:void(0);" @click="toggleLearning">
                     <i class="fas fa-chevron-right me-2"></i>
@@ -718,7 +741,6 @@ const fetchUserStatus = async () => {
                   </transition>
                 </li>
 
-                <!-- Fitur -->
                 <li>
                   <a href="javascript:void(0);" @click="toggleFitur">
                     <i class="fas fa-chevron-right me-2"></i>
@@ -777,7 +799,6 @@ const fetchUserStatus = async () => {
                   </transition>
                 </li>
 
-                <!-- Tiket -->
                 <li>
                   <a href="javascript:void(0);" @click="toggleTiketz">
                     <i class="fas fa-chevron-right me-2"></i>
@@ -804,7 +825,6 @@ const fetchUserStatus = async () => {
                   </transition>
                 </li>
 
-                <!-- Galeri -->
                 <li>
                   <router-link
                     to="/Master/Operator/Galeri"
@@ -816,7 +836,7 @@ const fetchUserStatus = async () => {
                 </li>
               </ul>
             </transition>
-          </li>
+          </li> -->
 
           <li
             v-if="

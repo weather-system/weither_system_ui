@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, watch } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
 import MainWrapper from '@/components/MainWrapper.vue'
@@ -10,6 +10,7 @@ import {
 } from '@/lib/referensiBakuMutu.js'
 
 const $loading = useLoading()
+const route = useRoute()
 
 const data = ref([])
 
@@ -45,7 +46,9 @@ const deleteData = async id => {
 const loadData = async () => {
   const loader = $loading.show()
   try {
-    data.value = await getReferensiBakuMutu()
+    data.value = await getReferensiBakuMutu({
+      ...route.query
+    })
   } catch (e) {
     console.error(e)
   } finally {
@@ -53,8 +56,10 @@ const loadData = async () => {
   }
 }
 
-onMounted(async () => {
+watch(() => route.query.jenis_baku_mutu, async (latest, _) => {
   await loadData()
+}, {
+  immediate: true
 })
 </script>
 
