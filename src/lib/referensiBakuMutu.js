@@ -1,7 +1,9 @@
 import axios from 'axios'
 
-export const getReferensiBakuMutu = async () => {
-  const resp = await axios.get('/api/referensiBakuMutu')
+export const getReferensiBakuMutu = async (params) => {
+  const resp = await axios.get('/api/referensiBakuMutu', {
+    params
+  })
   return resp.data
 }
 
