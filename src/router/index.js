@@ -94,6 +94,21 @@ const router = createRouter({
       component: () => import('@/views/ReferensiBakuMutu/Edit.vue'),
     },
     {
+      path: '/JenisLimbahB3',
+      name: 'JenisLimbahB3',
+      component: () => import('@/views/JenisLimbahB3.vue'),
+    },
+    {
+      path: '/JenisLimbahB3/Create',
+      name: 'JenisLimbahB3Create',
+      component: () => import('@/views/JenisLimbahB3/Create.vue'),
+    },
+    {
+      path: '/JenisLimbahB3/:id',
+      name: 'JenisLimbahB3Edit',
+      component: () => import('@/views/JenisLimbahB3/Edit.vue'),
+    },
+    {
       path: '/Verifikator/PertekIPAL',
       name: 'VerifikatorPertekIPAL',
       component: () => import('@/views/Verifikator/PertekIPAL.vue'),
