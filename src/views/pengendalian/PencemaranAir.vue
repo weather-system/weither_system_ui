@@ -114,6 +114,7 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
+                    <th>No</th>
                     <th>Bulan</th>
                     <th>Tanggal Ukur</th>
                     <th>Debit Terukur</th>
@@ -128,7 +129,8 @@ onMounted(async () => {
                   <tr v-if="pencemaranAir.length === 0">
                     <td colspan="8" class="text-center">Data Tidak Ada</td>
                   </tr>
-                  <tr v-for="data in pencemaranAir" :key="data.id">
+                  <tr v-for="(data, index) in pencemaranAir" :key="data.id">
+                    <td>{{ index + 1 }}</td>
                     <td>{{ data.month }} {{ data.year }}</td>
                     <td>{{ data.tgl_pengambilan_contoh }}</td>
                     <td>{{ data.debit_terukur }} {{ data.debit_terukur_satuan }}</td>

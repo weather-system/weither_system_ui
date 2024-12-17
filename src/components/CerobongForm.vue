@@ -145,14 +145,13 @@ onMounted(async () => {
               >
               <Field name="jenis_bahan_bakar" as="select" class="form-control">
                 <option value="">Pilih</option>
-                <option value="Batubara">Batubara</option>
-                <option value="Briket">Briket</option>
+                <option value="Biomassa berupa serabut dan/atau Cangkang">Biomassa berupa serabut dan/atau Cangkang</option>
+                <option value="Biomassa berupa ampas dan/atau daun tebu kering">Biomassa berupa ampas dan/atau daun tebu kering</option>
+                <option value="Biomassa selain poin 1 & 2">Biomassa selain poin 1 & 2</option>
+                <option value="Batu Bara">Batu Bara</option>
+                <option value="Minyak">Minyak</option>
                 <option value="Gas">Gas</option>
-                <option value="Solar">Solar</option>
-                <option value="Bensin">Bensin</option>
-                <option value="LPG">LPG</option>
-                <option value="Biomassa">Biomassa</option>
-                <option value="Listrik">Listrik</option>
+                <option value="Gabungan">Gabungan</option>
               </Field>
               <ErrorMessage name="jenis_bahan_bakar" />
             </div>

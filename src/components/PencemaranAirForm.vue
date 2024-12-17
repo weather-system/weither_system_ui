@@ -142,7 +142,7 @@ const handleIpalChange = async event => {
             as="select"
             @change="handleIpalChange($event)"
           >
-            <option value="">Pilih</option>
+            <option value="" disabled>Pilih</option>
             <option v-for="d in ipals" :key="d.id" :value="d.id">
               {{ d.type }}, Sistem IPAL : {{ d.system_ipal }}, Tahun Pembuatan :
               {{ d.year_of_manufacture_of_ipal }}

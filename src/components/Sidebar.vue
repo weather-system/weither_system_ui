@@ -992,7 +992,7 @@ const fetchUserStatus = async () => {
                   <a
                     @click="togglePenUdara"
 
-                    :to="!isUserEmisiPending ? '/Pengendalian/PencemaranUdara' : ''"
+                    :to="!isUserCerobongPending ? '/Pengendalian/PencemaranUdara' : ''"
                     style="cursor:pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
