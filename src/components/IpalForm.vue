@@ -155,7 +155,7 @@ watch(selectedIPALSystems,(latest,_) => {
 })
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/referensiBakuMutu');
+    const response = await axios.get('/api/referensiBakuMutu?jenis_baku_mutu=IPAL');
     referensiBakuMutu.value = response.data
   } catch (error) {
     Swal.fire('Error!', 'Gagal memuat data Sumber Limbah.', 'error')

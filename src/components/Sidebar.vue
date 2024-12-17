@@ -506,7 +506,7 @@ const fetchUserStatus = async () => {
                   <router-link :to="{
                       path: '/ReferensiBakuMutu',
                       query: {
-                        jenis_baku_mutu: 'Emisi'
+                        jenis_baku_mutu: 'Udara'
                       }
                     }" active-class="active">
                     <i class="fas fa-chevron-right"></i>

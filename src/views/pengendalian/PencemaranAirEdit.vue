@@ -31,6 +31,7 @@ const submit = async (data) => {
   data.details = data.details.map((v) => {
     delete v.created_at
     delete v.updated_at
+    delete v.referensi_baku_mutu_detail
     return v
   })
 
