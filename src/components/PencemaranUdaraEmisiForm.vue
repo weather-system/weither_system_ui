@@ -6,9 +6,11 @@ import * as yup from 'yup'
 import { uploadFile } from '@/lib/filestorage.js'
 import { getCerobongAcc } from '@/lib/company.js'
 import { MONTHS } from '@/lib/utils.js'
-import axios from 'axios'
 
-const props = defineProps(['initialValues'])
+const props = defineProps({
+  initialValues: Object,
+  jenis: String 
+});
 const emit = defineEmits('uploaded-document')
 
 const $loading = useLoading()
@@ -17,6 +19,7 @@ const form = ref(null)
 const files = reactive({})
 const cerobongs = ref([])
 const detailss = ref([])
+const bahanBakarTable = ref('');
 const initialData = ref({
   jenis: 'Udara Emisi',
   details: [],
@@ -62,12 +65,10 @@ const onUploadDocument2 = async (e, callback) => {
   }
 }
 
-const loadIpals = async () => {
+const loadEmisi = async () => {
   const loader = $loading.show()
   try {
     cerobongs.value = await getCerobongAcc()
-    const response = await axios.get('/api/referensiBakuMutuDetail')
-    detailss.value = response.data.data
   } catch (e) {
     console.error(e)
   } finally {
@@ -84,56 +85,74 @@ const onInvalidSubmit = data => {
 }
 
 onMounted(async () => {
-  await loadIpals()
+  await loadEmisi()
 })
 
 defineExpose({ setValues })
 const selectedCerobongId = ref(null)
-const handleIpalChange = async event => {
-  const selectedId = event.target.value
-  selectedCerobongId.value = selectedId
+const handleIpalChange = async (event) => {
+  const selectedId = event.target.value;
+  selectedCerobongId.value = selectedId;
 
-  if (!selectedId) {
-    return
-  }
+  if (!selectedId) return;
 
   try {
-    // Cari cerobong yang dipilih
     const selectedCerobong = cerobongs.value.find(
-      cerobong => cerobong.id === parseInt(selectedId)
-    )
+      (cerobong) => cerobong.id === parseInt(selectedId)
+    );
 
-    if (!selectedCerobong) return
+    if (!selectedCerobong) {
+      console.warn('Selected cerobong not found');
+      return;
+    }
 
-    // Ambil jenis_bahan_bakar dari cerobong yang dipilih
-    const jenisBahanBakar = selectedCerobong.jenis_bahan_bakar
-
-    // Filter referensi baku mutu berdasarkan jenis bahan bakar
-    const filteredDetails = detailss.value.filter(
-      detail => detail.bahan_bakar === jenisBahanBakar
-    )
-
-    // Mapping data ke dalam tabel details
-    initialData.value.details = filteredDetails.map(detail => ({
-      referensi_baku_mutu_detail_id: detail.id,
-      parameter: detail.parameter,
-      satuan: detail.satuan,
-    }))
-
+    const jenisBahanBakar = selectedCerobong.jenis_bahan_bakar;
+    const bahanBakar  = selectedCerobong.company_cerobong.jenis;
+    bahanBakarTable.value = bahanBakar
+    const cerobongData = selectedCerobong.company_cerobong
+    if (cerobongData && cerobongData.details) {
+        if (bahanBakar == 'Udara Emisi') {
+            detailss.value = cerobongData.details
+            .filter(detail => detail.bahan_bakar === jenisBahanBakar) // Filter di sini
+            .map(detail => ({
+            referensi_baku_mutu_detail_id: detail.id,
+            parameter: detail.parameter,
+            satuan: detail.satuan,
+            }))
+        } else if (bahanBakar == 'Kebisingan'){
+            detailss.value = cerobongData.details.map(detail => ({
+            referensi_baku_mutu_detail_id: detail.id,
+            tingkat_kebisingan: detail.tingkat_kebisingan,
+            jenis_kebisingan: detail.jenis_kebisingan,
+            detail_kebisingan: detail.detail_kebisingan,
+        }))
+        }
+    } else {
+      detailss.value = [
+        {
+          referensi_baku_mutu_detail_id: '',
+          parameter: 'Parameter Default',
+          satuan: 'mg/L',
+          tingkat_kebisingan : '',
+        },
+      ];
+    }
+    initialData.value.details = [...detailss.value];
     form.value.setValues({
       ...form.value.values,
       details: initialData.value.details,
-    })
+    });
+
   } catch (error) {
-    console.error('Error fetching IPAL details:', error)
+    console.error('Error fetching IPAL details:', error);
   }
-}
+};
 
 
-// watch(detailss, () => {
-//     console.log('Sebelum post:', detailss.value)
-//     console.log('arghhhhhhhhhh:', initialData.value.details)
-// })
+watch(detailss, () => {
+  console.log('Sebelum post:', detailss.value)
+  console.log('arghhhhhhhhhh:', initialData.value.details)
+})
 </script>
 
 <template>
@@ -194,68 +213,58 @@ const handleIpalChange = async event => {
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label">Tanggal Pengambilan Contoh</label>
-          <Field
-            name="tanggal_uji"
-            class="form-control"
-            type="date"
-          />
+          <Field name="tanggal_uji" class="form-control" type="date" />
           <ErrorMessage name="tanggal_uji" />
         </div>
       </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label"
-              >Upload Hasil Pemeriksaan Lab (PDF)</label
-            >
-            <Field
-                  name="file_hasil_pemeriksaan_lab"
-                  v-slot="{ field, handleChange }"
-                >
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">Upload Hasil Pemeriksaan Lab (PDF)</label>
+          <Field
+            name="file_hasil_pemeriksaan_lab"
+            v-slot="{ field, handleChange }"
+          >
             <input
               class="form-control"
               type="file"
               @change="onUploadDocument($event, handleChange)"
-            /><small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
-            <iframe
-              :src="field.value"
-              width="100%"
-              height="100%"
-            ></iframe>
-            </Field
-                >
-          </div>
+            /><small class="form-text text-muted"
+              >Maksimal ukuran file: 20MB</small
+            >
+            <iframe :src="field.value" width="100%" height="100%"></iframe>
+          </Field>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label">File Upload Dokumentasi Sampling (PDF)</label>
-             <Field
-                  name="file_dokumentasi_sampling"
-                  v-slot="{ field, handleChange }"
-                >
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label"
+            >File Upload Dokumentasi Sampling (PDF)</label
+          >
+          <Field
+            name="file_dokumentasi_sampling"
+            v-slot="{ field, handleChange }"
+          >
             <input
               class="form-control"
               type="file"
               @change="onUploadDocument2($event, handleChange)"
             />
-            <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
-            <iframe
-              :src="field.value"
-              width="100%"
-              height="100%"
-            ></iframe>
-            </Field
+            <small class="form-text text-muted"
+              >Maksimal ukuran file: 20MB</small
             >
-          </div>
+            <iframe :src="field.value" width="100%" height="100%"></iframe>
+          </Field>
         </div>
       </div>
+    </div>
 
     <div class="row">
       <div>
-        <div class="table-responsive">
+        <div class="table-responsive" v-if="bahanBakarTable === 'Udara Emisi' || jenis === 'Udara Emisi'">
           <p>
             NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,).
             Contoh: 123.32
@@ -295,6 +304,54 @@ const handleIpalChange = async event => {
                           field.value.referensi_baku_mutu_detail?.satuan
                         }}
                       </p>
+                    </div>
+                  </td>
+                </tr>
+              </FieldArray>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-responsive" v-if="bahanBakarTable === 'Kebisingan' || jenis === 'Kebisingan'">
+          <p>
+            NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,).
+            Contoh: 123.32
+          </p>
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <!-- <th>ID baku mutu</th> -->
+                <th>Jenis Kebisingan</th>
+                <th>Detail</th>
+                <th>Hasil Pengukuran</th>
+              </tr>
+            </thead>
+            <tbody>
+              <FieldArray name="details" v-slot="{ fields }">
+                <tr v-for="(field, i) in fields" :key="field.key">
+                  <!-- <td>{{ field.value.referensi_baku_mutu_detail_id }}</td> -->
+                  <td>
+                    {{
+                      field.value.jenis_kebisingan ||
+                      field.value.referensi_baku_mutu_detail?.jenis_kebisingan
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      field.value.detail_kebisingan ||
+                      field.value.referensi_baku_mutu_detail?.detail_kebisingan
+                    }}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center" style="gap: 1rem">
+                      <div class="col-6">
+                        <Field
+                          :name="`details[${i}].hasil_pengujian1`"
+                          class="form-control"
+                        />
+                        <ErrorMessage
+                          :name="`details[${i}].hasil_pengujian1`"
+                        />
+                      </div>
                     </div>
                   </td>
                 </tr>

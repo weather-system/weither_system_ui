@@ -11,6 +11,7 @@ const router = useRouter()
 const $loading = useLoading()
 
 const form = ref(null)
+const jenis = ref('');
 
 watch(() => route.query.id, async (latest, _) => {
   const loader = $loading.show()
@@ -19,6 +20,8 @@ watch(() => route.query.id, async (latest, _) => {
     delete data.id
     delete data.created_at
     delete data.updated_at
+    jenis.value = data.details[0].referensi_baku_mutu_detail.referensi_baku_mutu.jenis
+    console.log("ewe ",data.details[0].referensi_baku_mutu_detail.referensi_baku_mutu.jenis)
     form.value.setValues(data)
   } catch (e) {
     console.error(e)
@@ -71,7 +74,7 @@ const submit = async (data) => {
           </div>
         </div>
 
-        <PencemaranUdaraEmisiForm ref="form" @submit="submit" />
+        <PencemaranUdaraEmisiForm :jenis="jenis" ref="form" @submit="submit" />
       </div>
     </div>
   </MainWrapper>

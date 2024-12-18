@@ -119,10 +119,10 @@ const handleIpalChange = async event => {
 }
 
 
-// watch(detailss, () => {
-//     console.log('Sebelum post:', detailss.value)
-//     console.log('arghhhhhhhhhh:', initialData.value.details)
-// })
+watch(detailss, () => {
+    console.log('Sebelum post:', detailss.value)
+    console.log('arghhhhhhhhhh:', initialData.value.details)
+})
 </script>
 
 <template>
