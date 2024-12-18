@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { getPencemaranUdaraDetail, updatePencemaranUdara } from '@/lib/pencemaranUdara.js'
 import MainWrapper from '@/components/MainWrapper.vue'
-import PencemaranUdaraEmisiForm from '@/components/PencemaranUdaraEmisiForm.vue'
+import PencemaranUdaraAmbienForm from '@/components/PencemaranUdaraAmbienForm.vue'
 import Swal from 'sweetalert2'
 const route = useRoute()
 const router = useRouter()
@@ -68,12 +68,12 @@ const submit = async (data) => {
         <div class="content-page-header content-page-headersplit">
           <div>
             <h4>
-              Form Pemantauan Pencemaran Udara Edit
+              Form Pemantauan Pencemaran Ambien Edit
             </h4>
           </div>
         </div>
 
-        <PencemaranUdaraEmisiForm :jenis="jenis" ref="form" @submit="submit" />
+        <PencemaranUdaraAmbienForm :jenis="jenis" ref="form" @submit="submit" />
       </div>
     </div>
   </MainWrapper>

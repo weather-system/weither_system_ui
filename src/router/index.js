@@ -568,9 +568,19 @@ const router = createRouter({
       component: () => import('@/views/pengendalian/PencemaranUdaraEmisi/PencemaranUdaraEmisiCreate.vue'),
     },
     {
-      path: '/Pengendalian/PencemaranUdara/Edit',
+      path: '/Pengendalian/PencemaranUdara/EditUdaraEmisi',
       name: 'PencemaranUdaraEdit',
       component: () => import('@/views/pengendalian/PencemaranUdaraEmisi/PencemaranUdaraEmisiEdit.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/TambahUdaraAmbien',
+      name: 'TambahUdaraEmisi',
+      component: () => import('@/views/pengendalian/PencemaranUdaraAmbien/PencemaranUdaraAmbienCreate.vue'),
+    },
+    {
+      path: '/Pengendalian/PencemaranUdara/EditUdaraAmbien',
+      name: 'PencemaranUdaraEdit',
+      component: () => import('@/views/pengendalian/PencemaranUdaraAmbien/PencemaranUdaraAmbienEdit.vue'),
     },
     {
       path: '/Master/Companies',

@@ -180,7 +180,7 @@ onMounted(async () => {
                       <RouterLink
                         v-if="item.status != 'Verifikasi LH'"
                         :to="{
-                          path: '/Pengendalian/PencemaranUdara/Edit/',
+                          path: '/Pengendalian/PencemaranUdara/EditUdaraEmisi/',
                           query: { id: item.id },
                         }"
                         class="btn btn-primary m-2"
