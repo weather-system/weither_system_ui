@@ -469,7 +469,7 @@ const fetchUserStatus = async () => {
             <transition name="slide-fade">
               <ul v-if="toggleSidebarType == 'Rincian Teknis Limbah B3'" class="submenu d-block">
                 <li>
-                  <router-link to="/" active-class="active">
+                  <router-link to="/JenisLimbahB3" active-class="active">
                     <i class="fas fa-chevron-right"></i>
                     Jenis Limbah B3</router-link
                   >
