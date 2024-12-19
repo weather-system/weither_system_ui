@@ -96,9 +96,11 @@ watch(
                     <th>No</th>
                     <th>Tahun</th>
                     <th>Perusahaan</th>
-                    <th>Sistem IPAL</th>
+                    <!-- <th>Sistem IPAL</th> -->
                     <th>Jenis</th>
                     <th>Status</th>
+                    <th>Tanggal Pengajuan</th>
+                    <th>Tanggal Verifikasi</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -112,7 +114,7 @@ watch(
                     <td>{{ index + 1 }}</td>
                     <td>{{ ipal.year_of_manufacture_of_ipal }}</td>
                     <td>{{ ipal.company ? ipal.company.name : '-'}}</td>
-                    <td>{{ ipal.system_ipal }}</td>
+                    <!-- <td>{{ ipal.system_ipal }}</td> -->
                     <td>{{ ipal.type }}</td>
                     <td>
                       <h6
@@ -125,6 +127,8 @@ watch(
                         {{ ipal.status }}
                       </h6>
                     </td>
+                    <td>{{ ipal.created_at }}</td>
+                    <td>12 November 2024</td>
                     <td>
                       <router-link
                         :to="`/Verifikator/PertekIPAL/${ipal.id}`"
