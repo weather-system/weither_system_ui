@@ -129,7 +129,7 @@ onMounted(async () => {
                     <td>{{ data.status }}</td>
                     <td>
                       <router-link
-                        v-if="data.status !== ''"
+                        v-if="data.status !== 'DITERIMA'"
                         :to="
                           data.id
                             ? `/Data/Cerobong/Edit/${data.id}`

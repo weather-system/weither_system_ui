@@ -1,72 +1,54 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
+import { getTpsB3Detail, updateTpsB3 } from '@/lib/tpslimbahb3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
+import TPSLimbahB3Form from '@/components/TPSLimbahB3Form.vue';
 import Swal from 'sweetalert2'
-
-const tpsForm = ref({
-  tgl_input: '',
-  jenis_lb3: '',
-  kemasan: '',
-  jumlah: '',
-  satuan: '',
-  jenis: '',
-})
-
-const jenisOptions = [
-  'Disimpan',
-  'Dimanfaatkan',
-  'Diolah',
-  'Ditimbun',
-  'Diserahkan ke pihak ke tiga',
-  'Lainnya',
-  'Masuk',
-]
 const route = useRoute()
 const router = useRouter()
-const id = route.params.id
-onMounted(async () => {
-  fetchJenisLimbah()
-  try {
-    const response = await axios.get(`api/tpslimbahb3/${id}/edit`)
-    tpsForm.value = response.data
-  } catch (error) {
-    console.error('Error mengambil data:', error)
-  }
-})
+const $loading = useLoading()
 
-const updateForm = async () => {
+const form = ref(null)
+const jenis = ref('');
+
+watch(() => route.query.id, async (latest, _) => {
+  const loader = $loading.show()
   try {
-    const response = await axios.put(
-      `api/tpslimbahb3/${tpsForm.value.id}`,
-      tpsForm.value,
-    ); 
-      await Swal.fire({
+    const data = await getTpsB3Detail(latest)
+    delete data.id
+    delete data.created_at
+    delete data.updated_at
+    jenis.value = data.jenis
+    form.value.setValues(data)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}, { immediate: true })
+
+const submit = async (data) => {
+
+  try {
+    await updateTpsB3(route.query.id, data)
+    router.push('/logbook/TPSLimbahB3?sidebar=logbooklb3')
+    await Swal.fire({
       title: 'Success!',
-      text: 'Data berhasil diperbaharui!',
+      text: 'Data berhasil diperbarui!',
       icon: 'success',
       confirmButtonText: 'OK',
-    })
-    router.push('/logbook/TPSLimbahB3')
-  } catch (error) {
-    Swal.close()
-    console.error('Error while saving form:', error)
+    });
+  } catch (e) {
+    console.error(e)
+    const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
     await Swal.fire({
       title: 'Error!',
-      text: error.message || 'Gagal menambahkan Data.',
+      text: `Gagal memperbarui perizinan: ${errorMessage}`,
       icon: 'error',
       confirmButtonText: 'OK',
-    })
-  }
-}
-const jenisLb3Options = ref([])
-const fetchJenisLimbah = async () => {
-  try {
-    const response = await axios.get('/api/getItemstpsb3')
-    jenisLb3Options.value = response.data.map(item => item.jenis) 
-  } catch (error) {
-    console.error('Gagal mengambil data Jenis Limbah B3:', error)
+    });
   }
 }
 </script>
@@ -76,106 +58,14 @@ const fetchJenisLimbah = async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header content-page-headersplit">
-          <h3>Edit Logbook TPS Limbah B3</h3>
+          <div>
+            <h4>
+              Form Pemantauan Pencemaran Air Edit
+            </h4>
+          </div>
         </div>
 
-        <form @submit.prevent="updateForm">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="tanggal" class="form-label">Tanggal</label>
-                <input
-                  type="date"
-                  id="tgl_input"
-                  class="form-control"
-                  v-model="tpsForm.tgl_input"
-                />
-              </div>
-            </div>
-
-            <div class="col-md-5">
-              <div class="form-group">
-                <label for="jenis-limbah" class="form-label">Jenis Limbah B3</label>
-                <select
-                  id="jenis-limbah"
-                  class="form-control"
-                  v-model="tpsForm.jenis_lb3"
-                >
-                  <option value="" disabled>Pilih Jenis Limbah B3</option>
-                  <option v-for="jenis in jenisLb3Options" :key="jenis" :value="jenis">
-                    {{ jenis }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="form-group">
-              <div class="col-md-9">
-                <label for="kemasan" class="form-label">Kemasan</label>
-                <input
-                  type="text"
-                  id="kemasan"
-                  class="form-control"
-                  v-model="tpsForm.kemasan"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-5">
-              <div class="form-group">
-                <div>
-                  <label for="jumlah" class="form-label">Jumlah Limbah</label>
-                  <input
-                    type="number"
-                    id="jumlah"
-                    class="form-control"
-                    v-model="tpsForm.jumlah"
-                  />
-                </div>
-              </div>
-            </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="satuan" class="form-label">Satuan</label>
-                  <input
-                    type="text"
-                    id="satuan"
-                    class="form-control"
-                    v-model="tpsForm.satuan"
-                  />
-                </div>
-              </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-9">
-              <div class="form-group">
-                <label for="jenis" class="form-label">Jenis</label>
-                <select id="jenis" class="form-control" v-model="tpsForm.jenis">
-                  <option value="" disabled>Pilih Jenis</option>
-                  <option
-                    v-for="jenis in jenisOptions"
-                    :key="jenis"
-                    :value="jenis"
-                  >
-                    {{ jenis }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4">
-            <button type="submit" class="btn btn-primary next_btn">Update</button>
-            <router-link to="/logbook/TPSLimbahB3" class="btn btn-secondary m-2"
-                >Kembali</router-link
-              >
-          </div>
-        </form>
+        <TPSLimbahB3Form :jenis="jenis" ref="form" @submit="submit" />
       </div>
     </div>
   </MainWrapper>

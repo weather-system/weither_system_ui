@@ -321,7 +321,12 @@ const router = createRouter({
       component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahCreate.vue'),
     },
     {
-      path: '/Logbook/TPSLimbahB3/TPSLimbahB3Edit/:id',
+      path: '/Logbook/TPSLimbahB3/TPSLimbahB3KeluarCreate',
+      name: 'TPSLimbahB3KeluarCreate',
+      component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahKeluarCreate.vue'),
+    },
+    {
+      path: '/Logbook/TPSLimbahB3/TPSLimbahB3Edit',
       name: 'TPSLimbahB3Edit',
       component: () => import('@/views/Logbook/TPSLimbahB3/TPSLimbahEdit.vue'),
     },
@@ -569,17 +574,17 @@ const router = createRouter({
     },
     {
       path: '/Pengendalian/PencemaranUdara/EditUdaraEmisi',
-      name: 'PencemaranUdaraEdit',
+      name: 'PencemaranUdaraEmisiEdit',
       component: () => import('@/views/pengendalian/PencemaranUdaraEmisi/PencemaranUdaraEmisiEdit.vue'),
     },
     {
       path: '/Pengendalian/PencemaranUdara/TambahUdaraAmbien',
-      name: 'TambahUdaraEmisi',
+      name: 'TambahUdaraAmbien',
       component: () => import('@/views/pengendalian/PencemaranUdaraAmbien/PencemaranUdaraAmbienCreate.vue'),
     },
     {
       path: '/Pengendalian/PencemaranUdara/EditUdaraAmbien',
-      name: 'PencemaranUdaraEdit',
+      name: 'PencemaranUdaraAmbienEdit',
       component: () => import('@/views/pengendalian/PencemaranUdaraAmbien/PencemaranUdaraAmbienEdit.vue'),
     },
     {

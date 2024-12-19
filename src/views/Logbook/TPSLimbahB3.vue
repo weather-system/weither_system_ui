@@ -69,7 +69,7 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
           <h3>Data Logbook TPS Limbah B3</h3>
-          <div class="list-btn">
+          <!-- <div class="list-btn">
             <ul>
               <li>
                 <RouterLink
@@ -80,7 +80,7 @@ onMounted(async () => {
                 </RouterLink>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
         <div class="row mt-2">
           <div class="col-12">
@@ -88,26 +88,27 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
+                    <th>Jenis</th>
                     <th>Tanggal Input</th>
                     <th>Jenis LB3</th>
                     <th>Jumlah</th>
                     <th>Satuan</th>
-                    <th>Kemasan</th>
-                    <th>Jenis</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="tpsLimbahB3Data.length > 0" v-for="data in tpsLimbahB3Data" :key="data.id">
+                    <td>{{ data.jenis }}</td>
                     <td>{{ data.tgl_input }}</td>
                     <td>{{ data.jenis_lb3 }}</td>
                     <td>{{ data.jumlah }}</td>
                     <td>{{ data.satuan }}</td>
-                    <td>{{ data.kemasan }}</td>
-                    <td>{{ data.jenis }}</td>
                     <td class="d-flex" style="gap: 1rem">
                       <RouterLink
-                        :to="`/Logbook/TPSLimbahB3/TPSLimbahB3Edit/${data.id}`"
+                        :to="{
+                          path: '/Logbook/TPSLimbahB3/TPSLimbahB3Edit/',
+                          query: { id: data.id },
+                        }"
                         class="btn btn-primary"
                         >Edit</RouterLink
                       >
