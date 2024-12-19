@@ -7,7 +7,7 @@ import { getJenisLimbah } from '@/lib/tpslimbahb3.js'
 
 const props = defineProps({
   initialValues: Object,
-  jenis: String 
+  jenis: String
 });
 const emit = defineEmits('uploaded-document')
 const $loading = useLoading()
@@ -57,6 +57,16 @@ onMounted(async () => {
     :initial-values="initialData"
     @invalid-submit="console.log"
   >
+         <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="tanggal" class="form-label">Tanggal {{ jenis }}</label>
+                <Field name="tgl_input" class="form-control" type="date" />
+                <ErrorMessage name="tgl_input" />
+              </div>
+            </div>
+            <!-- <div class="col-md-4" v-if="jenisData === 'Limbah Keluar'"> -->
+          </div>
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
@@ -74,16 +84,7 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="tanggal" class="form-label">Tanggal {{ jenis }}</label>
-                <Field name="tgl_input" class="form-control" type="date" />
-                <ErrorMessage name="tgl_input" />
-              </div>
-            </div>
-            <!-- <div class="col-md-4" v-if="jenisData === 'Limbah Keluar'"> -->
-          </div>
+
 
           <div class="row">
             <div class="col-md-5">
