@@ -19,4 +19,13 @@ export const deleteTpsB3 = async (id) => {
   const resp = await axios.delete(`/api/tpslimbahb3/${id}`)
   return resp.data
 }
+export const getJenisLimbah = async () => {
+  const resp = await axios.get("/api/getItemstpsb3");
+  return resp.data;
+}
+
+export const getTpsB3Detail = async (id) => {
+  const resp = await axios.get(`/api/tpslimbahb3/${id}`)
+  return resp.data
+}
 

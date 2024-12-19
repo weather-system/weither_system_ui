@@ -15,17 +15,17 @@ const store = useStore()
 const router = useRouter()
 const statuspertek = ref([])
 const pencemaranAir = ref([])
-// const fetchData = async () => {
-//   const loader = $loading.show()
-//   try {
-//     pencemaranAir.value = await getPencemaranAir()
-//   } catch (e) {
-//     console.error('Error fetching data:', e)
-//     Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
-//   } finally {
-//     loader.hide()
-//   }
-// }
+const fetchData = async () => {
+  const loader = $loading.show()
+  try {
+    pencemaranAir.value = await getPencemaranAir()
+  } catch (e) {
+    console.error('Error fetching data:', e)
+    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+  } finally {
+    loader.hide()
+  }
+}
 
 const deleteData = async id => {
   const { isConfirmed } = await Swal.fire({
@@ -114,9 +114,10 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
+                    <th>No</th>
                     <th>Bulan</th>
                     <th>Tanggal Ukur</th>
-                    <th>Debit Terukur (M3/BLN)</th>
+                    <th>Debit Terukur</th>
                     <th>Produksi</th>
                     <th>Lab. Pengukur</th>
                     <th>IPAL</th>
@@ -128,11 +129,12 @@ onMounted(async () => {
                   <tr v-if="pencemaranAir.length === 0">
                     <td colspan="8" class="text-center">Data Tidak Ada</td>
                   </tr>
-                  <tr v-for="data in pencemaranAir" :key="data.id">
+                  <tr v-for="(data, index) in pencemaranAir" :key="data.id">
+                    <td>{{ index + 1 }}</td>
                     <td>{{ data.month }} {{ data.year }}</td>
                     <td>{{ data.tgl_pengambilan_contoh }}</td>
-                    <td>{{ data.debit_terukur }}</td>
-                    <td>{{ data.produksi_ton_bulan }}</td>
+                    <td>{{ data.debit_terukur }} {{ data.debit_terukur_satuan }}</td>
+                    <td>{{ data.produksi_ton_bulan }} Ton/Bulan</td>
                     <td>{{ data.lab_penguji }}</td>
                     <td>{{ data.company_ipal ? `${data.company_ipal.type} - ${data.company_ipal.system_ipal} - ${data.company_ipal.year_of_manufacture_of_ipal}` : '-' }}</td>
                     <td>{{ data.status }}</td>

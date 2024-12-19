@@ -15,52 +15,76 @@ const route = useRoute()
 const data = ref([])
 
 const deleteData = async id => {
-  const { isConfirmed } = await Swal.fire({
-    title: 'Apa kamu yakin ?',
-    text: 'Kamu tidak akan bisa mengembalikan ini!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Ya',
-    cancelButtonText: 'Tidak',
-    customClass: {
-      confirmButton: 'btn btn-primary',
-      cancelButton: 'btn btn-secondary',
-    },
-    buttonsStyling: false,
-  })
+  try {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Apa kamu yakin ?',
+      text: 'Kamu tidak akan bisa mengembalikan ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Tidak',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
+      },
+      buttonsStyling: false,
+    })
 
-  if (isConfirmed) {
-    const loader = $loading.show()
-    try {
-      await deleteReferensiBakuMutu(id)
-      Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
-    } catch (e) {
-      console.error(e)
-    } finally {
-      loader.hide()
-      await loadData()
+    if (isConfirmed) {
+      const loader = $loading.show()
+      try {
+        await deleteReferensiBakuMutu(id)
+        Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+        await loadData() // Reload the data only after successful deletion
+      } catch (e) {
+        console.error('Error deleting data:', e)
+        Swal.fire('Error!', 'Terjadi kesalahan saat menghapus data.', 'error')
+      } finally {
+        loader.hide()
+      }
     }
+  } catch (e) {
+    console.error('Error during delete confirmation:', e)
   }
 }
 
 const loadData = async () => {
   const loader = $loading.show()
   try {
-    data.value = await getReferensiBakuMutu({
+    const response = await getReferensiBakuMutu({
       ...route.query
     })
+    data.value = response
   } catch (e) {
-    console.error(e)
+    console.error('Error loading data:', e)
   } finally {
     loader.hide()
   }
 }
 
-watch(() => route.query.jenis_baku_mutu, async (latest, _) => {
-  await loadData()
-}, {
-  immediate: true
-})
+const getKategori = jenis => {
+  switch (jenis) {
+    case 'Limbah Domestik Tersendiri':
+      return 'IPAL'
+    case 'Udara Ambien':
+      return 'Ambien'
+    case 'Udara Emisi':
+    case 'Kebisingan':
+      return 'Emisi'
+    default:
+      return '-'
+  }
+}
+
+watch(
+  () => route.query.jenis_baku_mutu,
+  async () => {
+    await loadData()
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <template>
@@ -72,10 +96,8 @@ watch(() => route.query.jenis_baku_mutu, async (latest, _) => {
           <div class="list-btn">
             <ul>
               <li>
-                <RouterLink
-                  to="/ReferensiBakuMutu/Create"
-                  class="btn btn-primary"
-                  ><i class="fa fa-plus me-2"></i>Tambah Referensi Baku Mutu
+                <RouterLink to="/ReferensiBakuMutu/Create" class="btn btn-primary">
+                  <i class="fa fa-plus me-2"></i>Tambah Referensi Baku Mutu
                 </RouterLink>
               </li>
             </ul>
@@ -84,28 +106,30 @@ watch(() => route.query.jenis_baku_mutu, async (latest, _) => {
 
         <div class="row">
           <div class="col-12">
-            <div class="table-resposnive table-div">
+            <div class="table-responsive table-div">
               <table class="table datatable">
                 <thead>
                   <tr>
                     <th>Jenis</th>
                     <th>Referensi</th>
+                    <th>Kategori</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="data.length < 1">
-                    <td colspan="3" class="text-center">Data belum ada</td>
+                    <td colspan="4" class="text-center">Data belum ada</td>
                   </tr>
                   <tr v-else v-for="d in data" :key="d.id">
                     <td>{{ d.jenis }}</td>
                     <td>{{ d.referensi }}</td>
                     <td>
-                      <RouterLink
-                        :to="`/ReferensiBakuMutu/${d.id}`"
-                        class="btn btn-success me-2"
-                        >Ubah</RouterLink
-                      >
+                      {{ getKategori(d.jenis) }}
+                    </td>
+                    <td>
+                      <RouterLink :to="`/ReferensiBakuMutu/${d.id}`" class="btn btn-success me-2">
+                        Ubah
+                      </RouterLink>
                       <button class="btn btn-danger" @click="deleteData(d.id)">
                         Hapus
                       </button>

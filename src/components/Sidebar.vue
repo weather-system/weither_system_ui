@@ -55,6 +55,7 @@ const isFiturOpen = ref(false)
 const isTiketzOpen = ref(false)
 const isLearningOpen = ref(false)
 const isLogbookOpen = ref(false)
+const isLogbookLB3Open = ref(false)
 const isImportLogbookOpen = ref(false)
 const isTiketOpen = ref(false)
 const isVerifikasiOpen = ref(false)
@@ -149,7 +150,16 @@ const togglePerDas = () => {
     },
   })
 }
-
+const toggleLogbookLB3 = () => {
+  console.log('Data clicked')
+  isLogbookLB3Open.value = !isLogbookLB3Open.value
+  router.push({
+    path: '/logbook/TPSLimbahB3',
+    query: {
+      sidebar: 'logbooklb3',
+    },
+  })
+}
 const togglePenUdara = (event) => {
   if (isUserCerobongPending.value) {
     event.preventDefault()
@@ -183,6 +193,13 @@ watch(() => route.query.sidebar, (latest, _) => {
     ispenudaraOpen.value = true;
   } else {
     ispenudaraOpen.value = false;
+  }
+
+  if (latest === 'logbooklb3') {
+    isLogbookOpen.value = true;
+    isLogbookLB3Open.value = true;
+  } else {
+    isLogbookLB3Open.value = false;
   }
 }, {
   immediate: true
@@ -506,7 +523,7 @@ const fetchUserStatus = async () => {
                   <router-link :to="{
                       path: '/ReferensiBakuMutu',
                       query: {
-                        jenis_baku_mutu: 'Emisi'
+                        jenis_baku_mutu: 'Udara'
                       }
                     }" active-class="active">
                     <i class="fas fa-chevron-right"></i>
@@ -992,7 +1009,7 @@ const fetchUserStatus = async () => {
                   <a
                     @click="togglePenUdara"
 
-                    :to="!isUserEmisiPending ? '/Pengendalian/PencemaranUdara' : ''"
+                    :to="!isUserCerobongPending ? '/Pengendalian/PencemaranUdara' : ''"
                     style="cursor:pointer"
                   >
                     <i class="fas fa-chevron-right me-2"></i>
@@ -1065,10 +1082,40 @@ const fetchUserStatus = async () => {
                   >
                 </li>
                 <li>
-                  <router-link to="/logbook/TPSLimbahB3">
-                    <i class="fas fa-chevron-right me-2"></i>
-                    TPS Limbah B3</router-link
-                  >
+                  <a
+                    @click="toggleLogbookLB3"
+
+                    :to="'/logbook/TPSLimbahB3'"
+                    style="cursor:pointer"
+                  ><i class="fas fa-chevron-right me-2"></i>
+                    <span>TPS Limbah B3</span>
+                    <i
+                      class="fe"
+                      :class="{
+                        'fe-chevron-down': !isLogbookLB3Open,
+                        'fe-chevron-up': isLogbookLB3Open,
+                      }"
+                    ></i>
+                  </a>
+                  <transition name="slide-fade">
+                    <ul
+                      v-if="isLogbookOpen && isLogbookLB3Open"
+                      class="submenu d-block ms-3"
+                    >
+                      <li>
+                        <router-link to="/Logbook/TPSLimbahB3/TPSLimbahB3Create" activeClass="active">
+                          <i class="fas fa-chevron-right"></i>
+                          Masuk</router-link
+                        >
+                      </li>
+                      <li>
+                        <router-link to="/Logbook/TPSLimbahB3/TPSLimbahB3KeluarCreate" activeClass="active">
+                          <i class="fas fa-chevron-right"></i>
+                          Keluar</router-link
+                        >
+                      </li>
+                    </ul>
+                  </transition>
                 </li>
               </ul>
             </transition>

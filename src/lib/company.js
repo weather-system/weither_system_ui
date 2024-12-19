@@ -85,6 +85,10 @@ export const getIpalAcc = async () => {
   const resp = await axios.get('/api/company_ipal_acc')
   return resp.data
 }
+export const getCerobongAcc = async () => {
+  const resp = await axios.get('/api/company_cerobong_acc')
+  return resp.data
+}
 
 export const getAllIpals = async (status) => {
   const resp = await axios.get('/api/ipals_show', {

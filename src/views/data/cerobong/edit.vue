@@ -51,14 +51,14 @@ onMounted(async () => {
 
 <template>
   <MainWrapper>
-    <!-- <div class="page-wrapper page-settings"> -->
+    <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header mb-2">
-          <h3>Edit Cerobong</h3>
+          <h3>Edit Data Pertek Emisi</h3>
         </div>
 
         <CerobongForm ref="form" @submit="submit" />
       </div>
-    <!-- </div> -->
+    </div>
   </MainWrapper>
 </template>

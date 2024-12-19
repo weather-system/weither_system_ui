@@ -20,3 +20,27 @@ export const verifikasiPencemaranUdara = async (id, data) => {
   return resp.data
 }
 
+export const createPencemaranUdara = async data => {
+  const resp = await axios.post('/api/pencemaran-udaras', data)
+  return resp.data
+}
+
+export const getPencemaranUdara = async () => {
+  const resp = await axios.get('/api/pencemaran-udaras')
+  return resp.data
+}
+
+export const updatePencemaranUdara = async (id, data) => {
+  const resp = await axios.put(`/api/pencemaran-udaras/${id}`, data)
+  return resp.data
+}
+
+export const deletePencemaranUdara = async (id) => {
+  const resp = await axios.delete(`/api/pencemaran-udaras/${id}`)
+  return resp.data
+}
+export const getStatusPertek = async () => {
+  const resp = await axios.get(`/api/statusespertek`)
+  return resp.data
+}
+

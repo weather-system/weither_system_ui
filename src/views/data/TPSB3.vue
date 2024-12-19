@@ -84,7 +84,7 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
           <div>
-            <h3>Data Rintek LB3</h3>
+            <h3>Rincian Teknik Limbah B3</h3>
           </div>
           <div class="list-btn">
             <ul>

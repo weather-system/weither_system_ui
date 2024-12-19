@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
@@ -15,60 +15,10 @@ const $loading = useLoading()
 const form = ref(null)
 const files = reactive({})
 const ipals = ref([])
-
-const initialData = {
-  details: [
-    {
-      parameter: 'Temperatur Udara Sekitar',
-      satuan: 'C'
-    },
-    {
-      parameter: 'BOD',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'COD',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'TSS',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'Fenol Total',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'Krom Total',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'Amonia Total',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'Sulfida',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'Minyak dan Lemak',
-      satuan: 'mg/L'
-    },
-    {
-      parameter: 'Warna',
-      satuan: 'Pt-Co'
-    },
-    {
-      parameter: 'pH',
-      satuan: null
-    },
-    {
-      parameter: 'Temperatur Air',
-      satuan: 'C'
-    }
-  ],
-};
-
+const detailss = ref([])
+const initialData = ref({
+  details: [],
+})
 const schema = yup.object({
   month: yup.string().required(),
   year: yup.string().required(),
@@ -76,107 +26,32 @@ const schema = yup.object({
   produksi_ton_bulan: yup.number().required(),
   lab_penguji: yup.string().required(),
   tgl_pengambilan_contoh: yup.string().required(),
-  details: yup.array().of(yup.object({
-    parameter: yup.string().required(),
-    hasil_pengukuran: yup.number().required(),
-    satuan: yup.string().nullable()
-  }))
-  // file_hasil_pemeriksaan_lab: yup.number().required(),
-  // file_dokumentasi_sampling: yup.number().required(),
-  // temp_udara: yup.number().required(),
-  // temp_udara_expr: yup.string().required(),
-  // bod: yup.number().required(),
-  // bod_expr: yup.string().required(),
-  // cod: yup.number().required(),
-  // cod_expr: yup.string().required(),
-  // tss: yup.number().required(),
-  // tss_expr: yup.string().required(),
-  // fenol_total: yup.number().required(),
-  // fenol_total_expr: yup.string().required(),
-  // krom_total: yup.number().required(),
-  // krom_total_expr: yup.string().required(),
-  // amonia_total: yup.number().required(),
-  // amonia_total_expr: yup.string().required(),
-  // sulfida: yup.number().required(),
-  // sulfida_expr: yup.string().required(),
-  // minyak_dan_lemak: yup.number().required(),
-  // minyak_dan_lemak_expr: yup.string().required(),
-  // warna: yup.number().required(),
-  // warna_expr: yup.string().required(),
-  // ph: yup.number().required(),
-  // ph_expr: yup.string().required(),
-  // temp_air: yup.number().required(),
-  // temp_air_expr: yup.string().required(),
+  catatan: yup.string().nullable(),
+  details: yup.array().of(
+    yup.object({
+      hasil_pengukuran: yup.number().required(),
+      referensi_baku_mutu_detail_id : yup.number().required(),
+    }),
+  ),
 })
 
-const parameters = ref([
-  {
-    name: 'Temperatur Udara Sekitar',
-    satuan: 'C',
-    field: 'temp_udara',
-  },
-  {
-    name: 'BOD',
-    satuan: 'mg/L',
-    field: 'bod',
-  },
-  {
-    name: 'COD',
-    satuan: 'mg/L',
-    field: 'cod',
-  },
-  {
-    name: 'TSS',
-    satuan: 'mg/L',
-    field: 'tss',
-  },
-  {
-    name: 'Fenol Total',
-    satuan: 'mg/L',
-    field: 'fenol_total',
-  },
-  {
-    name: 'Krom Total',
-    satuan: 'mg/L',
-    field: 'krom_total',
-  },
-  {
-    name: 'Amonia Total',
-    satuan: 'mg/L',
-    field: 'amonia_total',
-  },
-  {
-    name: 'Sulfida',
-    satuan: 'mg/L',
-    field: 'sulfida',
-  },
-  {
-    name: 'Minyak dan Lemak',
-    satuan: 'mg/L',
-    field: 'minyak_dan_lemak',
-  },
-  {
-    name: 'Warna',
-    satuan: 'Pt-Co',
-    field: 'warna',
-  },
-  {
-    name: 'pH',
-    satuan: '',
-    field: 'ph',
-  },
-  {
-    name: 'Temperatur Air',
-    satuan: 'K',
-    field: 'temp_air',
-  },
-])
-
-const onUploadDocument = async (event, key) => {
+const onUploadDocument = async (e, callback) => {
   const loader = $loading.show()
   try {
-    const url = await uploadFile(event.target.files[0])
-    emit('uploaded-document', { key, url })
+    const url = await uploadFile(e.target.files[0])
+    callback(url)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+
+const onUploadDocument2 = async (e, callback) => {
+  const loader = $loading.show()
+  try {
+    const url = await uploadFile(e.target.files[0])
+    callback(url)
   } catch (e) {
     console.error(e)
   } finally {
@@ -195,12 +70,12 @@ const loadIpals = async () => {
   }
 }
 
-const setValues = (data) => {
+const setValues = data => {
   form.value.setValues(data)
 }
 
-const onInvalidSubmit = (data) => {
-  console.log('errro', data)
+const onInvalidSubmit = data => {
+  console.log('error', data)
 }
 
 onMounted(async () => {
@@ -208,140 +83,243 @@ onMounted(async () => {
 })
 
 defineExpose({ setValues })
+const selectedIpalId = ref(null)
+const handleIpalChange = async event => {
+  const selectedId = event.target.value
+  selectedIpalId.value = selectedId
+  
+  if (!selectedId) {
+    return
+  }
+
+  try {
+    const selectedIpal = ipals.value.find(ipal => ipal.id === parseInt(selectedId))
+    const ipalData = selectedIpal.company_ipal
+
+    if (ipalData && ipalData.details) {
+      detailss.value = ipalData.details.map(detail => ({
+        referensi_baku_mutu_detail_id: detail.id,
+        parameter: detail.parameter,
+        satuan: detail.satuan,
+      }))
+    } else {
+      detailss.value = [
+        {
+          referensi_baku_mutu_detail_id: '',
+          parameter: 'Parameter Default',
+          satuan: 'mg/L',
+        },
+      ]
+    }
+    initialData.value.details = [...detailss.value]
+    form.value.setValues({ ...form.value.values, details: initialData.value.details })
+  } catch (error) {
+    console.error('Error fetching IPAL details:', error)
+  }
+}
+
+
+watch(detailss, () => {
+    console.log('Sebelum post:', detailss.value)
+    console.log('arghhhhhhhhhh:', initialData.value.details)
+})
 </script>
 
 <template>
-    <Form
-        ref="form"
-          :validation-schema="schema"
-          :initial-values="initialData"
-          @invalid-submit="onInvalidSubmit"
-        >
-          <div class="row">
-            <div class="col-8 mb-2">
-              <label class="form-label">IPAL</label>
-              <Field name="company_ipal_id" class="form-control" as="select">
-                <option value="">Pilih</option>
-                <option v-for="d in ipals" :key="d.id" :value="d.id">{{ d.type }} - {{ d.system_ipal }} - {{ d.year_of_manufacture_of_ipal }}</option>
-              </Field>
-              <ErrorMessage name="company_ipal_id" />
-            </div>
-            <div class="col-5">
-              <label class="form-label">Bulan</label>
-              <Field name="month" class="form-control" as="select">
-                <option value="">Pilih</option>
-                <option v-for="(m, k) in MONTHS" :value="m">{{ m }}</option>
-              </Field>
-              <ErrorMessage name="month" />
-            </div>
-            <div class="col-3">
-              <label class="form-label">Tahun</label>
-              <Field name="year" class="form-control" />
-              <ErrorMessage name="year" />
-            </div>
-            <div class="mt-2 row">
-              <div class="col-4">
-                <label class="form-label">Debit Terukur</label>
-                <Field name="debit_terukur" class="form-control" />
-                <ErrorMessage name="debit_terukur" />
-              </div>
-              <div class="col-4">
-                <label class="form-label">Satuan</label>
-                <Field name="debit_terukur_satuan" class="form-control" as="select">
-                  <option value="">Pilih</option>
-                  <option value="m3/hari">m3/hari</option>
-                  <option value="m3/detik">m3/detik</option>
-                </Field>
-                <ErrorMessage name="debit_terukur_satuan" />
-              </div>
-            </div>
-            <div class="mt-2">
-              <div class="col-4">
-                <label class="form-label">Produksi (Ton/Bulan)</label>
-                <Field name="produksi_ton_bulan" class="form-control" />
-                <ErrorMessage name="produksi_ton_bulan" />
-              </div>
-            </div>
-            <div class="mt-2">
-              <div class="col-4">
-                <label class="form-label">Laboratorium Penguji</label>
-                <Field name="lab_penguji" class="form-control" />
-                <ErrorMessage name="lab_penguji" />
-              </div>
-            </div>
-            <div class="mt-2">
-              <div class="col-4">
-                <label class="form-label">Tanggal Pengambilan Contoh</label>
-                <Field
-                  name="tgl_pengambilan_contoh"
-                  class="form-control"
-                  type="date"
-                />
-                <ErrorMessage name="tgl_pengambilan_contoh" />
-              </div>
-            </div>
-            <div class="col-4 mt-2">
-              <label class="form-label"
-                >File Upload Hasil Pemeriksaan Lab (PDF)</label
-              >
-              <input
-                class="form-control"
-                type="file"
-                @change="onUploadDocument($event, 'file_hasil_pemeriksaan_lab')"
-              />
-              <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
-            </div>
-            <div class="col-4 mt-2">
-              <label class="form-label"
-                >File Upload Dokumentasi Sampling (PDF)</label
-              >
-              <input
-                class="form-control"
-                type="file"
-                @change="onUploadDocument($event, 'file_dokumentasi_sampling')"
-              />
-              <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
-            </div>
-
+  <Form
+    ref="form"
+    :validation-schema="schema"
+    :initial-values="initialData"
+    @invalid-submit="onInvalidSubmit"
+  >
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label">IPAL</label>
+          <Field
+            name="company_ipal_id"
+            class="form-control"
+            as="select"
+            @change="handleIpalChange($event)"
+          >
+            <option value="" disabled>Pilih</option>
+            <option v-for="d in ipals" :key="d.id" :value="d.id">
+              {{ d.type }}, Sistem IPAL : {{ d.system_ipal }}, Tahun Pembuatan :
+              {{ d.year_of_manufacture_of_ipal }}
+            </option>
+          </Field>
+          <ErrorMessage name="company_ipal_id" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Bulan</label>
+          <Field name="month" class="form-control" as="select">
+            <option value="">Pilih</option>
+            <option v-for="(m, k) in MONTHS" :value="m">{{ m }}</option>
+          </Field>
+          <ErrorMessage name="month" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">  
+          <label class="form-label">Tahun</label>
+          <Field name="year" class="form-control" />
+          <ErrorMessage name="year" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Debit Terukur</label>
+            <Field type="number" name="debit_terukur" class="form-control" />
+            <ErrorMessage name="debit_terukur" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Satuan</label>
+            <Field name="debit_terukur_satuan" class="form-control" as="select">
+              <option value="">Pilih</option>
+              <option value="m3/hari">m3/hari</option>
+              <option value="m3/detik">m3/detik</option>
+            </Field>
+            <ErrorMessage name="debit_terukur_satuan" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Produksi (Ton/Bulan)</label>
+            <Field name="produksi_ton_bulan" class="form-control" />
+            <ErrorMessage name="produksi_ton_bulan" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Laboratorium Penguji</label>
+            <Field name="lab_penguji" class="form-control" />
+            <ErrorMessage name="lab_penguji" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Tanggal Pengambilan Contoh</label>
+            <Field
+              name="tgl_pengambilan_contoh"
+              class="form-control"
+              type="date"
+            />
+            <ErrorMessage name="tgl_pengambilan_contoh" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label"
+              >File Upload Hasil Pemeriksaan Lab (PDF)</label
+            >
+            <Field
+                  name="file_hasil_pemeriksaan_lab"
+                  v-slot="{ field, handleChange }"
+                >
+            <input
+              class="form-control"
+              type="file"
+              @change="onUploadDocument($event, handleChange)"
+            /><small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
+            <iframe
+              :src="field.value"
+              width="100%"
+              height="100%"
+            ></iframe>
+            </Field
+                >
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">File Upload Dokumentasi Sampling (PDF)</label>
+             <Field
+                  name="file_dokumentasi_sampling"
+                  v-slot="{ field, handleChange }"
+                >
+            <input
+              class="form-control"
+              type="file"
+              @change="onUploadDocument2($event, handleChange)"
+            />
+            <small class="form-text text-muted">Maksimal ukuran file: 20MB</small>
+            <iframe
+              :src="field.value"
+              width="100%"
+              height="100%"
+            ></iframe>
+            </Field
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="table-responsive">
+            <p>
+              NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,). Contoh: 123.32
+            </p>
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <!-- <th>ID baku mutu</th> -->
+                  <th>Parameter</th>
+                  <th>Hasil Pengukuran</th>
+                </tr>
+              </thead>
+              <tbody>
+                <FieldArray name="details" v-slot="{ fields }">
+                  <tr v-for="(field, i) in fields" :key="field.key">
+                    <!-- <td>{{ field.value.referensi_baku_mutu_detail_id }}</td> -->
+                    <td>{{ field.value.parameter || field.value.referensi_baku_mutu_detail?.parameter }}</td>
+                    <td>
+                      <div class="d-flex align-items-center" style="gap: 1rem">
+                        <div class="col-6">
+                          <Field
+                            :name="`details[${i}].hasil_pengukuran`"
+                            class="form-control"
+                          />
+                          <ErrorMessage
+                            :name="`details[${i}].hasil_pengukuran`"
+                          />
+                        </div>
+                        <p class="m-0">{{ field.value.satuan || field.value.referensi_baku_mutu_detail?.satuan }}</p>
+                      </div>
+                    </td>
+                  </tr>
+                </FieldArray>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-md-12">
+          <div class="field-btns d-flex justify-content-between">
             <div>
-              <div class="table-resposnive table-div">
-                <p>NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,) Contoh: 123.32</p>
-                <table class="table datatable">
-                  <thead>
-                    <tr>
-                      <th>Parameter</th>
-                      <th>Hasil Pengukuran</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <FieldArray name="details" v-slot="{ fields }">
-                      <tr v-for="(field, i) in fields" :key="field.key">
-                        <td>{{ field.value.parameter }}</td>
-                        <td>
-                          <div
-                            class="d-flex align-items-center"
-                            style="gap: 1rem"
-                          >
-                            <div class="col-6">
-                              <Field
-                                :name="`details[${i}].hasil_pengukuran`"
-                                class="form-control"
-                              />
-                              <ErrorMessage :name="`details[${i}].hasil_pengukuran`" />
-                            </div>
-                            <p class="m-0">{{ field.value.satuan }}</p>
-                          </div>
-                        </td>
-                      </tr>
-                    </FieldArray>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="mt-4">
               <button class="btn btn-primary">Simpan</button>
+              <router-link to="/Pengendalian/PencemaranAir" class="btn btn-secondary m-2"
+                >Kembali</router-link
+              >
             </div>
           </div>
-        </Form>
+        </div>
+      </div>
+    </div>
+  </Form>
 </template>

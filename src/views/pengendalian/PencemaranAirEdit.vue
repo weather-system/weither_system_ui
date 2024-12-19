@@ -31,6 +31,9 @@ const submit = async (data) => {
   data.details = data.details.map((v) => {
     delete v.created_at
     delete v.updated_at
+    delete v.referensi_baku_mutu_detail
+    delete v.parameter
+    delete v.satuan
     return v
   })
 
@@ -62,10 +65,9 @@ const submit = async (data) => {
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <div>
-            <h5>
-              Form Swapantau Pengendalian Pencemaran Air Edit
-            </h5>
-            <p>Usaha dan/atau Kegiatan : Industri Tekstil (Q<=100 m3/hari)</p>
+            <h4>
+              Form Pemantauan Pencemaran Air Edit
+            </h4>
           </div>
         </div>
 
