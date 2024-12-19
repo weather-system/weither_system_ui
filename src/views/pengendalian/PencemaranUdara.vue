@@ -117,7 +117,7 @@ onMounted(async () => {
           </h4>
         </div>
         <div class="row">
-            <div class="d-flex align-items-center gap-2">
+            <!-- <div class="d-flex align-items-center gap-2">
               <RouterLink
                 class="btn btn-primary"
                 to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
@@ -129,14 +129,14 @@ onMounted(async () => {
                 to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi"
               >
                 Tambah Pemantauan Udara Emisi
-              </RouterLink>
-              <!-- <RouterLink
+              </RouterLink> 
+              <RouterLink
                 class="btn btn-primary"
                 to="/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge"
               >
                 Tambah Fly Ash, Bottom Ash, dan Sludge
-              </RouterLink> -->
-            </div>
+              </RouterLink>
+            </div>-->
           </div>
 
         <div class="row mt-1">

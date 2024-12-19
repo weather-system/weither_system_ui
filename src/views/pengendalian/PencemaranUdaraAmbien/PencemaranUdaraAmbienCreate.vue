@@ -27,7 +27,7 @@ const submit = async payload => {
     ...payload,
     ...document,
   }
-
+  delete payload.referensi_baku_mutu_id
   try {
     const data = await createPencemaranUdara(payload)
     Swal.fire({

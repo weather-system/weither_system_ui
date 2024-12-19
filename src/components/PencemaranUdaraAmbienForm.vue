@@ -32,8 +32,8 @@ const schema = yup.object({
       hasil_pengujian1: yup.number().required(),
       hasil_pengujian2: yup.number().nullable(),
       hasil_pengujian3: yup.number().nullable(),
-      longitude: yup.string().required(),
-      latitude: yup.string().required(),
+      longitude: yup.string().nullable(),
+      latitude: yup.string().nullable(),
       referensi_baku_mutu_detail_id: yup.number().required(),
     }),
   ),
@@ -81,28 +81,26 @@ onMounted(async () => {
   }
 });
 
-watch(() => form.value?.values.referensi_baku_mutu_id, (newValue) => {
-  console.log('Selected Referensi ID:', newValue);
-  
+watch(() => form.value?.values.referensi_baku_mutu_id, async (newValue) => {
   if (newValue) {
     const selected = referensiBakuMutu.value.find(item => item.id === Number(newValue))
     
-    if (selected) {
-      console.log('Selected Referensi Object:', selected);
-      console.log('Details:', selected.details);
-      selected.details.forEach(detail => {
-        detail.referensi_baku_mutu_detail_id = detail.id;
-      });
-      // Optional: Log details more verbosely
-      selected.details.forEach((detail, index) => {
-        console.log(`Detail ${index + 1}:`, detail)
-      });
+    if (selected && selected.details) {
+      const formattedDetails = selected.details.map(detail => ({
+        ...detail,
+        referensi_baku_mutu_detail_id: detail.id,
+        hasil_pengujian1: '',  
+        hasil_pengujian2: null,
+        hasil_pengujian3: null,
+      }))
       
-      form.value.setFieldValue('details', selected.details || []);
+      await form.value.setFieldValue('details', []) 
+      await form.value.setFieldValue('details', formattedDetails) 
+    } else {
+      await form.value.setFieldValue('details', [])
     }
   } else {
-    console.log('No referensi selected')
-    form.value.setFieldValue('details', []);
+    await form.value.setFieldValue('details', [])
   }
 });
 </script>
@@ -248,7 +246,7 @@ watch(() => form.value?.values.referensi_baku_mutu_id, (newValue) => {
         </div>
       </div>
     </div>
-    <div class="row">
+   <div class="row">
       <div class="table-responsive">
         <p>
           NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,).
@@ -265,33 +263,39 @@ watch(() => form.value?.values.referensi_baku_mutu_id, (newValue) => {
             </tr>
           </thead>
           <tbody>
-            <FieldArray :key="selectedReferensi" 
-            name="details"
-            v-slot="{ fields }">
-              <tr v-for="(field, i) in fields" :key="field.key">
-                <td>{{ field.value.referensi_baku_mutu_detail_id }}</td>
-                <td>{{ field.value.parameter || field.value.referensi_baku_mutu_detail?.parameter }}</td>
-                <td>{{ field.value.waktu_pengukuran || field.value.referensi_baku_mutu_detail?.waktu_pengukuran }}</td>
-                <td>{{ field.value.sistem_pengukuran || field.value.referensi_baku_mutu_detail?.sistem_pengukuran }}</td>
-                <td>
-                  <div class="d-flex align-items-center" style="gap: 1rem">
-                    <div class="col-6">
-                      <Field
-                        :name="`details[${i}].hasil_pengujian1`"
-                        class="form-control"
-                      />
-                      <ErrorMessage
-                        :name="`details[${i}].hasil_pengujian1`"
-                      />
-                    </div>
-                    <p class="m-0">
-                      {{ field.value.satuan || field.value.referensi_baku_mutu_detail?.satuan }}
-                    </p>
-                  </div>
-                </td>
-              </tr>
-            </FieldArray>
-          </tbody>
+  <FieldArray
+    :key="`field-array-${form?.values.referensi_baku_mutu_id}`"
+    name="details"
+    v-slot="{ fields }"
+  >
+    <template v-for="(field, index) in fields.slice(0, selectedReferensi ? 
+      referensiBakuMutu.find(item => item.id === Number(selectedReferensi))?.details?.length : 0)" 
+      :key="`row-${selectedReferensi}-${index}`">
+      <tr>
+        <td>{{ field.value.id }}</td>
+        <td>{{ field.value.parameter }}</td>
+        <td>{{ field.value.waktu_pengukuran }}</td>
+        <td>{{ field.value.sistem_pengukuran }}</td>
+        <td>
+          <div class="d-flex align-items-center" style="gap: 1rem">
+            <div class="col-6">
+              <Field
+                :name="`details[${index}].hasil_pengujian1`"
+                class="form-control"
+                type="number"
+                step="0.01"
+              />
+              <ErrorMessage
+                :name="`details[${index}].hasil_pengujian1`"
+              />
+            </div>
+            <p class="m-0">{{ field.value.satuan }}</p>
+          </div>
+        </td>
+      </tr>
+    </template>
+  </FieldArray>
+</tbody>
         </table>
       </div>
     </div>
