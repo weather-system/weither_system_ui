@@ -252,6 +252,7 @@ onMounted(async () => {
     const canPemantauanResult = await canCreatePemantauan()
     canPemantauan.value = canPemantauanResult.result
   } catch (e) {
+    console.log(e)
     console.error(e)
   } finally {
     loader.hide()

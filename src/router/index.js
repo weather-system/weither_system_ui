@@ -77,17 +77,17 @@ const router = createRouter({
         {
           path: 'DaftarJenisUsaha',
           name: 'DaftarJenisUsaha',
-          component: import('@/views/DaftarJenisUsaha.vue')
+          component: () => import('@/views/DaftarJenisUsaha.vue')
         },
         {
           path: 'DaftarJenisUsaha/Create',
           name: 'DaftarJenisUsahaCreate',
-          component: import('@/views/DaftarJenisUsaha/Create.vue')
+          component: () => import('@/views/DaftarJenisUsaha/Create.vue')
         },
         {
           path: 'DaftarJenisUsaha/:id',
           name: 'DaftarJenisUsahaEdit',
-          component: import('@/views/DaftarJenisUsaha/Edit.vue')
+          component: () => import('@/views/DaftarJenisUsaha/Edit.vue')
         },
       ]
     },
