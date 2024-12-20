@@ -416,7 +416,7 @@ const fetchUserStatus = async () => {
             </transition>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
-            <a href="javascript:void(0);" @click="toggleMaster">
+            <router-link to="/w/DaftarJenisUsaha">
               <i class="fas fa-book-bookmark"></i>
               <span>Daftar Jenis Usaha</span>
               <i
@@ -426,7 +426,7 @@ const fetchUserStatus = async () => {
                   'fe-chevron-up': isMasterOpen,
                 }"
               ></i>
-            </a>
+            </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleSidebar('Data Pelaku Usaha')">

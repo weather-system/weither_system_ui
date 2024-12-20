@@ -69,6 +69,28 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue'),
     },
     {
+      path: '/w',
+      name: 'AppContainer',
+      component: import('@/components/AppContainer.vue'),
+      children: [
+        {
+          path: 'DaftarJenisUsaha',
+          name: 'DaftarJenisUsaha',
+          component: import('@/views/DaftarJenisUsaha.vue')
+        },
+        {
+          path: 'DaftarJenisUsaha/Create',
+          name: 'DaftarJenisUsahaCreate',
+          component: import('@/views/DaftarJenisUsaha/Create.vue')
+        },
+        {
+          path: 'DaftarJenisUsaha/:id',
+          name: 'DaftarJenisUsahaEdit',
+          component: import('@/views/DaftarJenisUsaha/Edit.vue')
+        },
+      ]
+    },
+    {
       path: '/Admin',
       name: 'AdminView',
       component: () => import('@/views/AdminView.vue'),
