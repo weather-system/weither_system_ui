@@ -90,7 +90,7 @@ onMounted(async () => {
                   class="btn btn-primary"
                   to="/Logbook/IPAL/IPALCreate"
                 >
-                  <i class="fa fa-plus me-3"></i>Tambah
+                  <i class="fa fa-plus me-3"></i>Tambah Data Logbook IPAL
                 </RouterLink>
               </li>
             </ul>
@@ -102,6 +102,7 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
+                    <th>No</th>
                     <th>Tanggal Input</th>
                     <th>Sumber Limbah</th>
                     <th>Inlet (Warna, pH)</th>
@@ -112,7 +113,8 @@ onMounted(async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="ipalData.length > 0" v-for="data in ipalData" :key="data.id">
+                  <tr v-if="ipalData.length > 0" v-for="(data,index) in ipalData" :key="data.id">
+                    <td>{{ index + 1 }}</td>
                     <td>{{ data.formatted_date }}</td>
                     <td>{{ data.company_ipal.type }}</td>
                     <td>{{ data.warna_inlet }}, {{ data.ph_inlet }}</td>

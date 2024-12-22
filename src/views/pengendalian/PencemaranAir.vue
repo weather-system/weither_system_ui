@@ -3,7 +3,11 @@ import { ref, onMounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
-import { getPencemaranAir, deletePencemaranAir, getStatusPertek } from '@/lib/pencemaranAir.js'
+import {
+  getPencemaranAir,
+  deletePencemaranAir,
+  getStatusPertek,
+} from '@/lib/pencemaranAir.js'
 import MainWrapper from '@/components/MainWrapper.vue' // Import MainWrapper
 import Swal from 'sweetalert2'
 import { MONTHS, YEARS } from '@/lib/utils.js'
@@ -63,12 +67,12 @@ onMounted(async () => {
       isUserIpalPending.value = true
     }
     if (isUserIpalPending.value) {
-    Swal.fire({
-      title: 'Warning!',
-      text: 'Pertek IPAL Anda Statusnya Pending.',
-      icon: 'warning',
-    });
-  }
+      Swal.fire({
+        title: 'Warning!',
+        text: 'Pertek IPAL Anda Statusnya Pending.',
+        icon: 'warning',
+      })
+    }
 
     pencemaranAir.value = await getPencemaranAir()
   } catch (e) {
@@ -85,27 +89,20 @@ onMounted(async () => {
     <div class="" v-if="isUserIpalPending"></div>
     <div class="page-wrapper page-settings" v-if="!isUserIpalPending">
       <div class="content">
-        <div class="content-page-header content-page-headersplit">
+        <div class="content-page-header content-page-headersplit mb-2">
           <h4>
             Pemantauan Pencemaran Air ({{
               store.state.auth.user.company?.name
             }})
           </h4>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="list-btn">
+          <div class="list-btn">
             <ul>
               <li>
-                <RouterLink
-                  class="btn btn-primary"
-                  to="/Pengendalian/PencemaranAir/Create"
-                >
+                <router-link class="btn btn-primary" to="/Pengendalian/PencemaranAir/Create">
                   <i class="fa fa-plus me-2"></i>Tambah Pemantauan
-                </RouterLink>
+                </router-link>
               </li>
             </ul>
-          </div>
           </div>
         </div>
         <div class="row">
@@ -133,10 +130,18 @@ onMounted(async () => {
                     <td>{{ index + 1 }}</td>
                     <td>{{ data.month }} {{ data.year }}</td>
                     <td>{{ data.tgl_pengambilan_contoh }}</td>
-                    <td>{{ data.debit_terukur }} {{ data.debit_terukur_satuan }}</td>
+                    <td>
+                      {{ data.debit_terukur }} {{ data.debit_terukur_satuan }}
+                    </td>
                     <td>{{ data.produksi_ton_bulan }} Ton/Bulan</td>
                     <td>{{ data.lab_penguji }}</td>
-                    <td>{{ data.company_ipal ? `${data.company_ipal.type} - ${data.company_ipal.system_ipal} - ${data.company_ipal.year_of_manufacture_of_ipal}` : '-' }}</td>
+                    <td>
+                      {{
+                        data.company_ipal
+                          ? `${data.company_ipal.type} - ${data.company_ipal.system_ipal} - ${data.company_ipal.year_of_manufacture_of_ipal}`
+                          : '-'
+                      }}
+                    </td>
                     <td>{{ data.status }}</td>
                     <td class="d-flex" style="gap: 1rem">
                       <RouterLink
@@ -155,7 +160,12 @@ onMounted(async () => {
                       >
                         Hapus
                       </button>
-                      <button v-if="data.status == 'Verifikasi LH'" class="btn btn-primary">Cetak</button>
+                      <button
+                        v-if="data.status == 'Verifikasi LH'"
+                        class="btn btn-primary"
+                      >
+                        Cetak
+                      </button>
                     </td>
                   </tr>
                 </tbody>

@@ -1042,7 +1042,7 @@ const fetchUserStatus = async () => {
                     </ul>
                   </transition>
                 </li>
-
+<!-- 
                 <li>
                   <router-link
                     :to="!isUserTpsb3Pending ? '/pengendalian/PengelolaanLimbahB3' : ''"
@@ -1050,7 +1050,7 @@ const fetchUserStatus = async () => {
                     tag="span">
                     <i class="fas fa-chevron-right me-2"></i>Pengelolaan Limbah B3
                   </router-link>
-                </li>
+                </li> -->
               </ul>
             </transition>
           </li>

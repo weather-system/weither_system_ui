@@ -69,18 +69,20 @@ onMounted(async () => {
       <div class="content">
         <div class="content-page-header content-page-headersplit mb-2">
           <h3>Data Logbook TPS Limbah B3</h3>
-          <!-- <div class="list-btn">
+          <div class="list-btn">
             <ul>
               <li>
-                <RouterLink
-                  class="btn btn-primary"
-                  to="/Logbook/TPSLimbahB3/TPSLimbahB3Create"
-                >
-                  <i class="fa fa-plus me-3"></i>Tambah
-                </RouterLink>
+                <router-link class="btn btn-primary" to="/Logbook/TPSLimbahB3/TPSLimbahB3Create">
+                  <i class="fa fa-plus me-2"></i>Tambah Data Limbah Masuk
+                </router-link>
+              </li>
+              <li>
+                <router-link class="btn btn-primary" to="/Logbook/TPSLimbahB3/TPSLimbahB3KeluarCreate">
+                  <i class="fa fa-plus me-2"></i>Tambah Data Limbah Keluar
+                </router-link>
               </li>
             </ul>
-          </div> -->
+          </div>
         </div>
         <div class="row mt-2">
           <div class="col-12">
@@ -88,6 +90,7 @@ onMounted(async () => {
               <table class="table datatable">
                 <thead>
                   <tr>
+                    <th>No</th>
                     <th>Jenis</th>
                     <th>Tanggal Input</th>
                     <th>Jenis LB3</th>
@@ -97,7 +100,8 @@ onMounted(async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="tpsLimbahB3Data.length > 0" v-for="data in tpsLimbahB3Data" :key="data.id">
+                  <tr v-if="tpsLimbahB3Data.length > 0" v-for="(data,i) in tpsLimbahB3Data" :key="data.id">
+                    <td>{{ i + 1 }}</td>
                     <td>{{ data.jenis }}</td>
                     <td>{{ data.tgl_input }}</td>
                     <td>{{ data.jenis_lb3 }}</td>

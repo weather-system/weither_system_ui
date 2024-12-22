@@ -12,11 +12,13 @@ const emit = defineEmits('uploaded-document')
 
 const $loading = useLoading()
 
-const referensiBakuMutu = ref([]);
-const selectedReferensi = ref(null);
+const referensiBakuMutu = ref([])
+const selectedReferensi = ref(null)
 const form = ref(null)
+let index = ref(1)
 const initialData = ref({
   jenis: 'Udara Ambien',
+  jumlah_titik_uji: index,
   details: [],
 })
 const schema = yup.object({
@@ -74,35 +76,45 @@ defineExpose({ setValues })
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/referensiBakuMutu?jenis_baku_mutu=Ambien');
+    const response = await axios.get(
+      '/api/referensiBakuMutu?jenis_baku_mutu=Ambien',
+    )
     referensiBakuMutu.value = response.data
   } catch (error) {
     Swal.fire('Error!', 'Gagal memuat data Sumber Limbah.', 'error')
   }
-});
+})
 
-watch(() => form.value?.values.referensi_baku_mutu_id, async (newValue) => {
-  if (newValue) {
-    const selected = referensiBakuMutu.value.find(item => item.id === Number(newValue))
-    
-    if (selected && selected.details) {
-      const formattedDetails = selected.details.map(detail => ({
-        ...detail,
-        referensi_baku_mutu_detail_id: detail.id,
-        hasil_pengujian1: '',  
-        hasil_pengujian2: null,
-        hasil_pengujian3: null,
-      }))
-      
-      await form.value.setFieldValue('details', []) 
-      await form.value.setFieldValue('details', formattedDetails) 
+watch(
+  () => form.value?.values.referensi_baku_mutu_id,
+  async newValue => {
+    if (newValue) {
+      const selected = referensiBakuMutu.value.find(
+        item => item.id === Number(newValue),
+      )
+
+      if (selected && selected.details) {
+        const formattedDetails = selected.details.map(detail => ({
+          ...detail,
+          referensi_baku_mutu_detail_id: detail.id,
+          hasil_pengujian1: '',
+          hasil_pengujian2: null,
+          hasil_pengujian3: null,
+        }))
+
+        await form.value.setFieldValue('details', [])
+        await form.value.setFieldValue('details', formattedDetails)
+      } else {
+        await form.value.setFieldValue('details', [])
+      }
     } else {
       await form.value.setFieldValue('details', [])
     }
-  } else {
-    await form.value.setFieldValue('details', [])
-  }
-});
+  },
+)
+const addTestPoint = () => {
+  index.value++
+}
 </script>
 
 <template>
@@ -190,67 +202,70 @@ watch(() => form.value?.values.referensi_baku_mutu_id, async (newValue) => {
         </div>
       </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">
-                    Jumlah Uji Titik
-                </label>
-                <Field type="number" name="jumlah_titik_uji" class="form-control" />
-                <ErrorMessage name="jumlah_titik_uji" />
-            </div>
+    <!-- <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label"> Jumlah Uji Titik </label>
+          <Field type="number" name="jumlah_titik_uji" class="form-control" />
+          <ErrorMessage name="jumlah_titik_uji" />
         </div>
+      </div>
+    </div> -->
+    <div class="form-group">
+      <h4 class="mb-0">Titik Uji ke-{{ index }}</h4>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">
-                    Longitude (Ex. -123.21312)
-                </label>
-                <Field name="longitude" class="form-control" />
-                <a
-                href="https://www.yogantara.info/"
-                class="text-small"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Konvert dari derajat ke decimal Link</a
-              >
-              <ErrorMessage name="longitude" />
-            </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label"> Longitude (Ex. -123.21312) </label>
+          <Field name="longitude" class="form-control" />
+          <a
+            href="https://www.yogantara.info/"
+            class="text-small"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Konvert dari derajat ke decimal Link</a
+          >
+          <ErrorMessage name="longitude" />
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">
-                    Latitude
-                </label>
-                <Field name="latitude" class="form-control" />
-                <ErrorMessage name="latitude" />
-            </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label"> Latitude </label>
+          <Field name="latitude" class="form-control" />
+          <ErrorMessage name="latitude" />
         </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
           <label class="col-form-label">Acuan Buku Mutu</label>
-          <Field as="select" name="referensi_baku_mutu_id" class="form-control" v-model="selectedReferensi">
+          <Field
+            as="select"
+            name="referensi_baku_mutu_id"
+            class="form-control"
+            v-model="selectedReferensi"
+          >
             <option value="" disabled>Acuan Buku Mutu</option>
             <option
-              v-for="(referensi_baku_mutus,index) in referensiBakuMutu"
+              v-for="(referensi_baku_mutus, index) in referensiBakuMutu"
               :key="referensi_baku_mutus.id"
               :value="referensi_baku_mutus.id"
             >
-              {{ index + 1 }}, Type : {{ referensi_baku_mutus.jenis }}, {{ referensi_baku_mutus.referensi }},  
+              {{ index + 1 }}, Type : {{ referensi_baku_mutus.jenis }},
+              {{ referensi_baku_mutus.referensi }},
             </option>
           </Field>
           <ErrorMessage name="referensi_baku_mutu_id" />
         </div>
       </div>
     </div>
-   <div class="row">
+    <div class="row">
       <div class="table-responsive">
         <p>
-          NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,).
-          Contoh: 123.32
+          NOTE: Menulis angka decimal menggunakan simbol (.) bukan (,). Contoh:
+          123.32
         </p>
         <table class="table datatable">
           <thead>
@@ -263,55 +278,66 @@ watch(() => form.value?.values.referensi_baku_mutu_id, async (newValue) => {
             </tr>
           </thead>
           <tbody>
-  <FieldArray
-    :key="`field-array-${form?.values.referensi_baku_mutu_id}`"
-    name="details"
-    v-slot="{ fields }"
-  >
-    <template v-for="(field, index) in fields.slice(0, selectedReferensi ? 
-      referensiBakuMutu.find(item => item.id === Number(selectedReferensi))?.details?.length : 0)" 
-      :key="`row-${selectedReferensi}-${index}`">
-      <tr>
-        <td>{{ field.value.id }}</td>
-        <td>{{ field.value.parameter }}</td>
-        <td>{{ field.value.waktu_pengukuran }}</td>
-        <td>{{ field.value.sistem_pengukuran }}</td>
-        <td>
-          <div class="d-flex align-items-center" style="gap: 1rem">
-            <div class="col-6">
-              <Field
-                :name="`details[${index}].hasil_pengujian1`"
-                class="form-control"
-                type="number"
-                step="0.01"
-              />
-              <ErrorMessage
-                :name="`details[${index}].hasil_pengujian1`"
-              />
-            </div>
-            <p class="m-0">{{ field.value.satuan }}</p>
-          </div>
-        </td>
-      </tr>
-    </template>
-  </FieldArray>
-</tbody>
+            <FieldArray
+              :key="`field-array-${form?.values.referensi_baku_mutu_id}`"
+              name="details"
+              v-slot="{ fields }"
+            >
+              <template
+                v-for="(field, index) in fields.slice(
+                  0,
+                  selectedReferensi
+                    ? referensiBakuMutu.find(
+                        item => item.id === Number(selectedReferensi),
+                      )?.details?.length
+                    : 0,
+                )"
+                :key="`row-${selectedReferensi}-${index}`"
+              >
+                <tr>
+                  <td>{{ field.value.id }}</td>
+                  <td>{{ field.value.parameter }}</td>
+                  <td>{{ field.value.waktu_pengukuran }}</td>
+                  <td>{{ field.value.sistem_pengukuran }}</td>
+                  <td>
+                    <div class="d-flex align-items-center" style="gap: 1rem">
+                      <div class="col-6">
+                        <Field
+                          :name="`details[${index}].hasil_pengujian1`"
+                          class="form-control"
+                          type="number"
+                          step="0.01"
+                        />
+                        <ErrorMessage
+                          :name="`details[${index}].hasil_pengujian1`"
+                        />
+                      </div>
+                      <p class="m-0">{{ field.value.satuan }}</p>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </FieldArray>
+          </tbody>
         </table>
       </div>
     </div>
+    <button type="button" @click="addTestPoint" class="btn btn-success mt-3">
+      Tambah Uji Titik
+    </button>
     <div class="row">
-        <div class="col-md-12">
-          <div class="field-btns d-flex justify-content-between">
-            <div>
-              <button class="btn btn-primary">Simpan</button>
-              <router-link
-                to="/Pengendalian/PencemaranUdara?sidebar=PencemaranUdara"
-                class="btn btn-secondary m-2"
-                >Kembali</router-link
-              >
-            </div>
+      <div class="col-md-12">
+        <div class="field-btns d-flex justify-content-between">
+          <div>
+            <button class="btn btn-primary">Simpan</button>
+            <router-link
+              to="/Pengendalian/PencemaranUdara?sidebar=PencemaranUdara"
+              class="btn btn-secondary m-2"
+              >Kembali</router-link
+            >
           </div>
         </div>
       </div>
+    </div>
   </Form>
 </template>
