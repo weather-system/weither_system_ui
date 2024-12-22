@@ -18,7 +18,7 @@ const initialData = ref({
     jenis: props.jenis
 })
 const schema = yup.object({
-    jenis_lb3: yup.string().required(),
+    company_tps_b3_item_id: yup.number().required(),
     jumlah: yup.number().nullable(),
     tgl_input: yup.string().nullable(),
     satuan: yup.string().nullable(),
@@ -72,12 +72,12 @@ onMounted(async () => {
               <div class="form-group">
                 <label for="jenis-limbah" class="form-label">Jenis Limbah B3</label>
                 <Field
-                    name="jenis_lb3"
+                    name="company_tps_b3_item_id"
                     class="form-control"
                     as="select"
                 >
                   <option value="" disabled>Pilih Jenis Limbah B3</option>
-                  <option v-for="(jenis,index) in jenisLb3Options" :key="jenis.jenis" :value="jenis.jenis">
+                  <option v-for="(jenis,index) in jenisLb3Options" :key="jenis.id" :value="jenis.id">
                     {{ index + 1 }}, {{ jenis.jenis }}
                   </option>
                 </Field>

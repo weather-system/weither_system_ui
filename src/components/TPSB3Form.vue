@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import * as yup from 'yup'
 import { useLoading } from 'vue-loading-overlay'
@@ -9,7 +9,20 @@ import axios from 'axios'
 
 const $loading = useLoading()
 const form = ref(null)
+const jenisLimbahBerdasarkanSumber = ref([])
 
+const fetchJenisLimbahBerdasarkanSumberOptions = async () => {
+  const loader = $loading.show()
+  try {
+    const response = await axios.get('/api/jenisLimbahB3')
+    jenisLimbahBerdasarkanSumber.value = response.data
+  } catch (error) {
+    console.error('Error fetching company IPAL data:', error)
+    Swal.fire('Error!', 'Gagal memuat data Sumber Limbah.', 'error')
+  } finally {
+    loader.hide()
+  }
+}
 const initialValues = {
   volume_limbah_dalam_izin: 0,
   items: [
@@ -151,6 +164,10 @@ const setValues = data => {
 }
 
 defineExpose({ setValues })
+
+onMounted(() => {
+  fetchJenisLimbahBerdasarkanSumberOptions()
+})
 </script>
 
 <template>
@@ -529,6 +546,7 @@ defineExpose({ setValues })
                             satuan: '',
                             jenis_limbah_berdasarkan_sumber: '',
                             masa_simpan: '',
+                            jenis_limbah_b3_id: '',
                           })
                         "
                         type="button"
@@ -542,12 +560,21 @@ defineExpose({ setValues })
                     <td>{{ idx + 1 }}</td>
                     <td>
                       <Field
-                        :name="`items[${idx}].jenis_limbah_berdasarkan_sumber`"
-                        type="text"
+                        :name="`items[${idx}].jenis_limbah_b3_id`"
+                        as="select"
                         class="form-control"
-                      />
+                      >
+                      <option value="" disabled>Pilih Jenis Limbah Berdasarkan Sumber</option>
+                      <option
+                        v-for="company in jenisLimbahBerdasarkanSumber"
+                        :key="company.id"
+                        :value="company.id"
+                      >
+                        {{ company.jenis }}, Kode Limbah : {{ company.kode_limbah }}, Kategori Bahaya : {{ company.kategori_bahaya }}
+                      </option>
+                      </Field>
                       <ErrorMessage
-                        :name="`items[${idx}].jenis_limbah_berdasarkan_sumber`"
+                        :name="`items[${idx}].jenis_limbah_b3_id`"
                       />
                     </td>
                     <td>
@@ -606,6 +633,7 @@ defineExpose({ setValues })
                             satuan: '',
                             jenis_limbah_berdasarkan_sumber: '',
                             masa_simpan: '',
+                            jenis_limbah_b3_id: '',
                           })
                         "
                         type="button"
