@@ -2,6 +2,7 @@ import axios from 'axios'
 import { createRouter, createWebHistory } from 'vue-router'
 import { me } from '@/lib/auth.js'
 import store from '@/store'
+import AppContainer from '@/components/AppContainer.vue'
 
 // Array untuk halaman admin
 const adminRoutes = [
@@ -67,6 +68,28 @@ const router = createRouter({
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/w',
+      name: 'AppContainer',
+      component: AppContainer,
+      children: [
+        {
+          path: 'DaftarJenisUsaha',
+          name: 'DaftarJenisUsaha',
+          component: () => import('@/views/DaftarJenisUsaha.vue')
+        },
+        {
+          path: 'DaftarJenisUsaha/Create',
+          name: 'DaftarJenisUsahaCreate',
+          component: () => import('@/views/DaftarJenisUsaha/Create.vue')
+        },
+        {
+          path: 'DaftarJenisUsaha/:id',
+          name: 'DaftarJenisUsahaEdit',
+          component: () => import('@/views/DaftarJenisUsaha/Edit.vue')
+        },
+      ]
     },
     {
       path: '/Admin',

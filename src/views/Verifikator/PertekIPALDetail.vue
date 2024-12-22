@@ -55,6 +55,23 @@ onMounted(async () => {
               <h3>Verifikasi Pertek IPAL</h3>
             </div>
             <div  class="row">
+              <div class="form-group">
+                <label class="col-form-label"
+                  >Status</label
+                >
+                <select v-model="status" class="form-control">
+                  <option value="">Pilih Status</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="DITERIMA">DITERIMA</option>
+                  <option value="DITOLAK">DITOLAK</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label"
+                  >Catatan Perbaikan</label
+                >
+                <textarea class="form-control"></textarea>
+              </div>
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="col-form-label">Jenis IPAL</label>
@@ -527,17 +544,7 @@ onMounted(async () => {
               </select>
             </div>
 
-            <div class="form-group">
-              <label class="col-form-label"
-                >Status</label
-              >
-              <select v-model="status" class="form-control">
-                <option value="">Pilih Status</option>
-                <option value="PENDING">PENDING</option>
-                <option value="DITERIMA">DITERIMA</option>
-                <option value="DITOLAK">DITOLAK</option>
-              </select>
-            </div>
+
 
             <div class="row">
               <div class="col-md-12">

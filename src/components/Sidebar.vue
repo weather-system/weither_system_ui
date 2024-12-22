@@ -252,6 +252,7 @@ onMounted(async () => {
     const canPemantauanResult = await canCreatePemantauan()
     canPemantauan.value = canPemantauanResult.result
   } catch (e) {
+    console.log(e)
     console.error(e)
   } finally {
     loader.hide()
@@ -323,25 +324,25 @@ const fetchUserStatus = async () => {
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
             <router-link to="/Verifikator/PertekIPAL" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
-              <span>Pertek IPAL</span>
+              <span><small>Persetujuan Teknis IPAL</small></span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
             <router-link to="/Verifikator/PertekEmisi" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
-              <span>Pertek Emisi</span>
+              <span><small>Persetujuan Teknis Emisi</small></span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
             <router-link to="/Verifikator/RintekLB3" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
-              <span>Rintek LB3</span>
+              <span><small>Rintek LB3</small></span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
             <router-link to="/Verifikator/PemantauanAir" activeClass="active">
               <i class="fas fa-tachometer-alt"></i>
-              <span>Pem. Air</span>
+              <span><small>Pemantauan Kualitas Air</small></span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
@@ -350,7 +351,7 @@ const fetchUserStatus = async () => {
               activeClass="active"
             >
               <i class="fas fa-tachometer-alt"></i>
-              <span>Pem. Udara Ambien</span>
+              <span><small>Pemantauan Kualitas Udara Ambien</small></span>
             </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'PENGAWAS'">
@@ -359,7 +360,7 @@ const fetchUserStatus = async () => {
               activeClass="active"
             >
               <i class="fas fa-tachometer-alt"></i>
-              <span>Pem. Udara Emisi</span>
+              <span><small>Pemantauan Kualitas Udara Emisi</small></span>
             </router-link>
           </li>
           <!-- <li v-if="store.state.auth.user.role == 'ADMIN'">
@@ -414,6 +415,19 @@ const fetchUserStatus = async () => {
                 </li>
               </ul>
             </transition>
+          </li>
+          <li v-if="store.state.auth.user.role == 'ADMIN'">
+            <router-link to="/w/DaftarJenisUsaha">
+              <i class="fas fa-book-bookmark"></i>
+              <span>Daftar Jenis Usaha</span>
+              <i
+                class="fe"
+                :class="{
+                  'fe-chevron-down': !isMasterOpen,
+                  'fe-chevron-up': isMasterOpen,
+                }"
+              ></i>
+            </router-link>
           </li>
           <li v-if="store.state.auth.user.role == 'ADMIN'">
             <a href="javascript:void(0);" @click="toggleSidebar('Data Pelaku Usaha')">

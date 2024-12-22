@@ -109,7 +109,7 @@ onMounted(async () => {
     <div class="page-wrapper page-settings">
       <div class="content">
         <div class="content-page-header mb-2">
-          <h3>Edit Referensi Baku Mutu</h3>
+          <h3>Input Referensi Baku Mutu</h3>
         </div>
 
         <ReferensiBakuMutuForm ref="form" @submit="submit" />

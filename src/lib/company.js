@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 export const getCompanies = async query => {
   const resp = await axios.get('/api/companies', {
@@ -72,8 +72,17 @@ export const updateCompany = async (id, data) => {
 }
 
 export const getStatusPertek = async () => {
-  const resp = await axios.get(`/api/statusespertek`)
-  return resp.data
+  try {
+    const resp = await axios.get(`/api/statusespertek`)
+    return resp.data
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      if (e.status == 403) {
+        return
+      }
+    }
+    throw e
+  }
 }
 
 export const getIpals = async () => {
