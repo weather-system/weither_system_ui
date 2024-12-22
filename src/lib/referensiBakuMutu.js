@@ -31,3 +31,10 @@ export const updateReferensiBakuMutu = async (id, data) => {
   const resp = await axios.put(`/api/referensiBakuMutu/${id}`, data)
   return resp.data
 }
+
+export const getUniqueParameters = async (params) => {
+  const resp = await axios.get('/api/referensiBakuMutu/getUniqueParameters', {
+    params
+  })
+  return resp.data
+}

@@ -507,7 +507,7 @@ const fetchUserStatus = async () => {
               <ul v-if="toggleSidebarType == 'Persetujuan Teknis IPAL'" class="submenu d-block">
                 <li>
                   <router-link :to="{
-                      path: '/ReferensiBakuMutu',
+                      path: '/w/ReferensiBakuMutu',
                       query: {
                         jenis_baku_mutu: 'IPAL'
                       }
@@ -535,7 +535,7 @@ const fetchUserStatus = async () => {
               <ul v-if="toggleSidebarType == 'Persetujuan Teknis Emisi'" class="submenu d-block">
                 <li>
                   <router-link :to="{
-                      path: '/ReferensiBakuMutu',
+                      path: '/w/ReferensiBakuMutu',
                       query: {
                         jenis_baku_mutu: 'Udara'
                       }

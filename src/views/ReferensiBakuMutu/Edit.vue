@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import MainWrapper from '@/components/MainWrapper.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import ReferensiBakuMutuForm from '@/components/ReferensiBakuMutuForm.vue'
 import {
   getReferensiBakuMutuDetail,
@@ -63,7 +63,7 @@ const submit = async data => {
   const loader = $loading.show()
   try {
     await updateReferensiBakuMutu(route.params.id, data)
-    router.push('/ReferensiBakuMutu')
+    router.push('/w/ReferensiBakuMutu')
   } catch (e) {
     console.error(e)
   } finally {
@@ -105,15 +105,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <MainWrapper>
-    <div class="page-wrapper page-settings">
-      <div class="content">
-        <div class="content-page-header mb-2">
-          <h3>Input Referensi Baku Mutu</h3>
-        </div>
+  <PageHeader>
+    <h3>Input Referensi Baku Mutu</h3>
+  </PageHeader>
 
-        <ReferensiBakuMutuForm ref="form" @submit="submit" />
-      </div>
-    </div>
-  </MainWrapper>
+  <ReferensiBakuMutuForm ref="form" @submit="submit" :is-edit="true" />
 </template>

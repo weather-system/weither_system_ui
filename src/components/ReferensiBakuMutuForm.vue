@@ -1,12 +1,12 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
 import Swal from 'sweetalert2'
 import BakuMutuUdaraEmisiForm from '@/components/BakuMutuUdaraEmisiForm.vue'
 import LimbahIntegrasiForm from '@/components/LimbahIntegrasiForm.vue'
-import { deleteReferensiBakuMutuDetail } from '@/lib/referensiBakuMutu.js'
+import { deleteReferensiBakuMutuDetail, getUniqueParameters } from '@/lib/referensiBakuMutu.js'
 import {
   getJenisUsaha,
 } from '@/lib/jenisUsaha.js'
@@ -87,6 +87,27 @@ const setValues = data => {
   }
 }
 
+watch(() => formData.jenis_usaha_id, async (latest, _) => {
+  if (!props.isEdit) {
+    const loader = $loading.show()
+    try {
+      let dat = await getUniqueParameters({
+        jenis_usaha_id: latest
+      })
+      if (dat.length == 0) {
+        dat = [{}]
+      }
+      form.value.setValues({
+        details: dat
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
+  }
+})
+
 onMounted(async () => {
   await loadJenisUsaha()
 })
@@ -104,7 +125,6 @@ defineExpose({ setValues })
           name="jenis"
           class="form-control"
           as="select"
-          :disabled="props.isEdit"
         >
           <option value="">Pilih</option>
           <option value="Udara Ambien">Udara Ambien</option>
@@ -130,7 +150,7 @@ defineExpose({ setValues })
     <div v-if="formData.jenis == 'Limbah Integrasi'" class="row mt-2">
       <div class="col-3">
         <label class="form-label">Jenis Usaha</label>
-        <Field name="jenis_usaha_id" class="form-control" as="select">
+        <Field v-model="formData.jenis_usaha_id" name="jenis_usaha_id" class="form-control" as="select">
           <option value="">Pilih</option>
           <option v-for="j in jenisUsaha" :value="j.id" :key="j.id">{{ j.jenis }}</option>
         </Field>
