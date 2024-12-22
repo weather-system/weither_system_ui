@@ -121,7 +121,13 @@ watch(
                     <td colspan="4" class="text-center">Data belum ada</td>
                   </tr>
                   <tr v-else v-for="d in data" :key="d.id">
-                    <td>{{ d.jenis }}</td>
+                    <td>
+                      {{ d.jenis }}
+                      <template v-if="d.jenis == 'Limbah Integrasi'">
+                        <p class="m-0">Jenis Usaha: <span class="fw-bold">{{ d.jenis_usaha.jenis }}</span></p>
+                        <p class="m-0">Detail: <span class="fw-bold">{{ d.detail_jenis_usaha }}</span></p>
+                      </template>
+                    </td>
                     <td>{{ d.referensi }}</td>
                     <td>
                       {{ getKategori(d.jenis) }}
