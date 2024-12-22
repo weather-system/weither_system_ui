@@ -20,7 +20,7 @@ const initialData = ref({
 const schema = yup.object({
     company_tps_b3_item_id: yup.number().required(),
     jumlah: yup.number().nullable(),
-    tgl_input: yup.string().nullable(),
+    tgl_input: yup.string().required(),
     satuan: yup.string().nullable(),
     satuan_output: yup.string().nullable(),
     tujuan_penyerahan: yup.string().nullable(),
@@ -78,7 +78,14 @@ onMounted(async () => {
                 >
                   <option value="" disabled>Pilih Jenis Limbah B3</option>
                   <option v-for="(jenis,index) in jenisLb3Options" :key="jenis.id" :value="jenis.id">
-                    {{ index + 1 }}, {{ jenis.jenis }}
+                    {{ index + 1 }}. 
+                        <!-- Kode Limbah : {{ jenis.jenis_limbah.kode_limbah ?? 'N/A' }}, 
+                        Zat Pencemar : {{ jenis.jenis_limbah.zat_pencemar ?? 'N/A' }}, 
+                        Jenis Limbah : {{ jenis.jenis_limbah.jenis_limbah ?? 'N/A' }}, 
+                        Sumber Limbah : {{ jenis.jenis_limbah.sumber_limbah ?? 'N/A' }}, 
+                        Uraian Limbah : {{ jenis.jenis_limbah.uraian_limbah ?? 'N/A' }}, 
+                        Kategori Bahaya : {{ jenis.jenis_limbah.kategori_bahaya ?? 'N/A' }} -->
+                        {{ jenis.jenis_limbah.nama_limbah }}
                   </option>
                 </Field>
               </div>

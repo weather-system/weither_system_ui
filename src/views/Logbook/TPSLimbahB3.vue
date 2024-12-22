@@ -110,7 +110,7 @@ const limbahKeluar = computed(() =>
                 <tbody>
                   <tr v-if="tpsLimbahB3Data.length > 0" v-for="(data,i) in limbahMasuk" :key="data.id">
                     <td>{{ i + 1 }}</td>
-                    <td>{{ data.item.jenis }}</td>
+                    <td>{{ data.item.jenis_limbah.nama_limbah }}</td>
                     <td>{{ data.tgl_input }}</td>
                     <td>{{ data.item.jenis_limbah.jenis }}</td>
                     <td>{{ data.jumlah }} {{ data.satuan }}</td>
@@ -153,7 +153,7 @@ const limbahKeluar = computed(() =>
                   <tr v-if="tpsLimbahB3Data.length > 0" v-for="(data,i) in limbahKeluar" :key="data.id">
                     <td>{{ i + 1 }}</td>
                     <td>{{ data.tgl_input }}</td>
-                    <td>{{ data.item.jenis }}</td>
+                    <td>{{ data.item.jenis_limbah.nama_limbah }}</td>
                     <td>{{ data.jumlah }}</td>
                     <td>{{ data.satuan }}</td>
                     <td class="d-flex" style="gap: 1rem">

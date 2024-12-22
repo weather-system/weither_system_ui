@@ -105,7 +105,7 @@ const schema = yup.object({
   masa_berlaku: yup.string().required(),
   items: yup.array(
     yup.object({
-      jenis: yup.string().required(),
+      jenis: yup.string().nullable(),
       volume: yup.number().required(),
       satuan: yup.string().required(),
       jenis_limbah_berdasarkan_sumber: yup.string().required(),
@@ -168,6 +168,19 @@ defineExpose({ setValues })
 onMounted(() => {
   fetchJenisLimbahBerdasarkanSumberOptions()
 })
+
+const updateJenis = (idx, selectedId) => {
+  const id = parseInt(selectedId, 10)
+  
+  const selectedLimbah = jenisLimbahBerdasarkanSumber.value.find(
+    item => item.id === id
+  )
+  
+  if (selectedLimbah && form.value) {
+    console.log('Updating jenis with:', selectedLimbah.jenis)
+    form.value.setFieldValue(`items[${idx}].jenis_limbah_berdasarkan_sumber`, selectedLimbah.jenis)
+  }
+}
 </script>
 
 <template>
@@ -510,8 +523,8 @@ onMounted(() => {
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>Jenis Limbah Berdasarkan Sumber</th>
                   <th>Jenis Limbah B3</th>
+                  <th>Jenis Limbah Berdasarkan Sumber</th>
                   <th>Volume Limbah Dalam Izin</th>
                   <th>Satuan Limbah Dalam Izin</th>
                   <th>Masa Simpan (Hari)</th>
@@ -563,27 +576,32 @@ onMounted(() => {
                         :name="`items[${idx}].jenis_limbah_b3_id`"
                         as="select"
                         class="form-control"
+                        @change="(e) => updateJenis(idx, e.target.value)"
                       >
-                      <option value="" disabled>Pilih Jenis Limbah Berdasarkan Sumber</option>
-                      <option
-                        v-for="company in jenisLimbahBerdasarkanSumber"
-                        :key="company.id"
-                        :value="company.id"
-                      >
-                        {{ company.jenis }}, Kode Limbah : {{ company.kode_limbah }}, Kategori Bahaya : {{ company.kategori_bahaya }}
-                      </option>
+                        <option value="" disabled>Pilih Jenis Limbah Berdasarkan Sumber</option>
+                        <option
+                          v-for="company in jenisLimbahBerdasarkanSumber"
+                          :key="company.id"
+                          :value="company.id"
+                        >
+                        <!-- Kode Limbah : {{ company.kode_limbah ?? 'N/A' }}, 
+                        Zat Pencemar : {{ company.zat_pencemar ?? 'N/A' }}, 
+                        Jenis Limbah : {{ company.jenis_limbah ?? 'N/A' }}, 
+                        Sumber Limbah : {{ company.sumber_limbah ?? 'N/A' }}, 
+                        Uraian Limbah : {{ company.uraian_limbah ?? 'N/A' }}, 
+                        Kategori Bahaya : {{ company.kategori_bahaya ?? 'N/A' }} -->
+                        {{ company.nama_limbah ?? 'N/A' }}
+                        </option>
                       </Field>
-                      <ErrorMessage
-                        :name="`items[${idx}].jenis_limbah_b3_id`"
-                      />
+                      <ErrorMessage :name="`items[${idx}].jenis_limbah_b3_id`" />
                     </td>
                     <td>
                       <Field
-                        :name="`items[${idx}].jenis`"
+                        :name="`items[${idx}].jenis_limbah_berdasarkan_sumber`"
                         type="text"
                         class="form-control"
                       />
-                      <ErrorMessage :name="`items[${idx}].jenis`" />
+                      <ErrorMessage :name="`items[${idx}].jenis_limbah_berdasarkan_sumber`" />
                     </td>
                     <td>
                       <Field
