@@ -20,6 +20,8 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@sentry/vite-plugin": "^2.22.7",
+    "@sentry/vue": "^8.47.0",
     "@tinymce/tinymce-vue": "^6.1.0",
     "axios": "^1.7.7",
     "chart.js": "^4.4.6",

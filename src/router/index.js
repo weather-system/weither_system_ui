@@ -58,7 +58,8 @@ const mainRoutes = [
   '/beranda/PengumumanView',
   '/beranda/DownloadView',
   '/beranda/AgendaView',
-  '/tiket/PengaduanBaru'
+  '/tiket/PengaduanBaru',
+  '/devtest'
 ]
 
 const router = createRouter({
@@ -68,6 +69,11 @@ const router = createRouter({
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/devtest',
+      name: 'DevTest',
+      component: () => import('@/views/DevTest.vue'),
     },
     {
       path: '/w',

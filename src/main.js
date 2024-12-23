@@ -36,6 +36,7 @@ import 'vue-loading-overlay/dist/css/index.css'
 import { createApp } from 'vue'
 import { LoadingPlugin } from 'vue-loading-overlay'
 import axios from 'axios'
+import * as Sentry from "@sentry/vue";
 import App from './App.vue'
 import router from './router'
 import { API_BASE_URL } from './lib/env'
@@ -45,6 +46,25 @@ const app = createApp(App)
 
 axios.defaults.baseURL = API_BASE_URL
 axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
+
+
+if (import.meta.env.VITE_ALLOW_SENTRY == 'yes') {
+  Sentry.init({
+    app,
+    dsn: "https://ed077f027eb0e63690e2a933959d59e5@o4508515506847744.ingest.us.sentry.io/4508515581689856",
+    integrations: [
+      Sentry.browserTracingIntegration({ router }),
+      Sentry.replayIntegration(),
+    ],
+    // Tracing
+    tracesSampleRate: 0.1, //  Capture 100% of the transactions
+    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: ["localhost", /^https:\/\/dlh-cimahi-frontend\.onrender\.com\//, /^https:\/\/dlh-cimahi-backend\.onrender\.com\//],
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 0.1, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  });
+}
 
 app.use(LoadingPlugin)
 app.use(router)
