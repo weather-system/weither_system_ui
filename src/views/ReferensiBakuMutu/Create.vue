@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
+import * as Sentry from "@sentry/vue";
 import PageHeader from '@/components/PageHeader.vue'
 import ReferensiBakuMutuForm from '@/components/ReferensiBakuMutuForm.vue'
 import { createReferensiBakuMutu } from '@/lib/referensiBakuMutu.js'
@@ -38,7 +39,7 @@ const submit = async data => {
     await createReferensiBakuMutu(data)
     router.push('/w/ReferensiBakuMutu')
   } catch (e) {
-    console.error(e)
+    Sentry.captureException(e);
   } finally {
     loader.hide()
   }
