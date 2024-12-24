@@ -9,6 +9,7 @@ import ReferensiBakuMutuForm from '@/components/ReferensiBakuMutuForm.vue'
 import {
   getReferensiBakuMutuDetail,
   updateReferensiBakuMutu,
+  validateReferensiBakuMutuDetails
 } from '@/lib/referensiBakuMutu.js'
 
 const $loading = useLoading()
@@ -28,6 +29,16 @@ const submit = async data => {
       ...data.details5,
       ...data.details6,
     ]
+  }
+
+  let error = null
+  if (data.jenis == 'Limbah Integrasi') {
+    error = validateReferensiBakuMutuDetails(data.details)
+  }
+
+  if (error) {
+    Swal.fire('Error', error, 'error');
+    return
   }
 
   delete data.details1
@@ -64,7 +75,13 @@ const submit = async data => {
   const loader = $loading.show()
   try {
     await updateReferensiBakuMutu(route.params.id, data)
-    router.push('/w/ReferensiBakuMutu')
+    Swal.fire({
+      title: 'Success',
+      text: 'Data berhasil diubah.',
+      icon: 'success',
+      confirmButtonText: 'Oke',
+    })
+    router.push({ path: '/w/ReferensiBakuMutu', query: route.query })
   } catch (e) {
     Sentry.captureException(e);
   } finally {

@@ -1,5 +1,21 @@
 import axios from 'axios'
 
+export const validateReferensiBakuMutuDetails = (details) => {
+  let error = null
+  const regex = /^[0-9\s\-.]+$/; // Regex to match numbers, spaces, '-', and '.'
+  for (const det of details) {
+    if (!det.kadar_paling_tinggi || !det.beban_paling_tinggi) {
+      error = 'Kadar paling tinggi atau beban paling tinggi harus diisi'
+      continue
+    }
+    if (!regex.test(det.kadar_paling_tinggi) || !regex.test(det.beban_paling_tinggi)) {
+      error = 'Kadar paling tinggi atau beban paling tinggi hanya boleh numbers, spaces, \'-\', and \'.\''
+      continue
+    }
+  }
+  return error
+}
+
 export const getReferensiBakuMutu = async (params) => {
   const resp = await axios.get('/api/referensiBakuMutu', {
     params

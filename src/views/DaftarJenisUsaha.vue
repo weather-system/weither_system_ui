@@ -81,17 +81,15 @@ onMounted(async () => {
           <thead>
             <tr>
               <th>Jenis Usaha dan/atau Kegiatan</th>
-              <th>Satuan</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="data.length < 1">
-              <td colspan="3" class="text-center">Data belum ada</td>
+              <td colspan="2" class="text-center">Data belum ada</td>
             </tr>
             <tr v-else v-for="d in data" :key="d.id">
               <td>{{ d.jenis }}</td>
-              <td>{{ d.satuan }}</td>
               <td>
                 <RouterLink :to="`/w/DaftarJenisUsaha/${d.id}`" class="btn btn-success me-2">
                   Ubah

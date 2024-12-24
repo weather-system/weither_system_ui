@@ -93,7 +93,7 @@ watch(
     <div class="list-btn">
       <ul>
         <li>
-          <RouterLink to="/w/ReferensiBakuMutu/Create" class="btn btn-primary">
+          <RouterLink :to="{ path: '/w/ReferensiBakuMutu/Create', query: route.query }" class="btn btn-primary">
             <i class="fa fa-plus me-2"></i>Tambah Referensi Baku Mutu
           </RouterLink>
         </li>
@@ -130,7 +130,7 @@ watch(
                 {{ getKategori(d.jenis) }}
               </td>
               <td>
-                <RouterLink :to="`/w/ReferensiBakuMutu/${d.id}`" class="btn btn-success me-2">
+                <RouterLink :to="{ path: `/w/ReferensiBakuMutu/${d.id}`, query: route.query }" class="btn btn-success me-2">
                   Ubah
                 </RouterLink>
                 <button class="btn btn-danger" @click="deleteData(d.id)">

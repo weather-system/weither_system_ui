@@ -511,7 +511,7 @@ const fetchUserStatus = async () => {
                       query: {
                         jenis_baku_mutu: 'IPAL'
                       }
-                    }" active-class="active">
+                      }" :class="{'active': route.path == '/w/ReferensiBakuMutu' && route.query.jenis_baku_mutu == 'IPAL'}">
                     <i class="fas fa-chevron-right"></i>
                     Referensi Baku Mutu IPAL</router-link
                   >
@@ -539,7 +539,7 @@ const fetchUserStatus = async () => {
                       query: {
                         jenis_baku_mutu: 'Udara'
                       }
-                    }" active-class="active">
+                    }" :class="{'active': route.path == '/w/ReferensiBakuMutu' && route.query.jenis_baku_mutu == 'Udara'}">
                     <i class="fas fa-chevron-right"></i>
                     Referensi Baku Mutu Emisi</router-link
                   >
