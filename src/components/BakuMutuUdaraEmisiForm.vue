@@ -39,7 +39,6 @@ const props = defineProps(['name', 'deleteDetail', 'bahanBakar'])
               <Field
                 :name="`${props.name}[${i}].baku_mutu`"
                 class="form-control"
-                type="number"
               />
               <ErrorMessage :name="`${props.name}[${i}].baku_mutu`" />
             </td>
@@ -49,7 +48,7 @@ const props = defineProps(['name', 'deleteDetail', 'bahanBakar'])
                 class="form-control"
                 :value="props.bahanBakar"
               />
-              <ErrorMessage :name="`${props.name}[${i}].baku_mutu`" />
+              <ErrorMessage :name="`${props.name}[${i}].bahan_bakar`" />
             </td>
             <td>
               <button

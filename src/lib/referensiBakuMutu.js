@@ -1,16 +1,24 @@
 import axios from 'axios'
 
-export const validateReferensiBakuMutuDetails = (details) => {
+export const validateReferensiBakuMutuDetails = (data) => {
   let error = null
   const regex = /^[0-9\s\-.]+$/; // Regex to match numbers, spaces, '-', and '.'
-  for (const det of details) {
-    if (!det.kadar_paling_tinggi || !det.beban_paling_tinggi) {
-      error = 'Kadar paling tinggi atau beban paling tinggi harus diisi'
-      continue
+  if (data.jenis == 'Limbah Integrasi') {
+    for (const det of data.details) {
+      if (!det.kadar_paling_tinggi || !det.beban_paling_tinggi) {
+        error = 'Kadar paling tinggi atau beban paling tinggi harus diisi'
+        continue
+      }
+      if (!regex.test(det.kadar_paling_tinggi) || !regex.test(det.beban_paling_tinggi)) {
+        error = 'Kadar paling tinggi atau beban paling tinggi hanya boleh numbers, spaces, \'-\', and \'.\''
+        continue
+      }
     }
-    if (!regex.test(det.kadar_paling_tinggi) || !regex.test(det.beban_paling_tinggi)) {
-      error = 'Kadar paling tinggi atau beban paling tinggi hanya boleh numbers, spaces, \'-\', and \'.\''
-      continue
+  } else {
+    for (const det of data.details) {
+      if (det.baku_mutu && !regex.test(det.baku_mutu)) {
+        error = 'Baku mutu hanya boleh numbers, spaces, \'-\', and \'.\''
+      }
     }
   }
   return error

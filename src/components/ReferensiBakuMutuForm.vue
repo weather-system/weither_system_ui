@@ -430,7 +430,6 @@ defineExpose({ setValues })
                   <Field
                     :name="`details[${i}].baku_mutu`"
                     class="form-control"
-                    type="number"
                   />
                   <ErrorMessage :name="`details[${i}].baku_mutu`" />
                 </td>

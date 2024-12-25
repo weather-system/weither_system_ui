@@ -31,10 +31,7 @@ const submit = async data => {
     ]
   }
 
-  let error = null
-  if (data.jenis == 'Limbah Integrasi') {
-    error = validateReferensiBakuMutuDetails(data.details)
-  }
+  let error = validateReferensiBakuMutuDetails(data)
 
   if (error) {
     Swal.fire('Error', error, 'error');
