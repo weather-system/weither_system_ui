@@ -169,9 +169,19 @@ onMounted(async () => {
                         Cetak
                       </button> -->
                       <RouterLink
-                        v-if="item.status != 'Verifikasi LH'"
+                        v-if="item.status != 'Verifikasi LH' && item.jenis == 'Udara Emisi'"
                         :to="{
                           path: '/Pengendalian/PencemaranUdara/EditUdaraEmisi/',
+                          query: { id: item.id },
+                        }"
+                        class="btn btn-primary m-2"
+                      >
+                        Edit
+                      </RouterLink>
+                      <RouterLink
+                        v-if="item.status != 'Verifikasi LH' && item.jenis == 'Udara Ambien'"
+                        :to="{
+                          path: '/Pengendalian/PencemaranUdara/EditUdaraAmbien/',
                           query: { id: item.id },
                         }"
                         class="btn btn-primary m-2"

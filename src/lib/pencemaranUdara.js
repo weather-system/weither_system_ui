@@ -44,3 +44,17 @@ export const getStatusPertek = async () => {
   return resp.data
 }
 
+export const createPencemaranUdaraAmbien = async data => {
+  const resp = await axios.post('/api/pencemaran-udara/ambien', data)
+  return resp.data
+}
+
+export const getPencemaranUdaraAmbienDetail = async (id) => {
+  const resp = await axios.get(`/api/pencemaran-udara/ambien/${id}`)
+  return resp.data
+}
+
+export const updatePencemaranUdaraAmbien = async (id, data) => {
+  const resp = await axios.put(`/api/pencemaran-udara/ambien/${id}`, data)
+  return resp.data
+}

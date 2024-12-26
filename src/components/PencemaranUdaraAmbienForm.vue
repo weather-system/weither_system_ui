@@ -27,8 +27,6 @@ const schema = yup.object({
   file_hasil_pemeriksaan_lab: yup.string().required(),
   file_dokumentasi_sampling: yup.string().required(),
   jumlah_titik_uji: yup.string().required(),
-  longitude: yup.string().required(),
-  latitude: yup.string().required(),
   details: yup.array().of(
     yup.object({
       hasil_pengujian1: yup.number().required(),
@@ -106,7 +104,7 @@ const updateTitikUjiDetails = (index, referensiId) => {
   )
   if (selectedRef && selectedRef.details) {
     const newDetails = selectedRef.details.map(detail => ({
-      id: detail.id,
+      referensi_baku_mutu_detail_id: detail.id,
       parameter: detail.parameter,
       waktu_pengukuran: detail.waktu_pengukuran,
       sistem_pengukuran: detail.sistem_pengukuran,
@@ -218,7 +216,8 @@ const updateTitikUjiDetails = (index, referensiId) => {
         </div>
       </div>
     </div>
-    <!-- <p>Jumlah Titik Uji: {{ form.values.titik_uji }}</p> -->
+    <!-- <p>Payload {{ form.values }}</p> -->
+    <!-- <p>{{ form.values.titik_uji }}</p> -->
     <div v-if="form?.values.titik_uji?.length" class="mb-4">
       <div
         v-for="(titik, index) in form.values.titik_uji"
