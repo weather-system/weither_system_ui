@@ -3,38 +3,47 @@ import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import { getAllIpals } from '@/lib/company.js'
+import { getAllCerobong } from '@/lib/cerobong.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 const route = useRoute()
 const title = computed(() => {
-  let ret = 'Semua Pertek IPAL'
-  if (route.query.status === 'pending') ret = 'Pertek IPAL Pending'
-  if (route.query.status === 'ditolak') ret = 'Pertek IPAL Ditolak'
-  if (route.query.status === 'diterima') ret = 'Pertek IPAL Diterima'
+  let ret = 'Semua Pertek Emisi'
+  if (route.query.status === 'pending') ret = 'Pertek Emisi Pending'
+  if (route.query.status === 'ditolak') ret = 'Pertek Emisi Ditolak'
+  if (route.query.status === 'diterima') ret = 'Pertek Emisi Diterima'
   return ret
 })
 
-const ipals = ref([])
+const emisis = ref([])
 
 const loadData = async () => {
-  const loader = $loading.show()
+  const loader = $loading.show();
   try {
-    ipals.value = await getAllIpals(route.query.status)
+    console.log('Fetching data with status:', route.query.status); // Debugging
+    const response = await getAllCerobong(route.query.status);
+    console.log('Data fetched:', response); // Tambahkan log respons API
+    emisis.value = response;
   } catch (e) {
-    console.error(e)
+    console.error('Error loading data:', e);
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal Memuat Data',
+      text: 'Terjadi kesalahan saat memuat data. Coba lagi nanti.',
+    });
   } finally {
-    loader.hide()
+    loader.hide();
   }
-}
+};
+
 
 watch(
   () => route.query.status,
-  async (latest, _) => {
+  async () => {
     await loadData()
   },
-  { immediate: true },
+  { immediate: true }
 )
 </script>
 
@@ -52,33 +61,33 @@ watch(
                 <ul>
                   <li>
                     <RouterLink
-                      to="/Verifikator/PertekIPAL"
-                      :class="{ active: route.query.status === undefined }"
-                      >Semua Pertek IPAL</RouterLink
+                      to="/Verifikator/Pertekemisi"
+                      :class="{ active: !route.query.status }"
+                      >Semua Pertek Emisi</RouterLink
                     >
                   </li>
                   <li>
                     <RouterLink
-                      :to="{ path: '/Verifikator/PertekIPAL', query: { status: 'pending' } }"
+                      :to="{ path: '/Verifikator/PertekEmisi', query: { status: 'pending' } }"
                       :class="{ active: route.query.status === 'pending' }"
-                      >Pertek IPAL Pending</RouterLink
+                      >Pertek Emisi Pending</RouterLink
                     >
                   </li>
                   <li>
                     <RouterLink
                       :to="{
-                        path: '/Verifikator/PertekIPAL',
+                        path: '/Verifikator/PertekEmisi',
                         query: { status: 'diterima' },
                       }"
                       :class="{ active: route.query.status === 'diterima' }"
-                      >Pertek IPAL Diterima</RouterLink
+                      >Pertek Emisi Diterima</RouterLink
                     >
                   </li>
                   <li>
                     <RouterLink
-                      :to="{ path: '/Verifikator/PertekIPAL', query: { status: 'ditolak' } }"
+                      :to="{ path: '/Verifikator/PertekEmisi', query: { status: 'ditolak' } }"
                       :class="{ active: route.query.status === 'ditolak' }"
-                      >Pertek IPAL Ditolak</RouterLink
+                      >Pertek Emisi Ditolak</RouterLink
                     >
                   </li>
                 </ul>
@@ -88,14 +97,15 @@ watch(
         </div>
         <div class="row">
           <div class="col-12">
-            <div class="table-resposnive table-div">
+            <div class="table-responsive table-div">
               <table class="table datatable">
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Tahun</th>
                     <th>Perusahaan</th>
-                    <th>Jenis</th>
+                    <th>Jenis Boiler (Jumlah)</th>
+                    <th>Tinggi/Diameter/Kap. Boiler</th>
+                    <th>Koordinat</th>
                     <th>Status</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Tanggal Verifikasi</th>
@@ -103,32 +113,37 @@ watch(
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="ipals.length === 0">
-                    <td colspan="7" class="text-center">
+                  <tr v-if="emisis.length === 0">
+                    <td colspan="9" class="text-center">
                       Data tidak ditemukan
                     </td>
                   </tr>
-                  <tr v-for="(ipal, index) in ipals" :key="ipal.id">
+                  <tr v-for="(emisi, index) in emisis" :key="emisi.id">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ ipal.year_of_manufacture_of_ipal }}</td>
-                    <td>{{ ipal.company ? ipal.company.name : '-'}}</td>
-                    <td>{{ ipal.type }}</td>
+                    <td>{{ emisi.company ? emisi.company.name : '-' }}</td>
+                    <td>{{ emisi.jenis_boiler }} ({{ emisi.jumlah_boiler }})</td>
+                    <td>
+                        T: {{ emisi.tinggi_cerobong }}, D:
+                        {{ emisi.diameter_cerbong }}, Kap:
+                        {{ emisi.kapasitas_boiler }}
+                    </td>
+                    <td>{{ emisi.koordinat_x }}, {{ emisi.koordinat_y }}</td>
                     <td>
                       <h6
                         :class="{
-                          'badge-pending': ipal.status === 'PENDING',
-                          'badge-active': ipal.status === 'DITERIMA',
-                          'badge-delete': ipal.status === 'DITOLAK',
+                          'badge-pending': emisi.status === 'PENDING',
+                          'badge-active': emisi.status === 'DITERIMA',
+                          'badge-delete': emisi.status === 'DITOLAK',
                         }"
                       >
-                        {{ ipal.status }}
+                        {{ emisi.status }}
                       </h6>
                     </td>
-                    <td>{{ ipal.created_at }}</td>
-                    <td>12 November 2024</td>
+                    <td>{{ emisi.created_at }}</td>
+                    <td>{{ emisi.verified_at || '-' }}</td>
                     <td>
                       <router-link
-                        :to="`/Verifikator/PertekIPAL/${ipal.id}`"
+                        :to="`/Verifikator/PertekEmisi/${emisi.id}`"
                         class="btn btn-primary"
                         >Verifikasi</router-link
                       >

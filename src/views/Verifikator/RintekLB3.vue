@@ -3,25 +3,25 @@ import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import { getAllIpals } from '@/lib/company.js'
+import { getAllForAdmin } from '@/lib/tpsb3.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 
 const $loading = useLoading()
 const route = useRoute()
 const title = computed(() => {
-  let ret = 'Semua Pertek IPAL'
-  if (route.query.status === 'pending') ret = 'Pertek IPAL Pending'
-  if (route.query.status === 'ditolak') ret = 'Pertek IPAL Ditolak'
-  if (route.query.status === 'diterima') ret = 'Pertek IPAL Diterima'
+  let ret = 'Semua Rintek LB3'
+  if (route.query.status === 'pending') ret = 'Rintek LB3 Pending'
+  if (route.query.status === 'ditolak') ret = 'Rintek LB3 Ditolak'
+  if (route.query.status === 'diterima') ret = 'Rintek LB3 Diterima'
   return ret
 })
 
-const ipals = ref([])
+const lb3s = ref([])
 
 const loadData = async () => {
   const loader = $loading.show()
   try {
-    ipals.value = await getAllIpals(route.query.status)
+    lb3s.value = await getAllForAdmin(route.query.status)
   } catch (e) {
     console.error(e)
   } finally {
@@ -52,33 +52,33 @@ watch(
                 <ul>
                   <li>
                     <RouterLink
-                      to="/Verifikator/PertekIPAL"
+                      to="/Verifikator/RintekLB3"
                       :class="{ active: route.query.status === undefined }"
-                      >Semua Pertek IPAL</RouterLink
+                      >Semua Rintek LB3</RouterLink
                     >
                   </li>
                   <li>
                     <RouterLink
-                      :to="{ path: '/Verifikator/PertekIPAL', query: { status: 'pending' } }"
+                      :to="{ path: '/Verifikator/RintekLB3', query: { status: 'pending' } }"
                       :class="{ active: route.query.status === 'pending' }"
-                      >Pertek IPAL Pending</RouterLink
+                      >Rintek LB3 Pending</RouterLink
                     >
                   </li>
                   <li>
                     <RouterLink
                       :to="{
-                        path: '/Verifikator/PertekIPAL',
+                        path: '/Verifikator/RintekLB3',
                         query: { status: 'diterima' },
                       }"
                       :class="{ active: route.query.status === 'diterima' }"
-                      >Pertek IPAL Diterima</RouterLink
+                      >Rintek LB3 Diterima</RouterLink
                     >
                   </li>
                   <li>
                     <RouterLink
-                      :to="{ path: '/Verifikator/PertekIPAL', query: { status: 'ditolak' } }"
+                      :to="{ path: '/Verifikator/RintekLB3', query: { status: 'ditolak' } }"
                       :class="{ active: route.query.status === 'ditolak' }"
-                      >Pertek IPAL Ditolak</RouterLink
+                      >Rintek LB3 Ditolak</RouterLink
                     >
                   </li>
                 </ul>
@@ -93,9 +93,10 @@ watch(
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Tahun</th>
                     <th>Perusahaan</th>
-                    <th>Jenis</th>
+                    <th>Sumber Limbah</th>
+                    <th>Koordinat (X,Y)</th>
+                    <th>Masa Berlaku</th>
                     <th>Status</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Tanggal Verifikasi</th>
@@ -103,32 +104,33 @@ watch(
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="ipals.length === 0">
+                  <tr v-if="lb3s.length === 0">
                     <td colspan="7" class="text-center">
                       Data tidak ditemukan
                     </td>
                   </tr>
-                  <tr v-for="(ipal, index) in ipals" :key="ipal.id">
+                  <tr v-for="(lb3, index) in lb3s" :key="lb3.id">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ ipal.year_of_manufacture_of_ipal }}</td>
-                    <td>{{ ipal.company ? ipal.company.name : '-'}}</td>
-                    <td>{{ ipal.type }}</td>
+                    <td>{{ lb3.company ? lb3.company.name : '-'}}</td>
+                    <td>{{ lb3.sumber_limbah_b3 }}</td>
+                    <td>{{ lb3.koordinat_x }}, {{ lb3.koordinat_y }}</td>
+                    <td>{{ lb3.masa_berlaku }}</td>
                     <td>
                       <h6
                         :class="{
-                          'badge-pending': ipal.status === 'PENDING',
-                          'badge-active': ipal.status === 'DITERIMA',
-                          'badge-delete': ipal.status === 'DITOLAK',
+                          'badge-pending': lb3.status === 'PENDING',
+                          'badge-active': lb3.status === 'DITERIMA',
+                          'badge-delete': lb3.status === 'DITOLAK',
                         }"
                       >
-                        {{ ipal.status }}
+                        {{ lb3.status }}
                       </h6>
                     </td>
-                    <td>{{ ipal.created_at }}</td>
+                    <td>{{ lb3.created_at }}</td>
                     <td>12 November 2024</td>
                     <td>
                       <router-link
-                        :to="`/Verifikator/PertekIPAL/${ipal.id}`"
+                        :to="`/Verifikator/RintekLB3/${lb3.id}`"
                         class="btn btn-primary"
                         >Verifikasi</router-link
                       >

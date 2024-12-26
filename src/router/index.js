@@ -148,6 +148,26 @@ const router = createRouter({
       component: () => import('@/views/Verifikator/PertekIPALDetail.vue'),
     },
     {
+      path: '/Verifikator/PertekEmisi',
+      name: 'VerifikatorPertekEmisi',
+      component: () => import('@/views/Verifikator/PertekEmisi.vue'),
+    },
+    {
+      path: '/Verifikator/PertekEmisi/:id',
+      name: 'VerifikatorPertekEmisiDetail',
+      component: () => import('@/views/Verifikator/PertekEmisiDetail.vue'),
+    },
+    {
+      path: '/Verifikator/RintekLB3',
+      name: 'VerifikatorRintekLB3',
+      component: () => import('@/views/Verifikator/RintekLB3.vue'),
+    },
+    {
+      path: '/Verifikator/RintekLB3/:id',
+      name: 'VerifikatorRintekLB3Detail',
+      component: () => import('@/views/Verifikator/RintekLB3Detail.vue'),
+    },
+    {
       path: '/Verifikator/PemantauanAir',
       name: 'VerifikatorPemantauanAir',
       component: () => import('@/views/Verifikator/PemantauanAir.vue'),
