@@ -108,37 +108,28 @@ onMounted(async () => {
     <div class="page-wrapper page-settings" v-if="!isUserCerobongPending">
       <div class="content">
         <div
-          class="content-page-header"
+          class="content-page-header content-page-headersplit mb-2"
         >
           <h4>
-            Pemantauan Pencemaran Air ({{
+            Pemantauan Pencemaran Udara ({{
               store.state.auth.user.company?.name
             }})
           </h4>
-        </div>
-        <div class="row">
-            <!-- <div class="d-flex align-items-center gap-2">
-              <RouterLink
-                class="btn btn-primary"
-                to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien"
-              >
-                Tambah Pemantauan Udara Ambien
-              </RouterLink>
-              <RouterLink
-                class="btn btn-primary"
-                to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi"
-              >
-                Tambah Pemantauan Udara Emisi
-              </RouterLink> 
-              <RouterLink
-                class="btn btn-primary"
-                to="/Pengendalian/PencemaranUdara/TambahFlyAshBottomAshDanSludge"
-              >
-                Tambah Fly Ash, Bottom Ash, dan Sludge
-              </RouterLink>
-            </div>-->
+          <div class="list-btn">
+            <ul>
+              <li>
+                <router-link class="btn btn-primary" to="/Pengendalian/PencemaranUdara/TambahUdaraAmbien?sidebar=PencemaranUdara">
+                  <i class="fa fa-plus me-2"></i>Tambah Pemantauan Ambien
+                </router-link>
+              </li>
+              <li>
+                <router-link class="btn btn-primary" to="/Pengendalian/PencemaranUdara/TambahUdaraEmisi?sidebar=PencemaranUdara">
+                  <i class="fa fa-plus me-2"></i>Tambah Pemantauan Emisi
+                </router-link>
+              </li>
+            </ul>
           </div>
-
+        </div>
         <div class="row mt-1">
           <div class="col-12">
             <div class="table-responsive table-div">
@@ -178,9 +169,19 @@ onMounted(async () => {
                         Cetak
                       </button> -->
                       <RouterLink
-                        v-if="item.status != 'Verifikasi LH'"
+                        v-if="item.status != 'Verifikasi LH' && item.jenis == 'Udara Emisi'"
                         :to="{
                           path: '/Pengendalian/PencemaranUdara/EditUdaraEmisi/',
+                          query: { id: item.id },
+                        }"
+                        class="btn btn-primary m-2"
+                      >
+                        Edit
+                      </RouterLink>
+                      <RouterLink
+                        v-if="item.status != 'Verifikasi LH' && item.jenis == 'Udara Ambien'"
+                        :to="{
+                          path: '/Pengendalian/PencemaranUdara/EditUdaraAmbien/',
                           query: { id: item.id },
                         }"
                         class="btn btn-primary m-2"
