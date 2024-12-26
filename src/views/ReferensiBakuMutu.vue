@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import MainWrapper from '@/components/MainWrapper.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import {
   getReferensiBakuMutu,
   deleteReferensiBakuMutu,
@@ -88,59 +88,59 @@ watch(
 </script>
 
 <template>
-  <MainWrapper>
-    <div class="page-wrapper page-settings">
-      <div class="content">
-        <div class="content-page-header content-page-headersplit">
-          <h5>Referensi Baku Mutu</h5>
-          <div class="list-btn">
-            <ul>
-              <li>
-                <RouterLink to="/ReferensiBakuMutu/Create" class="btn btn-primary">
-                  <i class="fa fa-plus me-2"></i>Tambah Referensi Baku Mutu
-                </RouterLink>
-              </li>
-            </ul>
-          </div>
-        </div>
+  <PageHeader>
+    <h5>Referensi Baku Mutu</h5>
+    <div class="list-btn">
+      <ul>
+        <li>
+          <RouterLink :to="{ path: '/w/ReferensiBakuMutu/Create', query: route.query }" class="btn btn-primary">
+            <i class="fa fa-plus me-2"></i>Tambah Referensi Baku Mutu
+          </RouterLink>
+        </li>
+      </ul>
+    </div>
+  </PageHeader>
 
-        <div class="row">
-          <div class="col-12">
-            <div class="table-responsive table-div">
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th>Jenis</th>
-                    <th>Referensi</th>
-                    <th>Kategori</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="data.length < 1">
-                    <td colspan="4" class="text-center">Data belum ada</td>
-                  </tr>
-                  <tr v-else v-for="d in data" :key="d.id">
-                    <td>{{ d.jenis }}</td>
-                    <td>{{ d.referensi }}</td>
-                    <td>
-                      {{ getKategori(d.jenis) }}
-                    </td>
-                    <td>
-                      <RouterLink :to="`/ReferensiBakuMutu/${d.id}`" class="btn btn-success me-2">
-                        Ubah
-                      </RouterLink>
-                      <button class="btn btn-danger" @click="deleteData(d.id)">
-                        Hapus
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive table-div">
+        <table class="table datatable">
+          <thead>
+            <tr>
+              <th>Jenis</th>
+              <th>Referensi</th>
+              <th>Kategori</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="data.length < 1">
+              <td colspan="4" class="text-center">Data belum ada</td>
+            </tr>
+            <tr v-else v-for="d in data" :key="d.id">
+              <td>
+                {{ d.jenis }}
+                <template v-if="d.jenis == 'Limbah Integrasi'">
+                  <p class="m-0">Jenis Usaha: <span class="fw-bold">{{ d.jenis_usaha.jenis }}</span></p>
+                  <p class="m-0">Detail: <span class="fw-bold">{{ d.detail_jenis_usaha }}</span></p>
+                </template>
+              </td>
+              <td>{{ d.referensi }}</td>
+              <td>
+                {{ getKategori(d.jenis) }}
+              </td>
+              <td>
+                <RouterLink :to="{ path: `/w/ReferensiBakuMutu/${d.id}`, query: route.query }" class="btn btn-success me-2">
+                  Ubah
+                </RouterLink>
+                <button class="btn btn-danger" @click="deleteData(d.id)">
+                  Hapus
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </MainWrapper>
+  </div>
 </template>

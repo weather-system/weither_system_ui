@@ -12,6 +12,7 @@ const router = useRouter()
 const route = useRoute()
 
 const submit = async (data) => {
+  data.satuan = '<NULL>'
   const loader = $loading.show()
   try {
     await createJenisUsaha(data)

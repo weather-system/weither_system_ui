@@ -6,21 +6,20 @@ const props = defineProps(['name', 'deleteDetail', 'bahanBakar'])
 
 <template>
   <div class="table-resposnive table-div">
-    <p>Bahan Bakar: {{ props.bahanBakar }}</p>
     <FieldArray :name="props.name" v-slot="{ fields, push, remove }">
       <table class="table datatable">
         <thead>
           <tr>
-            <th>No</th>
             <th>Parameter</th>
+            <th>Kadar Paling Tinggi</th>
             <th>Satuan</th>
-            <th>Baku Mutu</th>
+            <th>Beban Paling Tinggi</th>
+            <th>Satuan</th>
             <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(field, i) in fields" :key="field.key">
-            <td>{{ i + 1 }}</td>
             <td>
               <Field
                 :name="`${props.name}[${i}].parameter`"
@@ -30,25 +29,31 @@ const props = defineProps(['name', 'deleteDetail', 'bahanBakar'])
             </td>
             <td>
               <Field
-                :name="`${props.name}[${i}].satuan`"
+                :name="`${props.name}[${i}].kadar_paling_tinggi`"
                 class="form-control"
               />
-              <ErrorMessage :name="`${props.name}[${i}].satuan`" />
+              <ErrorMessage :name="`${props.name}[${i}].kadar_paling_tinggi`" />
             </td>
             <td>
               <Field
-                :name="`${props.name}[${i}].baku_mutu`"
+                :name="`${props.name}[${i}].satuan_kadar_paling_tinggi`"
                 class="form-control"
               />
-              <ErrorMessage :name="`${props.name}[${i}].baku_mutu`" />
+              <ErrorMessage :name="`${props.name}[${i}].satuan_kadar_paling_tinggi`" />
             </td>
-            <td class="d-none">
+            <td>
               <Field
-                :name="`${props.name}[${i}].bahan_bakar`"
+                :name="`${props.name}[${i}].beban_paling_tinggi`"
                 class="form-control"
-                :value="props.bahanBakar"
               />
-              <ErrorMessage :name="`${props.name}[${i}].bahan_bakar`" />
+              <ErrorMessage :name="`${props.name}[${i}].beban_paling_tinggi`" />
+            </td>
+            <td>
+              <Field
+                :name="`${props.name}[${i}].satuan_beban_paling_tinggi`"
+                class="form-control"
+              />
+              <ErrorMessage :name="`${props.name}[${i}].satuan_beban_paling_tinggi`" />
             </td>
             <td>
               <button
@@ -64,7 +69,7 @@ const props = defineProps(['name', 'deleteDetail', 'bahanBakar'])
       </table>
       <div class="mt-2 d-flex justify-content-end">
         <button
-          @click="push({ bahan_bakar: props.bahanBakar })"
+          @click="push({})"
           type="button"
           class="btn btn-success"
         >

@@ -11,7 +11,6 @@ const form = ref(null)
 
 const schema = yup.object({
   jenis: yup.string().required(),
-  satuan: yup.string().required(),
 })
 
 const setValues = data => {
@@ -30,13 +29,13 @@ defineExpose({ setValues })
         <ErrorMessage name="jenis" />
       </div>
     </div>
-    <div class="row mt-2">
+    <!-- <div class="row mt-2">
       <div class="col-6">
         <label class="form-label">Satuan</label>
         <Field name="satuan" class="form-control" />
         <ErrorMessage name="satuan" />
       </div>
-    </div>
+    </div> -->
     <div class="mt-4">
       <button class="btn btn-primary">Simpan</button>
     </div>

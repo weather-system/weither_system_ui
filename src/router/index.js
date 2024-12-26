@@ -58,7 +58,8 @@ const mainRoutes = [
   '/beranda/PengumumanView',
   '/beranda/DownloadView',
   '/beranda/AgendaView',
-  '/tiket/PengaduanBaru'
+  '/tiket/PengaduanBaru',
+  '/devtest'
 ]
 
 const router = createRouter({
@@ -68,6 +69,11 @@ const router = createRouter({
       path: '/',
       name: 'HomeView',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/devtest',
+      name: 'DevTest',
+      component: () => import('@/views/DevTest.vue'),
     },
     {
       path: '/w',
@@ -89,6 +95,21 @@ const router = createRouter({
           name: 'DaftarJenisUsahaEdit',
           component: () => import('@/views/DaftarJenisUsaha/Edit.vue')
         },
+        {
+          path: 'ReferensiBakuMutu',
+          name: 'ReferensiBakuMutu',
+          component: () => import('@/views/ReferensiBakuMutu.vue'),
+        },
+        {
+          path: 'ReferensiBakuMutu/Create',
+          name: 'ReferensiBakuMutuCreate',
+          component: () => import('@/views/ReferensiBakuMutu/Create.vue'),
+        },
+        {
+          path: 'ReferensiBakuMutu/:id',
+          name: 'ReferensiBakuMutuEdit',
+          component: () => import('@/views/ReferensiBakuMutu/Edit.vue'),
+        },
       ]
     },
     {
@@ -100,21 +121,6 @@ const router = createRouter({
       path: '/Pengawas',
       name: 'PengawasView',
       component: () => import('@/views/PengawasView.vue'),
-    },
-    {
-      path: '/ReferensiBakuMutu',
-      name: 'ReferensiBakuMutu',
-      component: () => import('@/views/ReferensiBakuMutu.vue'),
-    },
-    {
-      path: '/ReferensiBakuMutu/Create',
-      name: 'ReferensiBakuMutuCreate',
-      component: () => import('@/views/ReferensiBakuMutu/Create.vue'),
-    },
-    {
-      path: '/ReferensiBakuMutu/:id',
-      name: 'ReferensiBakuMutuEdit',
-      component: () => import('@/views/ReferensiBakuMutu/Edit.vue'),
     },
     {
       path: '/JenisLimbahB3',

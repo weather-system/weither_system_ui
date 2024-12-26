@@ -17,6 +17,7 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  data.satuan = '<NULL>'
   const loader = $loading.show()
   try {
     await updateJenisUsaha(route.params.id, data)
@@ -47,7 +48,7 @@ onMounted(async () => {
 
 <template>
   <PageHeader>
-    <h3>Tambah Jenis Usaha</h3>
+    <h3>Edit Jenis Usaha</h3>
   </PageHeader>
   <DaftarJenisUsahaForm ref="form" @submit="submit" />
 </template>

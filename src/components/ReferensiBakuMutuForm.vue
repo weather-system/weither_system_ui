@@ -1,11 +1,15 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate'
 import { useLoading } from 'vue-loading-overlay'
 import * as yup from 'yup'
 import Swal from 'sweetalert2'
 import BakuMutuUdaraEmisiForm from '@/components/BakuMutuUdaraEmisiForm.vue'
-import { deleteReferensiBakuMutuDetail } from '@/lib/referensiBakuMutu.js'
+import LimbahIntegrasiForm from '@/components/LimbahIntegrasiForm.vue'
+import { deleteReferensiBakuMutuDetail, getUniqueParameters } from '@/lib/referensiBakuMutu.js'
+import {
+  getJenisUsaha,
+} from '@/lib/jenisUsaha.js'
 
 const props = defineProps(['isEdit'])
 
@@ -13,6 +17,7 @@ const $loading = useLoading()
 
 const form = ref(null)
 const formData = reactive({})
+const jenisUsaha = ref([])
 
 const defaultValues = {
   details: [{}],
@@ -62,6 +67,17 @@ const deleteDetail = async (cb, i, data) => {
   }
 }
 
+const loadJenisUsaha = async () => {
+  const loader = $loading.show()
+  try {
+    jenisUsaha.value = await getJenisUsaha()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loader.hide()
+  }
+}
+
 const setValues = data => {
   form.value.setValues(data)
 
@@ -70,6 +86,31 @@ const setValues = data => {
     formData.jenis_kebisingan_detail = data.jenis_kebisingan_detail
   }
 }
+
+watch(() => formData.jenis_usaha_id, async (latest, _) => {
+  if (!props.isEdit) {
+    const loader = $loading.show()
+    try {
+      let dat = await getUniqueParameters({
+        jenis_usaha_id: latest
+      })
+      if (dat.length == 0) {
+        dat = [{}]
+      }
+      form.value.setValues({
+        details: dat
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
+  }
+})
+
+onMounted(async () => {
+  await loadJenisUsaha()
+})
 
 defineExpose({ setValues })
 </script>
@@ -84,7 +125,6 @@ defineExpose({ setValues })
           name="jenis"
           class="form-control"
           as="select"
-          :disabled="props.isEdit"
         >
           <option value="">Pilih</option>
           <option value="Udara Ambien">Udara Ambien</option>
@@ -92,6 +132,9 @@ defineExpose({ setValues })
           <option value="Kebisingan">Kebisingan</option>
           <option value="Limbah Domestik Tersendiri">
             Limbah Domestik Tersendiri
+          </option>
+          <option value="Limbah Integrasi">
+            Limbah Integrasi
           </option>
         </Field>
         <ErrorMessage name="jenis" />
@@ -102,6 +145,21 @@ defineExpose({ setValues })
         <label class="form-label">Referensi</label>
         <Field name="referensi" class="form-control" />
         <ErrorMessage name="referensi" />
+      </div>
+    </div>
+    <div v-if="formData.jenis == 'Limbah Integrasi'" class="row mt-2">
+      <div class="col-3">
+        <label class="form-label">Jenis Usaha</label>
+        <Field v-model="formData.jenis_usaha_id" name="jenis_usaha_id" class="form-control" as="select">
+          <option value="">Pilih</option>
+          <option v-for="j in jenisUsaha" :value="j.id" :key="j.id">{{ j.jenis }}</option>
+        </Field>
+        <ErrorMessage name="jenis_usaha_id" />
+      </div>
+      <div class="col-3">
+        <label class="form-label">Detail Jenis</label>
+        <Field name="detail_jenis_usaha" class="form-control" />
+        <ErrorMessage name="detail_jenis_usaha" />
       </div>
     </div>
 
@@ -191,7 +249,7 @@ defineExpose({ setValues })
       </div>
     </div> -->
 
-    <div v-if="formData.jenis">
+    <div v-if="formData.jenis && formData.jenis != 'Limbah Integrasi'">
       <div class="table-resposnive table-div">
         <p v-if="formData.jenis == 'Udara Emisi'">
           Bahan Bakar: Biomassa berupa serabut dan/atau Cangkang
@@ -372,7 +430,6 @@ defineExpose({ setValues })
                   <Field
                     :name="`details[${i}].baku_mutu`"
                     class="form-control"
-                    type="number"
                   />
                   <ErrorMessage :name="`details[${i}].baku_mutu`" />
                 </td>
@@ -433,6 +490,10 @@ defineExpose({ setValues })
           </div>
         </FieldArray>
       </div>
+    </div>
+
+    <div v-if="formData.jenis == 'Limbah Integrasi'" class="mt-3">
+      <LimbahIntegrasiForm name="details" :delete-detail="deleteDetail" />
     </div>
 
     <div v-if="formData.jenis == 'Udara Emisi'">

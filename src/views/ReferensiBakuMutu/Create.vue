@@ -3,9 +3,10 @@ import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import Swal from 'sweetalert2'
-import MainWrapper from '@/components/MainWrapper.vue'
+import * as Sentry from "@sentry/vue";
+import PageHeader from '@/components/PageHeader.vue'
 import ReferensiBakuMutuForm from '@/components/ReferensiBakuMutuForm.vue'
-import { createReferensiBakuMutu } from '@/lib/referensiBakuMutu.js'
+import { createReferensiBakuMutu, validateReferensiBakuMutuDetails } from '@/lib/referensiBakuMutu.js'
 
 const $loading = useLoading()
 const router = useRouter()
@@ -26,6 +27,13 @@ const submit = async data => {
     ]
   }
 
+  let error = validateReferensiBakuMutuDetails(data)
+
+  if (error) {
+    Swal.fire('Error', error, 'error');
+    return
+  }
+
   delete data.details1
   delete data.details2
   delete data.details3
@@ -36,9 +44,15 @@ const submit = async data => {
   const loader = $loading.show()
   try {
     await createReferensiBakuMutu(data)
-    router.push('/ReferensiBakuMutu')
+    Swal.fire({
+      title: 'Success',
+      text: 'Data berhasil disimpan.',
+      icon: 'success',
+      confirmButtonText: 'Oke',
+    })
+    router.push({ path: '/w/ReferensiBakuMutu', query: route.query })
   } catch (e) {
-    console.error(e)
+    Sentry.captureException(e);
   } finally {
     loader.hide()
   }
@@ -46,15 +60,9 @@ const submit = async data => {
 </script>
 
 <template>
-  <MainWrapper>
-    <div class="page-wrapper page-settings">
-      <div class="content">
-        <div class="content-page-header mb-2">
-          <h3>Buat Referensi Baku Mutu</h3>
-        </div>
+  <PageHeader>
+    <h3>Buat Referensi Baku Mutu</h3>
+  </PageHeader>
 
-        <ReferensiBakuMutuForm ref="form" @submit="submit" />
-      </div>
-    </div>
-  </MainWrapper>
+  <ReferensiBakuMutuForm ref="form" @submit="submit" />
 </template>
