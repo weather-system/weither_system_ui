@@ -77,6 +77,13 @@ defineExpose({ setValues })
     </div>
 
     <template v-if="formData.jenis">
+      <div v-if="isShowField('nama_limbah')" class="row mt-2">
+        <div class="col-6">
+          <label class="form-label">Nama Limbah</label>
+          <Field name="nama_limbah" class="form-control" />
+          <ErrorMessage name="nama_limbah" />
+        </div>
+      </div>
       <div v-if="isShowField('kode_industri')" class="row mt-2">
         <div class="col-6">
           <label class="form-label">Kode Industri/Kegiatan</label>

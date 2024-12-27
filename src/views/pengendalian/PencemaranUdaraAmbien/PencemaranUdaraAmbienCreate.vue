@@ -5,7 +5,7 @@ import { useLoading } from 'vue-loading-overlay'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
-import { createPencemaranUdara } from '@/lib/pencemaranUdara.js'
+import { createPencemaranUdaraAmbien } from '@/lib/pencemaranUdara.js'
 import { uploadFile } from '@/lib/filestorage.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import PencemaranUdaraAmbienForm from '@/components/PencemaranUdaraAmbienForm.vue'
@@ -27,9 +27,9 @@ const submit = async payload => {
     ...payload,
     ...document,
   }
-  delete payload.referensi_baku_mutu_id
+  delete payload.titik_uji.referensi_baku_mutu_id
   try {
-    const data = await createPencemaranUdara(payload)
+    const data = await createPencemaranUdaraAmbien(payload)
     Swal.fire({
         icon: 'success',
         title: 'Success',

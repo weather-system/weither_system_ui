@@ -2,61 +2,96 @@
 import { watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { getPencemaranUdaraDetail, updatePencemaranUdara } from '@/lib/pencemaranUdara.js'
+import { getPencemaranUdaraAmbienDetail, updatePencemaranUdaraAmbien } from '@/lib/pencemaranUdara.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import PencemaranUdaraAmbienForm from '@/components/PencemaranUdaraAmbienForm.vue'
 import Swal from 'sweetalert2'
+
 const route = useRoute()
 const router = useRouter()
 const $loading = useLoading()
 
 const form = ref(null)
-const jenis = ref('');
+const jenis = ref('')
 
-watch(() => route.query.id, async (latest, _) => {
+// Watch for changes in route id and load data
+watch(() => route.query.id, async (id) => {
+  if (!id) return
+
   const loader = $loading.show()
   try {
-    const data = await getPencemaranUdaraDetail(latest)
-    delete data.id
-    delete data.created_at
-    delete data.updated_at
-    jenis.value = data.details[0].referensi_baku_mutu_detail.referensi_baku_mutu.jenis
-    form.value.setValues(data)
-  } catch (e) {
-    console.error(e)
+    const data = await getPencemaranUdaraAmbienDetail(id)
+    
+    // Process the data for form
+    const formData = {
+      ...data,
+      titik_uji: data.titik_uji.map(titik => ({
+        ...titik,
+        details: titik.details.map(detail => ({
+          ...detail,
+          hasil_pengujian1: parseFloat(detail.hasil_pengujian1)
+        }))
+      }))
+    }
+
+    // Set the jenis value if available
+    if (data.titik_uji?.[0]?.details?.[0]?.referensi_baku_mutu_detail?.referensi_baku_mutu?.jenis) {
+      jenis.value = data.titik_uji[0].details[0].referensi_baku_mutu_detail.referensi_baku_mutu.jenis
+    }
+
+    // Set form values
+    form.value?.setValues(formData)
+  } catch (error) {
+    console.error('Error loading data:', error)
+    Swal.fire({
+      title: 'Error!',
+      text: 'Gagal memuat data',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
   } finally {
     loader.hide()
   }
 }, { immediate: true })
 
+// Handle form submission
 const submit = async (data) => {
-  data.details = data.details.map((v) => {
-    delete v.created_at
-    delete v.updated_at
-    delete v.referensi_baku_mutu_detail
-    delete v.parameter
-    delete v.satuan
-    return v
-  })
-
+  const loader = $loading.show()
   try {
-    await updatePencemaranUdara(route.query.id, data)
-    router.push('/Pengendalian/PencemaranUdara?sidebar=PencemaranUdara')
+    // Clean up the data before submission
+    const submitData = {
+      ...data,
+      titik_uji: data.titik_uji.map(titik => ({
+        ...titik,
+        details: titik.details.map(detail => ({
+          id: detail.id,
+          hasil_pengujian1: detail.hasil_pengujian1,
+          referensi_baku_mutu_detail_id: detail.referensi_baku_mutu_detail_id
+        }))
+      }))
+    }
+
+    await updatePencemaranUdaraAmbien(route.query.id, submitData)
+    
     await Swal.fire({
       title: 'Success!',
       text: 'Data berhasil diperbarui!',
       icon: 'success',
-      confirmButtonText: 'OK',
-    });
-  } catch (e) {
-    console.error(e)
-    const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
+      confirmButtonText: 'OK'
+    })
+
+    router.push('/Pengendalian/PencemaranUdara?sidebar=PencemaranUdara')
+  } catch (error) {
+    console.error('Error updating data:', error)
+    const errorMessage = error.response?.data?.message || error.message || 'Terjadi kesalahan tak terduga'
     await Swal.fire({
       title: 'Error!',
-      text: `Gagal memperbarui perizinan: ${errorMessage}`,
+      text: `Gagal memperbarui data: ${errorMessage}`,
       icon: 'error',
-      confirmButtonText: 'OK',
-    });
+      confirmButtonText: 'OK'
+    })
+  } finally {
+    loader.hide()
   }
 }
 </script>
@@ -67,13 +102,15 @@ const submit = async (data) => {
       <div class="content">
         <div class="content-page-header content-page-headersplit">
           <div>
-            <h4>
-              Form Pemantauan Pencemaran Ambien Edit
-            </h4>
+            <h4>Form Pemantauan Pencemaran Ambien Edit</h4>
           </div>
         </div>
 
-        <PencemaranUdaraAmbienForm :jenis="jenis" ref="form" @submit="submit" />
+        <PencemaranUdaraAmbienForm 
+          ref="form"
+          :jenis="jenis"
+          @submit="submit"
+        />
       </div>
     </div>
   </MainWrapper>
