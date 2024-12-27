@@ -14,6 +14,8 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  data.status = 'PENDING';
+
   data.items = data.items.map((v) => {
     delete v.company_tps_b3_id;
     delete v.created_at;

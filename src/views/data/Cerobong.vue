@@ -8,18 +8,25 @@ import Swal from 'sweetalert2'
 const $loading = useLoading()
 
 const cerobong = ref([])
+const rejectedItems = ref([])
 const totalCerobong = ref(0)
+
 const fetchData = async () => {
   const loader = $loading.show()
   try {
     cerobong.value = await getCerobong()
+    // Perbarui daftar data yang "DITOLAK"
+    rejectedItems.value = cerobong.value.filter(
+      item => item.status === 'DITOLAK',
+    )
   } catch (e) {
     console.error('Error fetching data:', e)
-    Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
+    Swal.fire('Error', 'Gagal mengambil data.', 'error')
   } finally {
     loader.hide()
   }
 }
+
 const deleteData = async id => {
   const { isConfirmed } = await Swal.fire({
     title: 'Apa kamu yakin ?',
@@ -72,6 +79,24 @@ onMounted(async () => {
           }),
         )
       }
+      // Perbarui daftar data yang "DITOLAK"
+      rejectedItems.value = cerobong.value.filter(
+        item => item.status === 'DITOLAK',
+      )
+
+      // Menampilkan SweetAlert jika ada data yang "DITOLAK"
+      if (rejectedItems.value.length > 0) {
+        Swal.fire({
+          title: 'Perhatian!',
+          text: `Ada ${rejectedItems.value.length} data yang ditolak. Harap segera lakukan tindakan.`,
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+          buttonsStyling: false,
+        })
+      }
     }
   } catch (e) {
     console.error(e)
@@ -85,21 +110,24 @@ onMounted(async () => {
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
+        <!-- Banner Notifikasi -->
+        <div
+          v-if="rejectedItems.length > 0"
+          class="alert alert-warning mb-3"
+          role="alert"
+        >
+          <strong>Perhatian!</strong> Ada {{ rejectedItems.length }} data yang
+          ditolak. Harap segera lakukan tindakan.
+        </div>
+
+        <!-- Header -->
         <div class="content-page-header content-page-headersplit mb-2">
           <div>
             <h3>Persetujuan Teknis Emisi</h3>
           </div>
-          <!-- <div class="list-btn">
-            <ul>
-              <li>
-                <router-link class="btn btn-primary" to="/Data/Cerobong/Tambah">
-                   Change route as necessary
-                  <i class="fa fa-plus me-2"></i>Tambah Cerobong
-                </router-link>
-              </li>
-            </ul>
-          </div> -->
         </div>
+
+        <!-- Tabel -->
         <div class="row">
           <div class="col-12">
             <div class="table-responsive table-div">

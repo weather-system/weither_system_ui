@@ -13,11 +13,16 @@ const formData = ref(null)
 const isInletChecked = ref(false)
 const isOutletChecked = ref(false)
 const status = ref('')
+const catatan = ref('')
 
 const updateStatus = async () => {
   const loader = $loading.show()
   try {
-    await updateStatusIpal(route.params.id, { status: status.value })
+    // Mengirim status dan catatan
+    await updateStatusIpal(route.params.id, {
+      status: status.value,
+      catatan: catatan.value || '',
+    })
     router.push('/Verifikator/PertekIPAL')
   } catch (e) {
     console.error(e)
@@ -30,9 +35,12 @@ const loadData = async () => {
   const loader = $loading.show()
   try {
     formData.value = await getIpalDetail(route.params.id)
-    isInletChecked.value = formData.value.waste_discharge_measuring_instrument_inlet == 'Ada'
-    isOutletChecked.value = formData.value.waste_discharge_measuring_instrument_outlet == 'Ada'
+    isInletChecked.value =
+      formData.value.waste_discharge_measuring_instrument_inlet == 'Ada'
+    isOutletChecked.value =
+      formData.value.waste_discharge_measuring_instrument_outlet == 'Ada'
     status.value = formData.value.status
+    catatan.value = formData.value.catatan || ''
   } catch (e) {
     console.error(e)
   } finally {
@@ -54,11 +62,9 @@ onMounted(async () => {
             <div class="content-page-header mb-2">
               <h3>Verifikasi Pertek IPAL</h3>
             </div>
-            <div  class="row">
+            <div class="row">
               <div class="form-group">
-                <label class="col-form-label"
-                  >Status</label
-                >
+                <label class="col-form-label">Status</label>
                 <select v-model="status" class="form-control">
                   <option value="">Pilih Status</option>
                   <option value="PENDING">PENDING</option>
@@ -67,11 +73,10 @@ onMounted(async () => {
                 </select>
               </div>
               <div class="form-group">
-                <label class="col-form-label"
-                  >Catatan Perbaikan</label
-                >
-                <textarea class="form-control"></textarea>
+                <label class="col-form-label">Catatan Perbaikan</label>
+                <textarea class="form-control" v-model="catatan"></textarea>
               </div>
+
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="col-form-label">Jenis IPAL</label>
@@ -118,7 +123,12 @@ onMounted(async () => {
               <div class="col-md-6">
                 <div class="form-group d-flex flex-column align-items-start">
                   <label class="col-form-label">File Izin Perusahaan</label>
-                  <a :href="formData.file_izin_perusahaan" target="_blank" class="btn btn-secondary">Lihat File</a>
+                  <a
+                    :href="formData.file_izin_perusahaan"
+                    target="_blank"
+                    class="btn btn-secondary"
+                    >Lihat File</a
+                  >
                 </div>
               </div>
               <div class="col-md-12">
@@ -150,7 +160,9 @@ onMounted(async () => {
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-form-label">Longitude (Ex. -123.21312)</label>
+                  <label class="col-form-label"
+                    >Longitude (Ex. -123.21312)</label
+                  >
                   <input
                     type="text"
                     class="form-control"
@@ -158,12 +170,20 @@ onMounted(async () => {
                     v-model="formData.longitude"
                     disabled
                   />
-                  <a href ="https://www.yogantara.info/" class="text-small" target="_blank" rel="noopener noreferrer">Konvert dari derajat ke decimal Link</a>
+                  <a
+                    href="https://www.yogantara.info/"
+                    class="text-small"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Konvert dari derajat ke decimal Link</a
+                  >
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-form-label">Latitude (Ex. -123.21312)</label>
+                  <label class="col-form-label"
+                    >Latitude (Ex. -123.21312)</label
+                  >
                   <input
                     type="text"
                     class="form-control"
@@ -189,15 +209,15 @@ onMounted(async () => {
                 <div class="form-group">
                   <label class="col-form-label">Kapasitas IPAL</label>
                   <div class="form-duration">
-                  <input
-                    type="number"
-                    class="form-control"
-                    v-model="formData.capacity_ipal"
-                    disabled
-                  />
-                  <span class="mins">m3</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      v-model="formData.capacity_ipal"
+                      disabled
+                    />
+                    <span class="mins">m3</span>
                   </div>
-                  </div>
+                </div>
               </div>
               <!-- <div class="col-md-4">
                 <div class="form-group">
@@ -235,12 +255,14 @@ onMounted(async () => {
                           "
                           disabled
                         >
-                          <option value="" disabled>Pilih Nama Alat Ukur Pembuangan Limbah Masuk</option>
-                          <option value="U Notch"> U Notch</option>
+                          <option value="" disabled>
+                            Pilih Nama Alat Ukur Pembuangan Limbah Masuk
+                          </option>
+                          <option value="U Notch">U Notch</option>
                           <option value="V Notch">V Notch</option>
-                          <option value="Flowmeter">Flowmeter</option>r
+                          <option value="Flowmeter">Flowmeter</option>
+                          r
                         </select>
-
                       </div>
                     </div>
                   </div>
@@ -271,8 +293,10 @@ onMounted(async () => {
                           "
                           disabled
                         >
-                          <option value="" disabled>Pilih Nama Alat Ukur Pembuangan Limbah Masuk</option>
-                          <option value="U Notch"> U Notch</option>
+                          <option value="" disabled>
+                            Pilih Nama Alat Ukur Pembuangan Limbah Masuk
+                          </option>
+                          <option value="U Notch">U Notch</option>
                           <option value="V Notch">V Notch</option>
                           <option value="Flowmeter">Flowmeter</option>
                         </select>
@@ -297,11 +321,10 @@ onMounted(async () => {
                     />
                   </div>
                 </div>
-              </div><div class="col-md-4">
+              </div>
+              <div class="col-md-4">
                 <div class="form-group">
-                  <label class="col-form-label"
-                    >Satuan Debit Air Limbah</label
-                  >
+                  <label class="col-form-label">Satuan Debit Air Limbah</label>
                   <select
                     class="form-control"
                     v-model="formData.unit_permissible_waste_water_discharge"
@@ -384,10 +407,7 @@ onMounted(async () => {
                       Data Tidak Ditemukan
                     </td>
                   </tr>
-                  <tr
-                    v-for="(detail, index) in formData.itemz"
-                    :key="index"
-                  >
+                  <tr v-for="(detail, index) in formData.itemz" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>
                       <input
@@ -407,7 +427,12 @@ onMounted(async () => {
               <div class="col-md-4">
                 <div class="form-group d-flex flex-column align-items-start">
                   <label for="photo">Persetujuan Teknis IPAL</label>
-                  <a :href="formData.ipal_design_note" target="_blank" class="btn btn-secondary">Lihat File</a>
+                  <a
+                    :href="formData.ipal_design_note"
+                    target="_blank"
+                    class="btn btn-secondary"
+                    >Lihat File</a
+                  >
                 </div>
               </div>
             </div>
@@ -428,10 +453,7 @@ onMounted(async () => {
                         Data Tidak Ditemukan
                       </td>
                     </tr>
-                    <tr
-                      v-for="(detail, index) in formData.items"
-                      :key="index"
-                    >
+                    <tr v-for="(detail, index) in formData.items" :key="index">
                       <td>{{ index + 1 }}</td>
                       <td>
                         <input
@@ -544,8 +566,6 @@ onMounted(async () => {
               </select>
             </div>
 
-
-
             <div class="row">
               <div class="col-md-12">
                 <div class="field-btns d-flex justify-content-between">
@@ -556,7 +576,9 @@ onMounted(async () => {
                     >
                       Update
                     </button>
-                    <router-link to="/Verifikator/PertekIPAL" class="btn btn-secondary m-2"
+                    <router-link
+                      to="/Verifikator/PertekIPAL"
+                      class="btn btn-secondary m-2"
                       >Kembali</router-link
                     >
                   </div>

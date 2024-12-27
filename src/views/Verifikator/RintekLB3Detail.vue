@@ -11,35 +11,33 @@ const router = useRouter()
 
 const formData = ref(null)
 const status = ref('')
+const catatan = ref('')
 
 const updateStatus = async () => {
-  const loader = $loading.show();
+  const loader = $loading.show()
   try {
     // Ambil nilai volume limbah, pastikan tidak undefined atau null
-    const volumeLimbah = formData.value?.volume_limbah_dalam_izin || 0; // Pastikan ada nilai default
+    const volumeLimbah = formData.value?.volume_limbah_dalam_izin || 0 // Pastikan ada nilai default
 
     const payload = {
-      status: status.value || undefined,
+      status: status.value,
+      catatan: catatan.value,
       sumber_limbah_b3: formData.value?.sumber_limbah_b3 || undefined,
       koordinat_x: formData.value?.koordinat_x || undefined,
       koordinat_y: formData.value?.koordinat_y || undefined,
       volume_limbah_dalam_izin: volumeLimbah, // Pastikan mengirimkan nilai default 0 jika kosong
-    };
+    }
 
-    console.log("Payload:", payload); // Debug untuk melihat nilai payload
+    console.log('Payload:', payload) // Debug untuk melihat nilai payload
 
-    await updateTpsB3(route.params.id, payload);
-    router.push('/Verifikator/RintekLB3');
+    await updateTpsB3(route.params.id, payload)
+    router.push('/Verifikator/RintekLB3')
   } catch (e) {
-    console.error(e);
+    console.error(e)
   } finally {
-    loader.hide();
+    loader.hide()
   }
-};
-
-
-
-
+}
 
 const loadData = async () => {
   const loader = $loading.show()
@@ -79,7 +77,7 @@ onMounted(async () => {
               </div>
               <div class="form-group">
                 <label class="col-form-label">Catatan Perbaikan</label>
-                <textarea class="form-control"></textarea>
+                <textarea class="form-control" v-model="catatan"></textarea>
               </div>
             </div>
             <div class="row">
@@ -232,7 +230,9 @@ onMounted(async () => {
                       >
                         <td>{{ index + 1 }}</td>
                         <td>{{ detail.jenis || '-' }}</td>
-                        <td>{{ detail.jenis_limbah_berdasarkan_sumber || '-' }}</td>
+                        <td>
+                          {{ detail.jenis_limbah_berdasarkan_sumber || '-' }}
+                        </td>
                         <td>{{ detail.volume || '-' }}</td>
                         <td>{{ detail.satuan || '-' }}</td>
                         <td>{{ detail.masa_simpan || '-' }}</td>

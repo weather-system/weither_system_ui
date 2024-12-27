@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
-import { getTpsB3, deleteTpsB3 } from '@/lib/tpsb3';
+import { getTpsB3, deleteTpsB3 } from '@/lib/tpsb3'
 import { getPertekData } from '@/lib/company.js'
 import MainWrapper from '@/components/MainWrapper.vue'
 import Swal from 'sweetalert2'
@@ -10,10 +10,13 @@ const $loading = useLoading()
 
 const tpsB3 = ref([])
 const totalTpsB3 = ref(0)
+const rejectedItems = ref([])
+
 const fetchData = async () => {
   const loader = $loading.show()
   try {
     tpsB3.value = await getTpsB3()
+    rejectedItems.value = tpsB3.value.filter(item => item.status === 'DITOLAK')
   } catch (e) {
     console.error('Error fetching data:', e)
     Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
@@ -21,7 +24,7 @@ const fetchData = async () => {
     loader.hide()
   }
 }
-const deleteData = async (id) => {
+const deleteData = async id => {
   const { isConfirmed } = await Swal.fire({
     title: 'Apa kamu yakin ?',
     text: 'Kamu tidak akan bisa mengembalikan ini!',
@@ -38,16 +41,16 @@ const deleteData = async (id) => {
 
   if (isConfirmed) {
     const loader = $loading.show()
-  try {
-    await deleteTpsB3(id)
-    await fetchData()
-    Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
-  } catch (e) {
-    console.error(e)
-  } finally {
-    loader.hide()
+    try {
+      await deleteTpsB3(id)
+      await fetchData()
+      Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
   }
-}
 }
 
 onMounted(async () => {
@@ -60,14 +63,32 @@ onMounted(async () => {
 
       const n = pertekData.tpsb3_total - tpsB3.value.length
       if (n > 0) {
-        tpsB3.value = tpsB3.value.concat(Array(n).fill({
-          jenis_limbah_b3: '-',
-          sumber_limbah_b3: '-',
-          koordinat_x: '-',
-          koordinat_y: '-',
-          volume: '-',
-          satuan: '-',
-        }))
+        tpsB3.value = tpsB3.value.concat(
+          Array(n).fill({
+            jenis_limbah_b3: '-',
+            sumber_limbah_b3: '-',
+            koordinat_x: '-',
+            koordinat_y: '-',
+            volume: '-',
+            satuan: '-',
+          }),
+        )
+      }
+      rejectedItems.value = tpsB3.value.filter(
+        item => item.status === 'DITOLAK',
+      )
+
+      if (rejectedItems.value.length > 0) {
+        Swal.fire({
+          title: 'Perhatian!',
+          text: `Ada ${rejectedItems.value.length} data yang ditolak. Harap segera lakukan tindakan.`,
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+          buttonsStyling: false,
+        })
       }
     }
   } catch (e) {
@@ -82,6 +103,16 @@ onMounted(async () => {
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
+        <!-- Banner Notifikasi -->
+        <div
+          v-if="rejectedItems.length > 0"
+          class="alert alert-warning mb-3"
+          role="alert"
+        >
+          <strong>Perhatian!</strong> Ada {{ rejectedItems.length }} data yang
+          ditolak. Harap segera lakukan tindakan.
+        </div>
+
         <div class="content-page-header content-page-headersplit mb-2">
           <div>
             <h3>Rincian Teknik Limbah B3</h3>
@@ -118,7 +149,11 @@ onMounted(async () => {
                     <td>
                       <router-link
                         v-if="data.status !== 'DITERIMA'"
-                        :to="data.id ? `/Data/TPSB3/Edit/${data.id}` : '/Data/TPSB3/Tambah'"
+                        :to="
+                          data.id
+                            ? `/Data/TPSB3/Edit/${data.id}`
+                            : '/Data/TPSB3/Tambah'
+                        "
                         class="btn btn-primary"
                         >Edit</router-link
                       >

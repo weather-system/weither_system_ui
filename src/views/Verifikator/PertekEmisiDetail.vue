@@ -12,6 +12,7 @@ const router = useRouter()
 
 const formData = ref(null)
 const status = ref('')
+const catatan = ref('')
 const referensiBakuMutu = ref([])
 
 const updateStatus = async () => {
@@ -20,6 +21,7 @@ const updateStatus = async () => {
     // Hanya kirim field yang memiliki nilai
     const updateData = {
       status: status.value,
+      catatan: catatan.value,
       jenis_boiler: formData.value.jenis_boiler || undefined,
       jenis_bahan_bakar: formData.value.jenis_bahan_bakar || undefined,
       jumlah_boiler: formData.value.jumlah_boiler || undefined,
@@ -96,7 +98,10 @@ onMounted(async () => {
               </div>
               <div class="form-group">
                 <label class="col-form-label">Catatan Perbaikan</label>
-                <textarea class="form-control"></textarea>
+                <textarea
+                  class="form-control"
+                  v-model="catatan"
+                ></textarea>
               </div>
             </div>
 
@@ -127,7 +132,11 @@ onMounted(async () => {
             <div class="col-md-12">
               <div class="form-group">
                 <label class="col-form-label">Acuan Buku Mutu</label>
-                <select name="referensi_baku_mutu_id" class="form-control" disabled>
+                <select
+                  name="referensi_baku_mutu_id"
+                  class="form-control"
+                  disabled
+                >
                   <option value="" disabled>Acuan Buku Mutu</option>
                   <option
                     v-for="referensi_baku_mutus in referensiBakuMutu"

@@ -103,6 +103,8 @@ const schema = yup.object({
   volume_limbah_dalam_izin: yup.number().required(),
   sertifikat_dokumen: yup.string().required(),
   masa_berlaku: yup.string().required(),
+  catatan: yup.string().nullable(),
+  status: yup.string().required(),
   items: yup.array(
     yup.object({
       jenis: yup.string().nullable(),
@@ -193,6 +195,37 @@ const updateJenis = (idx, selectedId) => {
     <div class="row">
       <div class="col-12 mt-2">
         <div class="row mb-3">
+          <div class="row">
+            <div class="form-group">
+              <label class="col-form-label">Status</label>
+              <Field
+                name="status"
+                as="select"
+                class="form-control"
+                :disabled="true"
+                v-model="status"
+              >
+                <option value="">Pilih Status</option>
+                <option value="PENDING">PENDING</option>
+                <option value="DITERIMA">DITERIMA</option>
+                <option value="DITOLAK">DITOLAK</option>
+              </Field>
+              <ErrorMessage name="status" class="text-danger" />
+            </div>
+            <div v-if="status === 'DITOLAK'">
+              <div class="form-group">
+                <label class="col-form-label">Catatan Perbaikan</label>
+                <Field
+                  name="catatan"
+                  as="textarea"
+                  class="form-control"
+                  :class="status === 'DITOLAK' ? 'bg-warning' : ''"
+                  :disabled="true" 
+                />
+                <ErrorMessage name="catatan" class="text-danger" />
+              </div>
+            </div>
+          </div>
           <div class="col-md-6">
             <div class="form-group">
               <label class="col-form-label">No. Rintek</label>

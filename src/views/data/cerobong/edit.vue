@@ -13,6 +13,8 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  data.status = 'PENDING';
+  
   const loader = $loading.show()
   try {
     await updateCerobong(route.params.id, data)

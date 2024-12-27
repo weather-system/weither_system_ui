@@ -14,27 +14,28 @@ const route = useRoute()
 const form = ref(null)
 
 const submit = async (data) => {
+  // Set status menjadi PENDING sebelum submit
+  data.status = 'PENDING';
+
+  // Menghapus field yang tidak diperlukan
   data.items = data.items.map((v) => {
     delete v.company_ipal_id;
     delete v.created_at;
     delete v.updated_at;
     return v;
   });
-  const loader = $loading.show()
+
+  const loader = $loading.show();
   try {
-    await updateIpal(route.params.id, data);
-    Swal.fire('Success!', 'Data Berhasil Diperbarui.', 'success')
-    router.push('/Data/IPAL');
+    await updateIpal(route.params.id, data);  // Mengirim data ke API untuk diupdate
+    Swal.fire('Success!', 'Data Berhasil Diperbarui.', 'success');
+    router.push('/Data/IPAL');  // Redirect setelah berhasil
   } catch (e) {
     console.error(e);
     const errorMessage = e.response?.data?.message || e.message || 'Terjadi kesalahan tak terduga.';
-    Swal.fire(
-          'Error!',
-          '${errorMessage}',
-          'error',
-        )
+    Swal.fire('Error!', `${errorMessage}`, 'error');
   } finally {
-    loader.hide()
+    loader.hide();
   }
 };
 

@@ -1,17 +1,20 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useLoading } from 'vue-loading-overlay'
-import { getIpal, deleteIpal } from '@/lib/ipal';
+import { getIpal, deleteIpal } from '@/lib/ipal'
 import MainWrapper from '@/components/MainWrapper.vue'
 import Swal from 'sweetalert2'
 
 const $loading = useLoading()
 
 const ipal = ref([])
+const rejectedItems = ref([])
+
 const fetchData = async () => {
   const loader = $loading.show()
   try {
     ipal.value = await getIpal()
+    rejectedItems.value = ipal.value.filter(item => item.status === 'DITOLAK')
   } catch (e) {
     console.error('Error fetching data:', e)
     Swal.fire('Error', 'Gagal mengambil data pencemaran air.', 'error')
@@ -19,7 +22,7 @@ const fetchData = async () => {
     loader.hide()
   }
 }
-const deleteData = async (id) => {
+const deleteData = async id => {
   const { isConfirmed } = await Swal.fire({
     title: 'Apa kamu yakin ?',
     text: 'Kamu tidak akan bisa mengembalikan ini!',
@@ -36,22 +39,39 @@ const deleteData = async (id) => {
 
   if (isConfirmed) {
     const loader = $loading.show()
-  try {
-    await deleteIpal(id)
-    await fetchData()
-    Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
-  } catch (e) {
-    console.error(e)
-  } finally {
-    loader.hide()
+    try {
+      await deleteIpal(id)
+      await fetchData()
+      Swal.fire('Deleted!', 'Data berhasil dihapus.', 'success')
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loader.hide()
+    }
   }
-}
 }
 
 onMounted(async () => {
   const loader = $loading.show()
   try {
     ipal.value = await getIpal()
+
+    // Perbarui daftar data yang "DITOLAK"
+    rejectedItems.value = ipal.value.filter(item => item.status === 'DITOLAK')
+
+    // Menampilkan SweetAlert jika ada data yang "DITOLAK"
+    if (rejectedItems.value.length > 0) {
+      Swal.fire({
+        title: 'Perhatian!',
+        text: `Ada ${rejectedItems.value.length} data yang ditolak. Harap segera lakukan tindakan.`,
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+        },
+        buttonsStyling: false,
+      })
+    }
   } catch (e) {
     console.error(e)
   } finally {
@@ -60,11 +80,20 @@ onMounted(async () => {
 })
 </script>
 
-
 <template>
   <MainWrapper>
     <div class="page-wrapper page-settings">
       <div class="content">
+        <!-- Banner Notifikasi -->
+        <div
+          v-if="rejectedItems.length > 0"
+          class="alert alert-warning mb-3"
+          role="alert"
+        >
+          <strong>Perhatian!</strong> Ada {{ rejectedItems.length }} data yang
+          ditolak. Harap segera lakukan tindakan.
+        </div>
+
         <div class="content-page-header content-page-headersplit mb-2">
           <h3>Persetujuan Teknis IPAL</h3>
           <div class="list-btn">
@@ -93,17 +122,21 @@ onMounted(async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(data,index) in ipal" :key="data.id">
+                  <tr v-for="(data, index) in ipal" :key="data.id">
                     <td>{{ index + 1 }}</td>
                     <td>{{ data.type }}</td>
                     <td>{{ data.no_izin_perusahaan }}</td>
                     <td>{{ data.year_of_manufacture_of_ipal }}</td>
-                    <td>{{ data.capacity_ipal}}</td>
+                    <td>{{ data.capacity_ipal }}</td>
                     <td>{{ data.status }}</td>
                     <td>
                       <router-link
                         v-if="data.status !== 'DITERIMA'"
-                        :to="data.id ? `/Data/IPAL/Edit/${data.id}` : '/Data/IPAL/Tambah'"
+                        :to="
+                          data.id
+                            ? `/Data/IPAL/Edit/${data.id}`
+                            : '/Data/IPAL/Tambah'
+                        "
                         class="btn btn-primary"
                         >Edit</router-link
                       >
@@ -124,7 +157,6 @@ onMounted(async () => {
     </div>
   </MainWrapper>
 </template>
-
 
 <style>
 .img {
