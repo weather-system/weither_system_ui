@@ -35,26 +35,26 @@
           </div>
         </div>
         <div class="col-lg-4">
-          <h5 class="text-center">Tabel Data Cuaca</h5>
-          <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>No</th>
-                <th>Waktu</th>
-                <th>Suhu (°C)</th>
-                <th>Kelembapan (%)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(data, index) in weatherTable" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>{{ data.time }}</td>
-                <td>{{ data.temperature }}</td>
-                <td>{{ data.humidity }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <h5 class="text-center">Tabel Data Cuaca</h5>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Waktu</th>
+              <th>Suhu (°C)</th>
+              <th>Kelembapan (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(data, index) in weatherTable" :key="index" :class="{ 'table-success': data.temperature >= 30 }">
+              <td>{{ index + 1 }}</td>
+              <td>{{ data.time }}</td>
+              <td>{{ data.temperature }}</td>
+              <td>{{ data.humidity }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       </div>
     </div>
   </div>
@@ -114,6 +114,49 @@ export default {
 </script>
 
 <style scoped>
+
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+    .sidebar {
+      background-color: #343a40;
+      color: white;
+    }
+
+    .card-info {
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+    }
+
+    .chart-container {
+      height: 300px;
+    }
+
+table.table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px; /* Sesuaikan ukuran font */
+  }
+
+  table.table th,
+  table.table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+  table.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  table.table tr:hover {
+    background-color: #ddd;
+  }
+
+  /* Menambahkan warna khusus untuk suhu di atas 30 derajat */
+  .table-success {
+    background-color: lightgreen;
+  }
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f8f9fa;
