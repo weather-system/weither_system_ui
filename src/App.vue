@@ -1,6 +1,7 @@
 <script>
 import { defineComponent } from 'vue';
 import MainWrapper from "./MainWrapper.vue";
+import axios from 'axios';
 import ApexCharts from 'apexcharts';
 
 export default defineComponent({
@@ -11,26 +12,39 @@ export default defineComponent({
   data() {
     return {
       charts: {},
-      weatherData: {
-        windSpeed: 30,
-        windDirection: 30,
-        rainfall: 30,
-        temperature: 25,
-        humidity: 18,
-        lightIntensity: 650
-      }
+      weatherData: null, // Initial state untuk data cuaca
     }
   },
   mounted() {
-    this.initCharts();
+    this.fetchWeatherData();
   },
   methods: {
-    initCharts() {
+    async fetchWeatherData() {
+      try {
+        // Fetch data dari API Laravel
+        const response = await axios.get('http://127.0.0.1:8000/api/weather-get');
+        const data = response.data.data; // Ambil data dari response
+        
+        // Set weather data untuk kartu cuaca
+        this.weatherData = data;
+
+        // Gunakan data cuaca untuk grafik
+        this.initCharts(data);
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
+    },
+    initCharts(data) {
+      // Pastikan data terisi sebelum membuat grafik
+      if (!data || !data.length) return;
+
+      const lastWeekData = data.slice(-7); // Ambil data 7 hari terakhir
+
       // Bar Chart
       const barOptions = {
         series: [{
-          name: 'Wind Speed',
-          data: [30, 25, 35, 28, 32, 28, 30]
+          name: 'Kecepatan Angin',
+          data: lastWeekData.map(d => d.kecepatan_angin)
         }],
         chart: {
           type: 'bar',
@@ -43,35 +57,38 @@ export default defineComponent({
           },
         },
         title: {
-          text: 'Wind Speed Trends'
+          text: 'Kecepatan Angin'
         },
         xaxis: {
-          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          categories: lastWeekData.map(d => new Date(d.created_at).toLocaleDateString()),
         }
       };
 
       // Donut Chart
       const donutOptions = {
-        series: [44, 55, 13, 43, 22],
+        series: [
+          data.reduce((sum, d) => sum + d.kecepatan_angin, 0), 
+          data.reduce((sum, d) => sum + d.curah_hujan, 0)
+        ],
         chart: {
           type: 'donut',
           height: 450
         },
         title: {
-          text: 'Weather Distribution'
+          text: 'Distribusi Cuaca'
         },
-        labels: ['Sunny', 'Cloudy', 'Rainy', 'Windy', 'Stormy']
+        labels: ['Kecepatan Angin', 'Curah Hujan']
       };
 
       // Radial Bar Chart
       const radialOptions = {
-        series: [70],
+        series: [data[data.length - 1].kelembapan || 0],
         chart: {
           height: 450,
           type: 'radialBar',
         },
         title: {
-          text: 'Humidity Level'
+          text: 'Kelembapan'
         },
         plotOptions: {
           radialBar: {
@@ -80,10 +97,33 @@ export default defineComponent({
             }
           },
         },
-        labels: ['Humidity']
+        labels: ['Kelembapan']
+      };
+
+      // Line Chart
+      const lineOptions = {
+        series: [{
+          name: 'Suhu',
+          data: lastWeekData.map(d => d.suhu)
+        }],
+        chart: {
+          type: 'line',
+          height: 350
+        },
+        title: {
+          text: 'Tren Suhu'
+        },
+        xaxis: {
+          categories: lastWeekData.map(d => new Date(d.created_at).toLocaleDateString()),
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        colors: ['#FF4560']
       };
 
       // Initialize Charts
+      this.charts.lineChart = new ApexCharts(document.querySelector("#lineChart"), lineOptions);
       this.charts.barChart = new ApexCharts(document.querySelector("#bar"), barOptions);
       this.charts.donutChart = new ApexCharts(document.querySelector("#donutTop"), donutOptions);
       this.charts.radialChart = new ApexCharts(document.querySelector("#radialBar1"), radialOptions);
@@ -98,6 +138,7 @@ export default defineComponent({
   }
 });
 </script>
+
 
 <template>
   <MainWrapper>
@@ -126,12 +167,19 @@ export default defineComponent({
           </div>
 
           <!-- Weather Data Cards -->
-          <div class="row mt-4">
-            <div class="col-md-2" v-for="(value, key) in weatherData" :key="key">
+          <div class="row mt-4" v-if="weatherData">
+            <div class="col-md-2" v-for="item in weatherData" :key="item.id">
               <div class="box shadow p-3">
-                <h6 class="text-muted text-uppercase">{{ key }}</h6>
-                <h3>{{ value }}</h3>
+                <h6 class="text-muted text-uppercase">{{ item.arah_angin }}</h6>
+                <h3>{{ item.kecepatan_angin }}</h3>
               </div>
+            </div>
+          </div>
+
+          <!-- Line Chart -->
+          <div class="col-mt-6">
+            <div class="box shadow">
+              <div id="lineChart"></div>
             </div>
           </div>
         </div>
@@ -139,6 +187,7 @@ export default defineComponent({
     </div>
   </MainWrapper>
 </template>
+
 <style scoped>
 /* styles.css */
 body {
