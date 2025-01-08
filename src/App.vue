@@ -1,1112 +1,136 @@
 <script>
+import { defineComponent } from 'vue';
 import MainWrapper from "./MainWrapper.vue";
+import ApexCharts from 'apexcharts';
 
-export default {
-  name: 'App',
-  components: { MainWrapper }, // Hapus jika tidak perlu
-};
+export default defineComponent({
+  name: 'WeatherDashboard',
+  components: { 
+    MainWrapper
+  },
+  data() {
+    return {
+      charts: {},
+      weatherData: {
+        windSpeed: 30,
+        windDirection: 30,
+        rainfall: 30,
+        temperature: 25,
+        humidity: 18,
+        lightIntensity: 650
+      }
+    }
+  },
+  mounted() {
+    this.initCharts();
+  },
+  methods: {
+    initCharts() {
+      // Bar Chart
+      const barOptions = {
+        series: [{
+          name: 'Wind Speed',
+          data: [30, 25, 35, 28, 32, 28, 30]
+        }],
+        chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+          },
+        },
+        title: {
+          text: 'Wind Speed Trends'
+        },
+        xaxis: {
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }
+      };
 
+      // Donut Chart
+      const donutOptions = {
+        series: [44, 55, 13, 43, 22],
+        chart: {
+          type: 'donut',
+          height: 350
+        },
+        title: {
+          text: 'Weather Distribution'
+        },
+        labels: ['Sunny', 'Cloudy', 'Rainy', 'Windy', 'Stormy']
+      };
+
+      // Radial Bar Chart
+      const radialOptions = {
+        series: [70],
+        chart: {
+          height: 350,
+          type: 'radialBar',
+        },
+        title: {
+          text: 'Humidity Level'
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            }
+          },
+        },
+        labels: ['Humidity']
+      };
+
+      // Initialize Charts
+      this.charts.barChart = new ApexCharts(document.querySelector("#bar"), barOptions);
+      this.charts.donutChart = new ApexCharts(document.querySelector("#donutTop"), donutOptions);
+      this.charts.radialChart = new ApexCharts(document.querySelector("#radialBar1"), radialOptions);
+
+      // Render Charts
+      Object.values(this.charts).forEach(chart => chart.render());
+    }
+  },
+  beforeUnmount() {
+    // Cleanup charts
+    Object.values(this.charts).forEach(chart => chart.destroy());
+  }
+});
 </script>
 
 <template>
   <MainWrapper>
-    <div class="page-wrapper">
-      <div class="content">
-        <div class="row">
-          <div
-            class="col-lg-3 col-sm-6 col-12 d-flex widget-path widget-service"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-userhead">
-                    <div class="home-usercount">
-                      <span
-                        ><img src="@/assets/img/icons/user.svg" alt="img"
-                      /></span>
-                      <h6>User</h6>
-                    </div>
-                    <div class="home-useraction">
-                      <a
-                        class="delete-table bg-white"
-                        href="javascript:void(0);"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="true"
-                      >
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                      </a>
-                      <ul
-                        class="dropdown-menu"
-                        data-popper-placement="bottom-end"
-                      >
-                        <li>
-                          <a href="user-list.html" class="dropdown-item">
-                            View</a
-                          >
-                        </li>
-                        <li>
-                          <a href="edit-user.html" class="dropdown-item">
-                            Edit</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="home-usercontent">
-                    <div class="home-usercontents">
-                      <div class="home-usercontentcount">
-                        <img
-                          src="@/assets/img/icons/arrow-up.svg"
-                          alt="img"
-                          class="me-2"
-                        />
-                        <span class="counters" data-count="30">30</span>
-                      </div>
-                      <h5>Current Month</h5>
-                    </div>
-                    <div class="homegraph">
-                      <img src="@/assets/img/graph/graph1.png" alt="img" />
-                    </div>
-                  </div>
-                </div>
+    <div class="content-area">
+      <div class="container-fluid">
+        <div class="main">
+          <div class="row mt-4">
+            <!-- Bar Chart -->
+            <div class="col-md-5">
+              <div class="box shadow">
+                <div id="bar"></div>
+              </div>
+            </div>
+            <!-- Donut Chart -->
+            <div class="col-md-4">
+              <div class="box shadow">
+                <div id="donutTop"></div>
+              </div>
+            </div>
+            <!-- Radial Bar Chart -->
+            <div class="col-md-3">
+              <div class="box shadow">
+                <div id="radialBar1"></div>
               </div>
             </div>
           </div>
-          <div
-            class="col-lg-3 col-sm-6 col-12 d-flex widget-path widget-service"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user home-provider">
-                  <div class="home-userhead">
-                    <div class="home-usercount">
-                      <span
-                        ><img src="@/assets/img/icons/user-circle.svg" alt="img"
-                      /></span>
-                      <h6>Providers</h6>
-                    </div>
-                    <div class="home-useraction">
-                      <a
-                        class="delete-table bg-white"
-                        href="javascript:void(0);"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="true"
-                      >
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                      </a>
-                      <ul
-                        class="dropdown-menu"
-                        data-popper-placement="bottom-end"
-                      >
-                        <li>
-                          <a href="user-providers.html" class="dropdown-item">
-                            View</a
-                          >
-                        </li>
-                        <li>
-                          <a href="edit-provider.html" class="dropdown-item">
-                            Edit</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="home-usercontent">
-                    <div class="home-usercontents">
-                      <div class="home-usercontentcount">
-                        <img
-                          src="@/assets/img/icons/arrow-up.svg"
-                          alt="img"
-                          class="me-2"
-                        />
-                        <span class="counters" data-count="25">25</span>
-                      </div>
-                      <h5>Current Month</h5>
-                    </div>
-                    <div class="homegraph">
-                      <img src="@/assets/img/graph/graph2.png" alt="img" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="col-lg-3 col-sm-6 col-12 d-flex widget-path widget-service"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user home-service">
-                  <div class="home-userhead">
-                    <div class="home-usercount">
-                      <span
-                        ><img src="@/assets/img/icons/service.svg" alt="img"
-                      /></span>
-                      <h6>Service</h6>
-                    </div>
-                    <div class="home-useraction">
-                      <a
-                        class="delete-table bg-white"
-                        href="javascript:void(0);"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="true"
-                      >
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                      </a>
-                      <ul
-                        class="dropdown-menu"
-                        data-popper-placement="bottom-end"
-                      >
-                        <li>
-                          <a href="services.html" class="dropdown-item">
-                            View</a
-                          >
-                        </li>
-                        <li>
-                          <a href="edit-service.html" class="dropdown-item">
-                            Edit</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="home-usercontent">
-                    <div class="home-usercontents">
-                      <div class="home-usercontentcount">
-                        <img
-                          src="@/assets/img/icons/arrow-up.svg"
-                          alt="img"
-                          class="me-2"
-                        />
-                        <span class="counters" data-count="18">18</span>
-                      </div>
-                      <h5>Current Month</h5>
-                    </div>
-                    <div class="homegraph">
-                      <img src="@/assets/img/graph/graph3.png" alt="img" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="col-lg-3 col-sm-6 col-12 d-flex widget-path widget-service"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user home-subscription">
-                  <div class="home-userhead">
-                    <div class="home-usercount">
-                      <span
-                        ><img src="@/assets/img/icons/money.svg" alt="img"
-                      /></span>
-                      <h6>Subscription</h6>
-                    </div>
-                    <div class="home-useraction">
-                      <a
-                        class="delete-table bg-white"
-                        href="javascript:void(0);"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="true"
-                      >
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                      </a>
-                      <ul
-                        class="dropdown-menu"
-                        data-popper-placement="bottom-end"
-                      >
-                        <li>
-                          <a href="membership.html" class="dropdown-item">
-                            View</a
-                          >
-                        </li>
-                        <li>
-                          <a href="javascript:void(0);" class="dropdown-item">
-                            Edit</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="home-usercontent">
-                    <div class="home-usercontents">
-                      <div class="home-usercontentcount">
-                        <img
-                          src="@/assets/img/icons/arrow-up.svg"
-                          alt="img"
-                          class="me-2"
-                        />
-                        <span class="counters" data-count="650">$650</span>
-                      </div>
-                      <h5>Current Month</h5>
-                    </div>
-                    <div class="homegraph">
-                      <img src="@/assets/img/graph/graph4.png" alt="img" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-4 col-sm-6 col-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user">
-                    <h2>Revenue</h2>
-                    <div class="home-select">
-                      <div class="dropdown">
-                        <button
-                          class="btn btn-action btn-sm dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          Monthly
-                        </button>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Weekly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Monthly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Yearly</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="dropdown">
-                        <a
-                          class="delete-table bg-white"
-                          href="javascript:void(0);"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                        </a>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              View</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              Edit</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="chartgraph">
-                    <div id="chart-view"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-sm-6 col-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user">
-                    <h2>Booking Summary</h2>
-                    <div class="home-select">
-                      <div class="dropdown">
-                        <button
-                          class="btn btn-action btn-sm dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          Monthly
-                        </button>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Weekly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Monthly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Yearly</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="dropdown">
-                        <a
-                          class="delete-table bg-white"
-                          href="javascript:void(0);"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                        </a>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              View</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              Edit</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="chartgraph">
-                    <div id="chart-booking"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-sm-6 col-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user">
-                    <h2>Income</h2>
-                    <div class="home-select">
-                      <div class="dropdown">
-                        <button
-                          class="btn btn-action btn-sm dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          Monthly
-                        </button>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Weekly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Monthly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Yearly</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="dropdown">
-                        <a
-                          class="delete-table bg-white"
-                          href="javascript:void(0);"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                        </a>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              View</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              Edit</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="chartgraph">
-                    <div id="chart-incomes"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6 col-sm-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user home-graph-header">
-                    <h2>Top Services</h2>
-                    <a href="services.html" class="btn btn-viewall"
-                      >View All<img
-                        src="@/assets/img/icons/arrow-right.svg"
-                        class="ms-2"
-                        alt="img"
-                    /></a>
-                  </div>
-                  <div class="table-responsive datatable-nofooter">
-                    <table class="table datatable">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Service</th>
-                          <th>Category</th>
-                          <th>Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-03.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Computer Repair</span>
-                            </a>
-                          </td>
-                          <td>Computer</td>
-                          <td>$80</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-02.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Car Repair Services</span>
-                            </a>
-                          </td>
-                          <td>Automobile</td>
-                          <td>$50</td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-04.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Car Wash</span>
-                            </a>
-                          </td>
-                          <td>Automobile</td>
-                          <td>$14</td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-09.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>House Cleaning </span>
-                            </a>
-                          </td>
-                          <td>Cleaning</td>
-                          <td>$100</td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-10.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Interior </span>
-                            </a>
-                          </td>
-                          <td>Cleaning</td>
-                          <td>$50</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-sm-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user home-graph-header">
-                    <h2>Top Providers</h2>
-                    <a href="user-providers.html" class="btn btn-viewall"
-                      >View All<img
-                        src="@/assets/img/icons/arrow-right.svg"
-                        class="ms-2"
-                        alt="img"
-                    /></a>
-                  </div>
-                  <div class="table-responsive datatable-nofooter">
-                    <table class="table datatable">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Provider Name</th>
-                          <th>Email</th>
-                          <th>Phone</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-06.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Robert</span>
-                            </a>
-                          </td>
-                          <td>robert@gmail.com</td>
-                          <td>+1 347-679-8275</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-09.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Sharonda</span>
-                            </a>
-                          </td>
-                          <td>sharonda@gmail.com</td>
-                          <td>+1 570-621-248</td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-01.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>John Smith</span>
-                            </a>
-                          </td>
-                          <td>johnsmith@gmail.com</td>
-                          <td>+1 646-957-0004</td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-05.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Pricilla</span>
-                            </a>
-                          </td>
-                          <td>pricilla@gmail.com</td>
-                          <td>+1 614-915-8101</td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-09.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>James</span>
-                            </a>
-                          </td>
-                          <td>james@gmail.com</td>
-                          <td>+1 918-543-3702</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-8 col-sm-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user home-graph-header">
-                    <h2>Top Countries</h2>
-                    <div class="home-select">
-                      <div class="dropdown">
-                        <button
-                          class="btn btn-action btn-sm dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          Monthly
-                        </button>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Weekly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Monthly</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item"
-                              >Yearly</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="dropdown">
-                        <a
-                          class="delete-table bg-white"
-                          href="javascript:void(0);"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                        </a>
-                        <ul
-                          class="dropdown-menu"
-                          data-popper-placement="bottom-end"
-                        >
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              View</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                              Edit</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="chartgraph">
-                    <div class="row align-items-center">
-                      <div class="col-lg-7">
-                        <div id="world_map" style="height: 150px"></div>
-                      </div>
-                      <div class="col-lg-5">
-                        <div class="bookingmap">
-                          <ul>
-                            <li>
-                              <span
-                                ><img
-                                  src="@/assets/img/flags/us.png"
-                                  alt="img"
-                                  class="me-2"
-                                />United State</span
-                              >
-                              <h6>60%</h6>
-                            </li>
-                            <li>
-                              <span
-                                ><img
-                                  src="@/assets/img/flags/in.png"
-                                  alt="img"
-                                  class="me-2"
-                                />India</span
-                              >
-                              <h6>80%</h6>
-                            </li>
-                            <li>
-                              <span
-                                ><img
-                                  src="@/assets/img/flags/ca.png"
-                                  alt="img"
-                                  class="me-2"
-                                />Canada</span
-                              >
-                              <h6>50%</h6>
-                            </li>
-                            <li>
-                              <span
-                                ><img
-                                  src="@/assets/img/flags/au.png"
-                                  alt="img"
-                                  class="me-2"
-                                />Australia</span
-                              >
-                              <h6>75%</h6>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-sm-12 d-flex widget-path">
-            <div class="card">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user home-graph-header">
-                    <h2>Booking Statistics</h2>
-                    <a href="booking.html" class="btn btn-viewall"
-                      >View All<img
-                        src="@/assets/img/icons/arrow-right.svg"
-                        class="ms-2"
-                        alt="img"
-                    /></a>
-                  </div>
-                  <div class="chartgraph">
-                    <div class="row align-items-center">
-                      <div class="col-lg-7 col-sm-6">
-                        <div id="chart-bar"></div>
-                      </div>
-                      <div class="col-lg-5 col-sm-6">
-                        <div class="bookingstatus">
-                          <ul>
-                            <li>
-                              <span></span>
-                              <h6>Completed</h6>
-                            </li>
-                            <li class="process-status">
-                              <span></span>
-                              <h6>Process</h6>
-                            </li>
-                            <li class="process-pending">
-                              <span></span>
-                              <h6>Pending</h6>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-12 widget-path">
-            <div class="card mb-0">
-              <div class="card-body">
-                <div class="home-user">
-                  <div class="home-head-user home-graph-header">
-                    <h2>Recent Booking</h2>
-                    <a href="booking.html" class="btn btn-viewall"
-                      >View All<img
-                        src="@/assets/img/icons/arrow-right.svg"
-                        class="ms-2"
-                        alt="img"
-                    /></a>
-                  </div>
-                  <div class="table-responsive datatable-nofooter">
-                    <table class="table datatable">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Date</th>
-                          <th>Booking Time</th>
-                          <th>Provider</th>
-                          <th>User</th>
-                          <th>Service</th>
-                          <th>Amount</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>28 Sep 2022</td>
-                          <td>10:00:00 - 11:00:00</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-01.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>John Smith</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-03.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Sharon</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-03.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Computer Repair</span>
-                            </a>
-                          </td>
-                          <td>$80</td>
-                          <td><h6 class="badge-pending">Pending</h6></td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>10 Sep 2022</td>
-                          <td>18:00:00 - 19:00:00</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-04.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Johnny</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-05.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Pricilla</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-02.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Car Repair Services</span>
-                            </a>
-                          </td>
-                          <td>$50</td>
-                          <td><h6 class="badge-active">Completed</h6></td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>25 Sep 2022</td>
-                          <td>12:00:00 - 13:00:00</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-06.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Robert</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-02.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Amanda</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-04.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Steam Car Wash</span>
-                            </a>
-                          </td>
-                          <td>$50</td>
-                          <td><h6 class="badge-inactive">Inprogress</h6></td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>08 Sep 2022</td>
-                          <td>07 Oct 2022 11:22:51</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-09.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Sharonda</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-01.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>James</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-09.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>House Cleaning </span>
-                            </a>
-                          </td>
-                          <td>$50</td>
-                          <td><h6 class="badge-delete">cancelled</h6></td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>28 Sep 2022</td>
-                          <td>10:00:00 - 11:00:00</td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-01.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>John Smith</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              class="table-profileimage"
-                            >
-                              <img
-                                src="@/assets/img/customer/user-03.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Sharon</span>
-                            </a>
-                          </td>
-                          <td>
-                            <a href="view-service.html" class="table-imgname">
-                              <img
-                                src="@/assets/img/services/service-03.jpg"
-                                class="me-2"
-                                alt="img"
-                              />
-                              <span>Computer Repair</span>
-                            </a>
-                          </td>
-                          <td>$80</td>
-                          <td><h6 class="badge-pending">Pending</h6></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+
+          <!-- Weather Data Cards -->
+          <div class="row mt-4">
+            <div class="col-md-2" v-for="(value, key) in weatherData" :key="key">
+              <div class="box shadow p-3">
+                <h6 class="text-muted text-uppercase">{{ key }}</h6>
+                <h3>{{ value }}</h3>
               </div>
             </div>
           </div>
@@ -1115,3 +139,142 @@ export default {
     </div>
   </MainWrapper>
 </template>
+<style scoped>
+/* styles.css */
+body {
+  background: #F9FAFB;
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.content-area {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .content-area {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-area {
+    padding: 2rem;
+  }
+}
+
+.box {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Weather Cards */
+.weather-card {
+  padding: 1rem;
+  text-align: center;
+}
+
+.weather-card h6 {
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+@media (min-width: 768px) {
+  .weather-card h6 {
+    font-size: 0.875rem;
+  }
+}
+
+.weather-card h3 {
+  margin: 0;
+  font-weight: 600;
+  color: #2563EB;
+  font-size: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .weather-card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Chart Containers */
+.chart-box {
+  min-height: 250px;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .chart-box {
+    min-height: 350px;
+    padding: 1.5rem;
+  }
+}
+
+/* Chart Responsiveness */
+#bar, #donutTop, #radialBar1 {
+  width: 100%;
+  min-height: 250px;
+}
+
+@media (min-width: 768px) {
+  #bar, #donutTop, #radialBar1 {
+    min-height: 350px;
+  }
+}
+
+/* Container Spacing */
+.weather-summary {
+  margin-bottom: 1.5rem;
+}
+
+.charts-container {
+  margin-bottom: 2rem;
+}
+
+/* Utility Classes */
+.text-uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Loading State */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.weather-card, .chart-box {
+  animation: fadeIn 0.5s ease-out;
+}
+</style>
