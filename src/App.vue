@@ -55,7 +55,7 @@ export default defineComponent({
         series: [44, 55, 13, 43, 22],
         chart: {
           type: 'donut',
-          height: 350
+          height: 450
         },
         title: {
           text: 'Weather Distribution'
@@ -67,7 +67,7 @@ export default defineComponent({
       const radialOptions = {
         series: [70],
         chart: {
-          height: 350,
+          height: 450,
           type: 'radialBar',
         },
         title: {
@@ -152,7 +152,7 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 70px; /* Sesuaikan tinggi header */
-  margin-left: 250px; /* Sesuaikan lebar sidebar */
+  margin-left: 280px; /* Sesuaikan lebar sidebar */
   padding: 1rem;
   transition: all 0.3s ease;
 }
@@ -210,7 +210,7 @@ body {
 
 /* Weather Cards */
 .weather-card {
-  padding: 1rem;
+  padding: 3rem;
   text-align: center;
 }
 
