@@ -141,6 +141,21 @@ export default defineComponent({
 </template>
 <style scoped>
 /* styles.css */
+.main-wrapper {
+  display: flex;
+}
+.sidebar {
+  width: 250px;
+  background-color: #1f2937;
+  color: white;
+  height: 100vh;
+  position: fixed;
+}
+.content-area {
+  flex: 1;
+  margin-left: 250px;
+  padding: 1rem;
+}
 body {
   background: #F9FAFB;
   font-family: 'Montserrat', sans-serif;
