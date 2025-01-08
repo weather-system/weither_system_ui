@@ -166,6 +166,13 @@ export default defineComponent({
             </div>
           </div>
 
+           <!-- Line Chart -->
+           <div class="col-mt-6">
+            <div class="box shadow">
+              <div id="lineChart"></div>
+            </div>
+          </div>
+
           <!-- Weather Data Cards -->
           <div class="row mt-4" v-if="weatherData">
             <div class="col-md-2" v-for="item in weatherData" :key="item.id">
@@ -173,13 +180,6 @@ export default defineComponent({
                 <h6 class="text-muted text-uppercase">{{ item.arah_angin }}</h6>
                 <h3>{{ item.kecepatan_angin }}</h3>
               </div>
-            </div>
-          </div>
-
-          <!-- Line Chart -->
-          <div class="col-mt-6">
-            <div class="box shadow">
-              <div id="lineChart"></div>
             </div>
           </div>
         </div>
