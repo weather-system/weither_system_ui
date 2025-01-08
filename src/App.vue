@@ -141,21 +141,6 @@ export default defineComponent({
 </template>
 <style scoped>
 /* styles.css */
-.main-wrapper {
-  display: flex;
-}
-.sidebar {
-  width: 250px;
-  background-color: #1f2937;
-  color: white;
-  height: 100vh;
-  position: fixed;
-}
-.content-area {
-  flex: 1;
-  margin-left: 250px;
-  padding: 1rem;
-}
 body {
   background: #F9FAFB;
   font-family: 'Montserrat', sans-serif;
@@ -164,20 +149,44 @@ body {
 }
 
 .content-area {
-  max-width: 1280px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 70px; /* Sesuaikan tinggi header */
+  margin-left: 250px; /* Sesuaikan lebar sidebar */
   padding: 1rem;
+  transition: all 0.3s ease;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .content-area {
-    padding: 1.5rem;
+    margin-left: 0;
   }
 }
 
-@media (min-width: 1024px) {
-  .content-area {
-    padding: 2rem;
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; /* Sesuaikan lebar sidebar */
+  height: 100%;
+  background-color: #1E293B;
+  z-index: 1000;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 250px; /* Sesuaikan lebar sidebar */
+  right: 0;
+  height: 70px; /* Sesuaikan tinggi header */
+  background-color: #F3F4F6;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .header {
+    left: 0;
   }
 }
 
